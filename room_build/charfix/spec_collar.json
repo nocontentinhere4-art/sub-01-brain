@@ -1,0 +1,64 @@
+{
+ "parts": [
+  {
+   "name": "hood_lining",
+   "dir": "charfix/p_lining",
+   "material": {
+    "name": "hood_lining",
+    "color": [
+     1,
+     1,
+     1
+    ],
+    "roughness": 0.95,
+    "doubleSided": true,
+    "map": "charfix/hood_patch.png",
+    "normalMap": "charfix/hood_patch_n.png",
+    "mirror": true
+   }
+  },
+  {
+   "name": "hood_neck_fill",
+   "dir": "charfix/p_neck_fill",
+   "material": {
+    "name": "hood_neck_fill",
+    "color": [
+     0.9,
+     0.9,
+     0.9
+    ],
+    "roughness": 0.95,
+    "doubleSided": true,
+    "map": "charfix/hood_patch.png",
+    "normalMap": "charfix/hood_patch_n.png",
+    "mirror": true
+   }
+  },
+  {
+   "name": "hood_patches",
+   "dir": "charfix/p_patches",
+   "material": {
+    "name": "hood_patches",
+    "from": "tripo_material_6bf04053-4eb9-4c81-aed9-ebf290057e82",
+    "doubleSided": true
+   }
+  },
+  {
+   "name": "hood_patches_tiled",
+   "dir": "charfix/p_patches_tiled",
+   "material": {
+    "name": "hood_patches_tiled",
+    "color": [
+     1,
+     1,
+     1
+    ],
+    "roughness": 0.95,
+    "doubleSided": true,
+    "map": "charfix/hood_patch.png",
+    "normalMap": "charfix/hood_patch_n.png",
+    "mirror": true
+   }
+  }
+ ]
+}

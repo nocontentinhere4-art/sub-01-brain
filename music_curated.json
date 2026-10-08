@@ -1,0 +1,885 @@
+{
+ "built": "analysis/build_music_list.py",
+ "genres": {
+  "city_pop": {
+   "label": "Tokyo city pop",
+   "tags": "city pop music dance night nostalgia",
+   "playlists": [
+    {
+     "id": "1sDUV75FdWsjf2uIdooCzz",
+     "name": "Japanese 80s City Pop Songs"
+    },
+    {
+     "id": "1VdpRTsLCEipiJTrQERMST",
+     "name": "Tokyo Nights: Japanese City Pop of the 80s"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "2BHj31ufdEqVK5CkYDp9mA",
+     "title": "Mayonaka no Door / Stay With Me",
+     "artist": "Miki Matsubara",
+     "ms": 312293
+    },
+    {
+     "id": "1eyyAu5eU0EONveZhIcJDg",
+     "title": "Dress Down",
+     "artist": "Kaoru Akimoto",
+     "ms": 270012
+    },
+    {
+     "id": "38LrhW3eQSt3cK88dkvl5e",
+     "title": "Misty Night Cruising",
+     "artist": "S. Kiyotaka & Omega Tribe",
+     "ms": 267893
+    },
+    {
+     "id": "2iCPjExHWYrQdC3NZPxvIc",
+     "title": "Telephone Number",
+     "artist": "Junko Ohashi",
+     "ms": 239013
+    },
+    {
+     "id": "5OUnJyo4Cb9bFPzDWb5GAK",
+     "title": "Candy",
+     "artist": "Naoko Gushima",
+     "ms": 280186
+    },
+    {
+     "id": "2nMjfJtl5Tj5F9vzuHhqOl",
+     "title": "Crystal Night",
+     "artist": "1986 OMEGA TRIBE",
+     "ms": 245533
+    },
+    {
+     "id": "3FYDqY5BRtx3IVSaiQZSze",
+     "title": "悲しみがとまらない I CAN'T STOP THE LONELINESS",
+     "artist": "Anri",
+     "ms": 263706
+    },
+    {
+     "id": "0zoGVO4bQXG8U6ChKwNgeg",
+     "title": "4:00A.M.",
+     "artist": "Taeko Onuki",
+     "ms": 336960
+    },
+    {
+     "id": "2uXlHiOE4o5xHOCiob8DKn",
+     "title": "Fly-day Chinatown",
+     "artist": "Yasuha",
+     "ms": 208493
+    },
+    {
+     "id": "1qUo7d5lAOclNVbTUY0A2R",
+     "title": "Remember Summer Days",
+     "artist": "Anri",
+     "ms": 295666
+    },
+    {
+     "id": "4wUQvovMEkByMvZNCecZ9v",
+     "title": "黄昏のBAY CITY",
+     "artist": "Junko Yagami",
+     "ms": 250373
+    },
+    {
+     "id": "38LUbz74v3nmP8x0efElw2",
+     "title": "Last Summer Whisper",
+     "artist": "Anri",
+     "ms": 299680
+    },
+    {
+     "id": "0JUWF44gfMszGNhjCF7Ufs",
+     "title": "Midnight Pretenders",
+     "artist": "Tomoko Aran",
+     "ms": 345266
+    },
+    {
+     "id": "5SxrdeIHki6FmlsKj2m8mY",
+     "title": "テレフォン・ナンバー",
+     "artist": "Junko Ohashi",
+     "ms": 239573
+    }
+   ]
+  },
+  "jpop": {
+   "label": "J-pop",
+   "tags": "pop song music dance",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DXayDMsJG9ZBv",
+     "name": "Hot Hits Japan"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "11hcBLPtbMp4aQI6zGQLub",
+     "title": "Patient Zero",
+     "artist": "Taylor Swift",
+     "ms": 225868
+    },
+    {
+     "id": "4OZgLTWdsiogtoDdZVEtpZ",
+     "title": "You (feat. UMI)",
+     "artist": "Fujii Kaze, UMI",
+     "ms": 281766
+    },
+    {
+     "id": "5GKBPdWbW4RQtx9VkQ6xKO",
+     "title": "new trick",
+     "artist": "ROSÉ",
+     "ms": 182582
+    },
+    {
+     "id": "19UnXjpLshSLobPspdyxlD",
+     "title": "Less than a Lover",
+     "artist": "JENNIE",
+     "ms": 145680
+    },
+    {
+     "id": "0WbMK4wrZ1wFSty9F7FCgu",
+     "title": "Good Luck, Babe!",
+     "artist": "Chappell Roan",
+     "ms": 218423
+    },
+    {
+     "id": "5P3Nmg0jSYfrSKoYonTGan",
+     "title": "共犯",
+     "artist": "Mrs. GREEN APPLE",
+     "ms": 231946
+    },
+    {
+     "id": "7HNGIBi7xkcN1YGyhdjPkA",
+     "title": "ありふれた世界の果てに (feat. Awich, CHICO CARLITO, ONE OK ROCK & Paledusk)",
+     "artist": "YAO, Awich, CHICO CARLITO, ONE OK ROCK, Paledusk",
+     "ms": 234782
+    },
+    {
+     "id": "54kwD19pq6ea4yGiiX84QB",
+     "title": "GO GHOST",
+     "artist": "King Gnu",
+     "ms": 170100
+    },
+    {
+     "id": "1D5L58KLBbceOynTP4DQnY",
+     "title": "It's Me",
+     "artist": "ILLIT",
+     "ms": 138284
+    },
+    {
+     "id": "5MOIAV008posdOGmxiJBsi",
+     "title": "Made My Night",
+     "artist": "LE SSERAFIM",
+     "ms": 126000
+    },
+    {
+     "id": "3h5T5JypYU7huFiVYhv1dr",
+     "title": "BbY WOW",
+     "artist": "KAROL G, Judeline, rusowsky",
+     "ms": 225834
+    },
+    {
+     "id": "0kosUz0jePvjiz4ctmR6wL",
+     "title": "Dai Dai",
+     "artist": "Shakira, Burna Boy",
+     "ms": 223448
+    },
+    {
+     "id": "3IWZeuKAIICpfEj7bkSB6p",
+     "title": "WATCH ME - feat. BIA",
+     "artist": "BE:FIRST, BIA",
+     "ms": 189629
+    },
+    {
+     "id": "45Us1IGeAiIRmj3bKWaAkH",
+     "title": "DIGITAL GIRL",
+     "artist": "Number_i",
+     "ms": 139038
+    }
+   ]
+  },
+  "lofi": {
+   "label": "lofi",
+   "tags": "lofi calm study dream sleep music",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DWWQRwui0ExPn",
+     "name": "lofi beats"
+    },
+    {
+     "id": "54XEvcqtFLIcodkZAW9cxu",
+     "name": "Japanese Lofi Hip Hop / Chillhop"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "7uI6R3KoJWxuXjvBHIr5lW",
+     "title": "Marinara",
+     "artist": "rden.96",
+     "ms": 113210
+    },
+    {
+     "id": "3nLvd6qsfFRcMTVyZbb6vd",
+     "title": "Close Up",
+     "artist": "Audio Sculptor",
+     "ms": 133278
+    },
+    {
+     "id": "0hXawbgaDuD2ANxbH6tsl2",
+     "title": "Shelter",
+     "artist": "Floating Basket",
+     "ms": 147000
+    },
+    {
+     "id": "0z4hZnfyYaI62mrPMqvFid",
+     "title": "ditto",
+     "artist": "Collinsworthy",
+     "ms": 147267
+    },
+    {
+     "id": "50qVnHKZRO4er4D82zBuMe",
+     "title": "morning sight",
+     "artist": "Zupa Fitz",
+     "ms": 145356
+    },
+    {
+     "id": "5DTTeqf6ZoeCEZbky74cgm",
+     "title": "one umbrella",
+     "artist": "stillnote",
+     "ms": 133500
+    },
+    {
+     "id": "39FltUuMX7sBgt7D05diVP",
+     "title": "by the sea",
+     "artist": "Papi Pier",
+     "ms": 127656
+    },
+    {
+     "id": "1ApKMc4Rbzb77dqpcYMY0s",
+     "title": "22 Samurai",
+     "artist": "RŮDE",
+     "ms": 176222
+    },
+    {
+     "id": "2yJHDJvzl4zZhditeUFa3z",
+     "title": "Path of Cherry Blossom",
+     "artist": "Sleepy Octopus",
+     "ms": 137462
+    },
+    {
+     "id": "1es71gP1Ljrf6KVvqR1T75",
+     "title": "Shanghai Nights",
+     "artist": "Saib",
+     "ms": 264000
+    },
+    {
+     "id": "3d5sFXzamm1Bak74pl1eU9",
+     "title": "one day in japan",
+     "artist": "aekasora",
+     "ms": 172564
+    },
+    {
+     "id": "5PJX4rUiIHjDoUi3C8jeZm",
+     "title": "After the Rain",
+     "artist": "Virtual Mage",
+     "ms": 180000
+    },
+    {
+     "id": "38UT1akpWxg2i2COM05Kzd",
+     "title": "s p r i n g (st) r o l l",
+     "artist": "Nohidea",
+     "ms": 87407
+    },
+    {
+     "id": "3fr6YASa6IOc3o7xuDuvs7",
+     "title": "Shangri-La",
+     "artist": "SPEECHLESS",
+     "ms": 144015
+    }
+   ]
+  },
+  "hiphop": {
+   "label": "hip-hop",
+   "tags": "hip-hop rap words rhythm music",
+   "playlists": [
+    {
+     "id": "16tpPSjRXzDFr614qvjNwv",
+     "name": "Best Japanese Hip-Hop Nihongo Rap HIPHOP 日本語ラップ JPRAP"
+    },
+    {
+     "id": "6YsPOwWFDeraCgnUg98Cca",
+     "name": "The Sound of Japanese Old School Hip Hop"
+    },
+    {
+     "id": "0JTOLgpeHOVxyRVp7xnRvv",
+     "name": "Japanese Jazz Hip Hop"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "7reEz1CiptdZLMudacSxFX",
+     "title": "Area Area",
+     "artist": "OZROSAURUS",
+     "ms": 294293
+    },
+    {
+     "id": "77LGJt0mflUdM3rFkpkOdS",
+     "title": "Moisture",
+     "artist": "Lunniebeats, NNC",
+     "ms": 166000
+    },
+    {
+     "id": "6xzbeKuNnTfgpOBXpiCp5Y",
+     "title": "Stand Up!!! (feat. Norikiyo)",
+     "artist": "Yuugi, NORIKIYO",
+     "ms": 295226
+    },
+    {
+     "id": "7pNHmUI5hq1XmrvZIgSQM6",
+     "title": "Misty feat. Monju",
+     "artist": "One-Law, Monju",
+     "ms": 188333
+    },
+    {
+     "id": "3bNMcQYsUCOaxCeXdNuNlK",
+     "title": "I Rep",
+     "artist": "DABO",
+     "ms": 242173
+    },
+    {
+     "id": "3Ni4jY01ptSnpjKdJGa15P",
+     "title": "ALKMAN [Album Version]",
+     "artist": "SUIKEN",
+     "ms": 230173
+    },
+    {
+     "id": "0UglGK4OUhYGQ7vzXTUiFB",
+     "title": "NITRO MICROPHONE UNDERGROUND",
+     "artist": "Nitro Microphone Underground",
+     "ms": 336493
+    },
+    {
+     "id": "0OAOAmiKzuA7kXCPFWva4X",
+     "title": "Do the GARIYA thing",
+     "artist": "Rappagariya",
+     "ms": 262166
+    },
+    {
+     "id": "7jqarKRdoH5pP4NBgw2tcg",
+     "title": "Shooting Star (Dear Nujabes)",
+     "artist": "DJ Sorama",
+     "ms": 145891
+    },
+    {
+     "id": "5ImGouqvy27WuFykItDZl4",
+     "title": "Love (Nujabes Tribute)",
+     "artist": "Navid B",
+     "ms": 213750
+    },
+    {
+     "id": "23GsvQWsuYl61gRWzGWnSA",
+     "title": "Yes",
+     "artist": "Ta-ku",
+     "ms": 135053
+    },
+    {
+     "id": "1eXbw3hWP1ofFpHsyS9Snf",
+     "title": "Heavenly Keys",
+     "artist": "DJ Ezasscul",
+     "ms": 68702
+    }
+   ]
+  },
+  "anime": {
+   "label": "anime soundtracks",
+   "tags": "anime animation film soundtrack music",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DWT8aqnwgRt92",
+     "name": "Anime Now"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "0jjygW2mhgfVT8OOgEyp7U",
+     "title": "AIYOU",
+     "artist": "Eve",
+     "ms": 159895
+    },
+    {
+     "id": "4Pt00G3XrrhXOxXCUvhBKX",
+     "title": "TRICK STAR",
+     "artist": "go!go!vanillas",
+     "ms": 262760
+    },
+    {
+     "id": "3ggbBGIGIjY8B5mJATYFpF",
+     "title": "花蔭",
+     "artist": "Superfly",
+     "ms": 228600
+    },
+    {
+     "id": "7Kn5NdVjzS9WUPub1rlwuT",
+     "title": "SPIN",
+     "artist": "Kroi",
+     "ms": 305201
+    },
+    {
+     "id": "46B70zbvWffi3pnCDNpCBH",
+     "title": "螺旋 - RASEN",
+     "artist": "9Lana",
+     "ms": 190421
+    },
+    {
+     "id": "7vdZztyuzNX1joqkbhWBxX",
+     "title": "死ぬか生きるか",
+     "artist": "Yuki Chiba",
+     "ms": 165974
+    },
+    {
+     "id": "3T8OGzdBT8aUMRuqvSoFdY",
+     "title": "You Say Run - 10th Anniversary ver.",
+     "artist": "Yuki Hayashi, Electric Callboy",
+     "ms": 231771
+    },
+    {
+     "id": "1kAjMWyq8IBfh5JMhUX4Zx",
+     "title": "消えない理由",
+     "artist": "WANIMA",
+     "ms": 249243
+    },
+    {
+     "id": "2ooP5Cy1B5zgt2Y0xspqOh",
+     "title": "ささくれ",
+     "artist": "adieu",
+     "ms": 298545
+    },
+    {
+     "id": "3QEeNdYJDkAQn2XkD6tLEX",
+     "title": "BACKLASH",
+     "artist": "Hiromitsu Kitayama",
+     "ms": 201626
+    },
+    {
+     "id": "30F0aAsXuyMVcGYD1He7Zx",
+     "title": "IGNITE",
+     "artist": "JO1",
+     "ms": 209999
+    },
+    {
+     "id": "2afdDEOkeioSUIwIpx2MPv",
+     "title": "TACTIC",
+     "artist": "Daoko",
+     "ms": 194137
+    },
+    {
+     "id": "5Qq7kURxLlKg0tu2ZTGGvs",
+     "title": "猫じゃらし",
+     "artist": "7co",
+     "ms": 167173
+    },
+    {
+     "id": "3XNnq2oo1zmHDseKZKaYEF",
+     "title": "Nannmonee",
+     "artist": "Wasureranneyo",
+     "ms": 171000
+    }
+   ]
+  },
+  "indie": {
+   "label": "indie",
+   "tags": "indie guitar song album music",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DX2Nc3B70tvx0",
+     "name": "Indie's Top 50"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "5s50vIGQHK8FG8LfSdHC5q",
+     "title": "I Can’t Wait",
+     "artist": "Phoebe Bridgers",
+     "ms": 217205
+    },
+    {
+     "id": "2NQKHBLNYbTKyd3jHzAdoo",
+     "title": "Write Me A Letter",
+     "artist": "beabadoobee",
+     "ms": 194103
+    },
+    {
+     "id": "3lIHa4fUwNKOCSS5k3Za0i",
+     "title": "nothing",
+     "artist": "Steve Lacy",
+     "ms": 149663
+    },
+    {
+     "id": "6kBDO64MhuMjmEOAaqXeLA",
+     "title": "The Kid With the Crown",
+     "artist": "This Is Lorelei",
+     "ms": 254961
+    },
+    {
+     "id": "1iZsQ8JtDEjZojlFOBrDRi",
+     "title": "Red Car",
+     "artist": "Slow Pulp",
+     "ms": 208937
+    },
+    {
+     "id": "7CNzHJHDLfmEqGZDSKgqGj",
+     "title": "Blast",
+     "artist": "Hovvdy",
+     "ms": 197533
+    },
+    {
+     "id": "4gSItxVqOlJXeD2Oi2X9GJ",
+     "title": "Sometimes I rush",
+     "artist": "Fine",
+     "ms": 90867
+    },
+    {
+     "id": "3i1eMUF4POV3G1xkQIisoN",
+     "title": "Small Town",
+     "artist": "Dominic Fike, Gabriel Jacoby, Emma Ogier",
+     "ms": 169981
+    },
+    {
+     "id": "0XWmRFOE1No3BrWa4f5EgO",
+     "title": "If I Had The Hand Of God",
+     "artist": "Julia Jacklin",
+     "ms": 161816
+    },
+    {
+     "id": "0YyYarMXa1WsS6hwUxSt6n",
+     "title": "Over country",
+     "artist": "Lizzy McAlpine",
+     "ms": 305875
+    },
+    {
+     "id": "4FZA8C75s6Zm1Tqj71ej3M",
+     "title": "Trillions",
+     "artist": "DIIV",
+     "ms": 180964
+    },
+    {
+     "id": "3jNgp0vOXGqd0Dy9V4KdsB",
+     "title": "I WANNA LOVE YOU BABE",
+     "artist": "LAUNDRY DAY",
+     "ms": 274120
+    },
+    {
+     "id": "5mKk0BWGXLydgV1hP7C6jm",
+     "title": "Don't Touch",
+     "artist": "Love Spells",
+     "ms": 205497
+    },
+    {
+     "id": "6my2GkulHxUnSzKZkRv38d",
+     "title": "Are You Willing",
+     "artist": "Wet",
+     "ms": 230132
+    }
+   ]
+  },
+  "electronic": {
+   "label": "electronic",
+   "tags": "electronic synth dance signal music",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DX4dyzvuaRJ0n",
+     "name": "mint"
+    },
+    {
+     "id": "37i9dQZF1DX0r3x8OtiwEM",
+     "name": "Lowkey Tech"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "4PyDd3GxUijMVOdJA2IQEG",
+     "title": "DANGER DANGER (feat. Skepta)",
+     "artist": "Dom Dolla, Solomun, Skepta",
+     "ms": 180150
+    },
+    {
+     "id": "2q1i9lcsBPBtQRSWTu8gDp",
+     "title": "Woops",
+     "artist": "Dimitri Vegas, Dj Bountyhunter, BRANDON",
+     "ms": 127413
+    },
+    {
+     "id": "3wRO9Pt5iPbZTs8YT1x69Q",
+     "title": "Just A Little Bit More",
+     "artist": "Mau P",
+     "ms": 214038
+    },
+    {
+     "id": "4jVuZjOuBL2yj4R3fgeBAf",
+     "title": "Stay For Love",
+     "artist": "Kaskade, Brieanna Grace",
+     "ms": 274090
+    },
+    {
+     "id": "5Vz9XUiw2emOIRLobTMEkD",
+     "title": "Happiness Is So Sad",
+     "artist": "Swedish House Mafia, Lykke Li",
+     "ms": 232835
+    },
+    {
+     "id": "35pbQNMzooB4Qg6mRPt37b",
+     "title": "This Dream of You",
+     "artist": "Martin Garrix",
+     "ms": 286406
+    },
+    {
+     "id": "62hqNk13CuFLOpCw1cPMAF",
+     "title": "Sexy Magic (from GTAVI: The Album)",
+     "artist": "CA7RIEL & Paco Amoroso, PinkPantheress, Fred again.., Etienne de Crécy , Grand Theft Auto VI",
+     "ms": 195840
+    },
+    {
+     "id": "1BJJbSX6muJVF2AK7uH1x4",
+     "title": "Move",
+     "artist": "Adam Port, Stryv, Keinemusik, Orso, Malachiii",
+     "ms": 177598
+    },
+    {
+     "id": "40tPP3K10yMZxwnT65REKj",
+     "title": "Inner Light",
+     "artist": "Elderbrook, Bob Moses",
+     "ms": 257985
+    },
+    {
+     "id": "2GwsSbo6IbNDVvcm9rtmal",
+     "title": "Say What",
+     "artist": "Rampa, Adam Port, &ME, chuala, Keinemusik",
+     "ms": 181593
+    },
+    {
+     "id": "3bB97PIqXf7WtkKeuYuXFS",
+     "title": "Take My Mind",
+     "artist": "WizTheMc, bees & honey",
+     "ms": 171199
+    },
+    {
+     "id": "3nnStd7PMGgrN0tfmdhv3j",
+     "title": "Positions",
+     "artist": "Stryv, Malachiii, Adam Port",
+     "ms": 148000
+    },
+    {
+     "id": "4gDKviRLkpZowZhcnRPqqE",
+     "title": "Be The One",
+     "artist": "Adam Port, SG Lewis, Keinemusik",
+     "ms": 205975
+    },
+    {
+     "id": "75n9WHWZAzhB59xSjIHly4",
+     "title": "WACUKA",
+     "artist": "AVAION, Sofiya Nzau",
+     "ms": 190153
+    }
+   ]
+  },
+  "jazz": {
+   "label": "jazz",
+   "tags": "jazz coffee calm music",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DX0SM0LYsmbMT",
+     "name": "Jazz Vibes"
+    },
+    {
+     "id": "37i9dQZF1DWVqfgj8NZEp1",
+     "name": "Coffee Table Jazz"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "29NsEJWiLl7enjAuZzYUbt",
+     "title": "Swish",
+     "artist": "CMJ",
+     "ms": 137142
+    },
+    {
+     "id": "4ch77Hai24RaR1hXMZfpf3",
+     "title": "Follow The Sun",
+     "artist": "Screen Jazzmaster",
+     "ms": 121445
+    },
+    {
+     "id": "26zjxcIewOYyMWym0mftMl",
+     "title": "Balance",
+     "artist": "Toti Cisneros, yungmerrin",
+     "ms": 111463
+    },
+    {
+     "id": "0hcX7etCRdZALhZEV33Vip",
+     "title": "Mood Swings",
+     "artist": "Mr. Käfer, Niklas Nadidai",
+     "ms": 141219
+    },
+    {
+     "id": "7fi1XoGDgnI0WHUSK0zAoU",
+     "title": "Don't Stop",
+     "artist": "Lotus Beats",
+     "ms": 104099
+    },
+    {
+     "id": "5gJwoYanaqxIQj4GtQ3kWX",
+     "title": "Summer Drizzle",
+     "artist": "Lola",
+     "ms": 170823
+    },
+    {
+     "id": "3pOQ3FcLGbTfa6eFqJSF2m",
+     "title": "Cerveja",
+     "artist": "Phlocalyst, Mr. Käfer",
+     "ms": 108571
+    },
+    {
+     "id": "5tzsryoAEdVKmNcgrrinsS",
+     "title": "The Midnight Sun Will Never Set",
+     "artist": "Rasmus H Thomsen Trio",
+     "ms": 194850
+    },
+    {
+     "id": "7tMcM0jsaq8yG4OlSLVz4y",
+     "title": "Young and Foolish",
+     "artist": "Chad Lefkowitz-Brown",
+     "ms": 492272
+    },
+    {
+     "id": "4b58VZ1BNiveCt80fHMmto",
+     "title": "Isfahan",
+     "artist": "Brandon Sanders",
+     "ms": 323986
+    },
+    {
+     "id": "12tkQUMuoZx8Mr7iJGbKHk",
+     "title": "Cocktails for Two",
+     "artist": "Jakob Dinesen",
+     "ms": 221183
+    },
+    {
+     "id": "4xMuBuO98eVLJqj8CTuHjB",
+     "title": "Falling Leaves",
+     "artist": "Max Merseny, Living Room, Afternoon In Stereo",
+     "ms": 132923
+    },
+    {
+     "id": "0CN01lqL96CRZ3dQ4rTXNl",
+     "title": "Where Are You?",
+     "artist": "JD Allen",
+     "ms": 322495
+    },
+    {
+     "id": "4MQoAgfCZsw6iyv1olPb92",
+     "title": "The Unknown",
+     "artist": "Harry Allen",
+     "ms": 250364
+    }
+   ]
+  },
+  "piano": {
+   "label": "piano and ambient",
+   "tags": "piano calm peace sleep dream",
+   "playlists": [
+    {
+     "id": "37i9dQZF1DX4sWSpwq3LiO",
+     "name": "Peaceful Piano"
+    },
+    {
+     "id": "37i9dQZF1DX3Ogo9pFvBkY",
+     "name": "Ambient Relaxation"
+    }
+   ],
+   "tracks": [
+    {
+     "id": "5XaDdPqb8MTApJ5kqReqgg",
+     "title": "New Light",
+     "artist": "Dalby",
+     "ms": 146801
+    },
+    {
+     "id": "1zTqMY0pncDuHkLsQp9JHr",
+     "title": "Ryos",
+     "artist": "Xaverius Love",
+     "ms": 129444
+    },
+    {
+     "id": "6niIx0QbmKwJFk5H2vv9DT",
+     "title": "Light in Silence",
+     "artist": "Isidorus",
+     "ms": 124632
+    },
+    {
+     "id": "1sMKl4w5GEbLJaSjlIy75I",
+     "title": "Still Unbroken",
+     "artist": "Eternalistic",
+     "ms": 147971
+    },
+    {
+     "id": "12CHYifZr1nmh6andRykpi",
+     "title": "Prato Di Girasoli",
+     "artist": "Nascondiglio",
+     "ms": 158079
+    },
+    {
+     "id": "2brRgCl1LHEDuwMjFxp8s5",
+     "title": "Éveil",
+     "artist": "Floyd Nova",
+     "ms": 174375
+    },
+    {
+     "id": "2SV6rrWHkmxOgV4FwrGxl5",
+     "title": "As It Is",
+     "artist": "Aurelian Juno",
+     "ms": 140000
+    },
+    {
+     "id": "0qe5MQqiZG0hSZLk41FWSs",
+     "title": "Out Of Orbit",
+     "artist": "northrn frqncy",
+     "ms": 171844
+    },
+    {
+     "id": "4q6hucsNlqSYCHPMSk7713",
+     "title": "Still Dreaming",
+     "artist": "Aurora Aeterna",
+     "ms": 138181
+    },
+    {
+     "id": "4yQhseImfK6RlNXnwpIIsS",
+     "title": "United as One",
+     "artist": "Umi no Yume",
+     "ms": 174545
+    },
+    {
+     "id": "6G6EAmGXX7T52zOWj2GWPE",
+     "title": "Liminal",
+     "artist": "EMIKO",
+     "ms": 145500
+    },
+    {
+     "id": "5cZyvjrnA8FhihTAz0O4vR",
+     "title": "Soar Quiet",
+     "artist": "Slow Journey",
+     "ms": 127111
+    },
+    {
+     "id": "5STjn9OmRoyVMKbaylokXp",
+     "title": "Distant Traveler",
+     "artist": "Seth Sands",
+     "ms": 137647
+    },
+    {
+     "id": "7zTRBQY1gHajCzXVt7SuEG",
+     "title": "Resounding Hymn",
+     "artist": "Warmth of Muba",
+     "ms": 149000
+    }
+   ]
+  }
+ }
+}

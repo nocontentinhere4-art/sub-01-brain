@@ -1,0 +1,331 @@
+{
+ "session_id": "validate-20261002-035550",
+ "day": "2026-10-02",
+ "validate": true,
+ "phases": {
+  "bench": [
+   {
+    "plasticity_off": {
+     "steps_per_s": 1266.4,
+     "realtime_x": 1.266,
+     "mean_rate_hz": 2.64
+    },
+    "plasticity_on": {
+     "steps_per_s": 322.5,
+     "realtime_x": 0.322,
+     "mean_rate_hz": 2.699
+    },
+    "n_neurons": 1000000,
+    "synapses": 100972600,
+    "gpu": "NVIDIA A40",
+    "gpu_mem_gb": 5.71,
+    "steps_per_s": 322.5,
+    "realtime_x": 0.322
+   }
+  ],
+  "choice_curve": [
+   {
+    "k": 4,
+    "labels": [
+     "apple",
+     "river",
+     "cloud",
+     "stone"
+    ],
+    "probs": [
+     0.8,
+     0.6,
+     0.4,
+     0.2
+    ],
+    "trials": 200,
+    "reversal_at": 100,
+    "criterion": "14 of the last 20 trials correct",
+    "calibration": {
+     "pool_rate_mean_hz": 3.56,
+     "pool_rate_sd_hz": 0.26,
+     "threshold_hz": 4.08
+    },
+    "pool_sizes": [
+     3900,
+     3879,
+     3907,
+     3872
+    ],
+    "cue_sizes": [
+     26846,
+     26846,
+     26846,
+     26846
+    ],
+    "cue_pool_synapses": [
+     [
+      1317,
+      1328,
+      1273,
+      1288
+     ],
+     [
+      1360,
+      1351,
+      1249,
+      1288
+     ],
+     [
+      1378,
+      1334,
+      1310,
+      1358
+     ],
+     [
+      1419,
+      1361,
+      1249,
+      1358
+     ]
+    ],
+    "learned": {
+     "trials": 200,
+     "frac_correct": 0.66,
+     "reward_rate": 0.695,
+     "trials_to_criterion": 84,
+     "frac_correct_last20_before_reversal": 1.0,
+     "curve": [
+      0.05,
+      0.0,
+      0.5,
+      0.5,
+      1.0,
+      0.6,
+      1.0,
+      1.0,
+      1.0,
+      0.95
+     ],
+     "reversal_at": 100,
+     "trials_to_criterion_after_reversal": 22,
+     "frac_correct_after_reversal": 0.91,
+     "frac_correct_last20": 0.95,
+     "timeout_frac": 0.0,
+     "mean_rt_ms": 51.4
+    },
+    "frozen": {
+     "trials": 200,
+     "frac_correct": 0.285,
+     "reward_rate": 0.465,
+     "trials_to_criterion": null,
+     "frac_correct_last20_before_reversal": 0.3,
+     "curve": [
+      0.1,
+      0.35,
+      0.4,
+      0.2,
+      0.3,
+      0.25,
+      0.35,
+      0.3,
+      0.15,
+      0.45
+     ],
+     "reversal_at": 100,
+     "trials_to_criterion_after_reversal": null,
+     "frac_correct_after_reversal": 0.3,
+     "frac_correct_last20": 0.45,
+     "timeout_frac": 0.11
+    },
+    "random": {
+     "trials": 200,
+     "frac_correct": 0.23,
+     "reward_rate": 0.46,
+     "trials_to_criterion": null,
+     "frac_correct_last20_before_reversal": 0.3,
+     "curve": [
+      0.25,
+      0.2,
+      0.15,
+      0.1,
+      0.3,
+      0.3,
+      0.2,
+      0.3,
+      0.25,
+      0.25
+     ],
+     "reversal_at": 100,
+     "trials_to_criterion_after_reversal": null,
+     "frac_correct_after_reversal": 0.26,
+     "frac_correct_last20": 0.25
+    },
+    "dw_cue_pool_mean_mv": [
+     [
+      -0.4136,
+      -0.2182,
+      -0.1983,
+      1.0371
+     ],
+     [
+      -0.4139,
+      -0.215,
+      -0.1982,
+      1.0322
+     ],
+     [
+      -0.4032,
+      -0.2171,
+      -0.1976,
+      1.0318
+     ],
+     [
+      -0.4073,
+      -0.2053,
+      -0.203,
+      1.0389
+     ]
+    ]
+   }
+  ],
+  "choice_exam": [
+   {
+    "label": "after training (frozen)",
+    "probs": [
+     0.2,
+     0.4,
+     0.6,
+     0.8
+    ],
+    "trials": 40,
+    "frac_correct": 1.0,
+    "reward_rate": 0.775,
+    "timeout_frac": 0.0,
+    "mean_rt_ms": 50.2,
+    "controls": {
+     "no_learning": 0.275,
+     "random": 0.2615,
+     "chance": 0.25
+    }
+   }
+  ]
+ },
+ "files": [
+  "results.json",
+  "session.log"
+ ],
+ "build": {
+  "device": "cuda",
+  "gpu": "NVIDIA A40",
+  "n_neurons": 1000000,
+  "synapses": 100972600,
+  "max_delay_ms": 60,
+  "plastic_synapses": 60778400,
+  "build_s": 4.2,
+  "config_hash": "46439342c79e7f9c",
+  "config": {
+   "n_neurons": 1000000,
+   "seed": 1,
+   "frac_exc": 0.8,
+   "min_region": 10,
+   "hc_scale": 1.0,
+   "k_e_local": 45,
+   "k_i_local": 25,
+   "k_long": 30,
+   "k_hc_rec": 100,
+   "k_hc_rec_i": 100,
+   "k_vis_sm": 0,
+   "j_vis_sm": 0.1,
+   "dt": 1.0,
+   "tau_m": 20.0,
+   "v_th": 20.0,
+   "v_reset": 10.0,
+   "t_ref": 2.0,
+   "j_e": 0.5,
+   "g_i": 5.0,
+   "j_hc_rec": 0.05,
+   "j_hc_ei": 0.3,
+   "delay_local": [
+    1,
+    2
+   ],
+   "velocity_mm_ms": 6.0,
+   "mu_ext": 15.0,
+   "sigma_ext": 4.0,
+   "baseline_gain": 0.05,
+   "baseline_dt_ms": 50,
+   "plastic": true,
+   "tau_plus": 20.0,
+   "tau_minus": 20.0,
+   "a_plus": 1.0,
+   "a_minus": 0.5,
+   "x_theta": 0.1,
+   "h_pre": 0.1,
+   "tau_elig": 1000.0,
+   "elig_every": 10,
+   "tau_da": 200.0,
+   "w_max_ctx": 2.0,
+   "w_max_hc": 2.0,
+   "eta": {
+    "ctx": {
+     "da": 0.5,
+     "enc": 0.0005,
+     "cons": 0.002
+    },
+    "hc": {
+     "da": 0.0,
+     "enc": 0.025,
+     "cons": 0.0
+    }
+   },
+   "da_groups": [
+    "somatomotor"
+   ],
+   "hebb_theta": 10.0,
+   "hebb_ltd": 0.25,
+   "homeo_every": 1000,
+   "rate_target": 5.0,
+   "tau_rate": 10000.0,
+   "eta_theta": 0.0001,
+   "theta_max": 3.0,
+   "eta_scale": 0.0001,
+   "tau_forget_hc_days": 3.0,
+   "tau_forget_ctx_days": 60.0
+  },
+  "torch": "2.8.0+cu128",
+  "baseline_runs": 3,
+  "weights_loaded": false
+ },
+ "timing": {
+  "0:bench": {
+   "wall_s": 12.1
+  },
+  "1:choice_train": {
+   "wall_s": 72.5
+  },
+  "2:choice_exam": {
+   "wall_s": 14.7
+  }
+ },
+ "weights": {
+  "nonzero": 60374777,
+  "P": 60778400,
+  "dense": true,
+  "stats": {
+   "plastic_synapses": 60778400,
+   "updates": 264,
+   "ctx": {
+    "w_mean": 0.499070405960083,
+    "dw_mean": -0.0009295691270381212,
+    "dw_absmax": 1.5,
+    "frac_changed": 0.9280037879943848
+   },
+   "hc": {
+    "w_mean": 0.2433130145072937,
+    "dw_mean": 0.0004558886867016554,
+    "dw_absmax": 0.0013712644577026367,
+    "frac_changed": 0.6386802792549133
+   }
+  },
+  "bytes": 123558786
+ },
+ "wall_s": 104.8,
+ "sim_s": 117.6,
+ "error": null
+}

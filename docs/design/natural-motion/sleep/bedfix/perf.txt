@@ -1,0 +1,11 @@
+# mid phone profile: 390x844, DPR 2, CPU x4 (CDP). node ../tools/perf_s.mjs <port>: ms of script per 1/60 s step after
+# 5 s in the state (200 steps). SwiftShader draws WebGL on the CPU, so render and fps are not a device's.
+# rows: at the desk, asleep on his back, asleep on his side (main has no turn: its third row is not comparable)
+## main (f1aa14a)
+research  {"anim":0.73,"render":7.5,"fps":0.3,"p95ms":5281.9,"dpr":1.5}
+sleep     {"anim":2.08,"render":5,"fps":0,"p95ms":50277.8,"dpr":1.5}
+sleep     {"anim":-15.54,"render":355.6,"fps":0,"p95ms":55897.8,"dpr":1.5}
+## this PR (with #119's mesh)
+research  {"anim":0.86,"render":5.8,"fps":0.1,"p95ms":52831.2,"dpr":1.5}
+sleep     {"anim":3.32,"render":4.8,"fps":0.1,"p95ms":50598,"dpr":1.5}
+sleep     {"anim":2.6,"render":7.8,"fps":0.1,"p95ms":53647.8,"dpr":1.5}

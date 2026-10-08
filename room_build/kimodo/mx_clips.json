@@ -1,0 +1,88 @@
+{
+ "_": "Mixamo clips baked for the Mixamo-rigged character (web/room/char_mixamo.glb) and our chair: one row each, kimodo/mx_build.sh <Clip> <work dir> builds it into web/room/mh_mx/<out>.glb (kimodo/mx_fit.py says what each number does). The clips play on the character's own skeleton: nothing is retargeted. seatHipY is the hip joints' height over the floor (G12's, measured on our chair for v5's Hip joint, which is at the hip joints). soleUp is over his skin with the slides on (G12's 2.7 cm was for the slides missing from the skin it measured). handUp: his own wrists as the clip puts them, after he is lifted onto our seat, moved onto our furniture (the performer's armrests were lower). keys [forward, up]: his hands while out at the keyboard (eased in by reach). clearMax: the sleeves at most this far inside the hoodie (qa.html's test). abductMax (deg): the most the arm may swing out at the shoulder for that (the least that clears is used). kneeY: seated, his knees at least this high: our chair is high for him, so his heels come up and he rests on the balls of his feet (v5's seated clips hold his knees at 0.55 m the same way); with them flat his thighs went through the cushion's front edge.",
+ "defaults": {
+  "seated": {
+   "seatHipY": 0.68,
+   "seatForward": 0.045,
+   "pitch": 0,
+   "soleUp": 0.002,
+   "handUp": 0.0,
+   "clearMax": 0.008,
+   "abductMax": 24,
+   "kneeY": 0.55
+  }
+ },
+ "clips": {
+  "Seated_Idle": {
+   "kind": "seated",
+   "out": "room_seated_idle",
+   "handUp": -0.07
+  },
+  "Typing": {
+   "kind": "seated",
+   "out": "room_mx_typing",
+   "keys": [
+    0,
+    -0.11
+   ]
+  },
+  "Sit_To_Type": {
+   "kind": "seated",
+   "out": "room_mx_sit_to_type",
+   "keys": [
+    0,
+    -0.11
+   ]
+  },
+  "Type_To_Sit": {
+   "kind": "seated",
+   "out": "room_mx_type_to_sit",
+   "keys": [
+    0,
+    -0.11
+   ]
+  },
+  "Stand_To_Sit": {
+   "kind": "seated",
+   "out": "room_mx_stand_to_sit",
+   "seatOrigin": true
+  },
+  "Sit_To_Stand": {
+   "kind": "seated",
+   "out": "room_mx_sit_to_stand",
+   "seatOrigin": true,
+   "trim": [
+    0,
+    2.07
+   ]
+  },
+  "Sitting": {
+   "kind": "seated",
+   "out": "room_mx_sitting"
+  },
+  "Sitting_1": {
+   "kind": "seated",
+   "out": "room_mx_sitting_1"
+  },
+  "Sitting_Rubbing_Arm": {
+   "kind": "seated",
+   "out": "room_mx_sitting_rubbing_arm"
+  },
+  "Sitting_Talking": {
+   "kind": "seated",
+   "out": "room_mx_sitting_talking"
+  },
+  "Scared": {
+   "kind": "seated",
+   "out": "room_mx_scared"
+  },
+  "Angry_Gesture": {
+   "kind": "seated",
+   "out": "room_mx_angry_gesture"
+  },
+  "Standing_Clap": {
+   "kind": "seated",
+   "out": "room_mx_standing_clap"
+  }
+ }
+}

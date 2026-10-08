@@ -1,0 +1,203 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>autorig QA</title>
+<style>body{margin:0;background:#222}canvas{display:block}</style>
+<script type="importmap">
+{ "imports": { "three": "/room_build/node_modules/three/build/three.module.js",
+               "three/addons/": "/room_build/node_modules/three/examples/jsm/" } }
+</script></head><body>
+<script type="module">
+// The auto-rigged character playing Mixamo clips through web/room/char_mixamo.js (the page's own loader), for
+// qa.mjs: stills for the render sheet, and per-frame deformation and contact numbers from the skinned mesh itself.
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import * as CM from "/web/room/char_mixamo.js";
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+const load = url => new Promise((ok, no) => loader.load(url, ok, undefined, no));
+const R = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true}); R.setPixelRatio(1);
+R.outputColorSpace = THREE.SRGBColorSpace; document.body.appendChild(R.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xd8d8d4);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x666655, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.8); sun.position.set(1.5, 3, 2.5); scene.add(sun);
+const grid = new THREE.GridHelper(4, 40, 0x888888, 0xbbbbbb); scene.add(grid);
+const cam = new THREE.PerspectiveCamera(30, 1, 0.01, 50);
+let body, conv, mixer, clips = {}, meshes = [], act = null, wire = null, REST = [];
+
+window.QA = {
+  async load(charUrl, clipUrls) {
+    const g = await load(charUrl); body = g.scene; conv = CM.prep(THREE, g); scene.add(body);
+    body.traverse(o => { if (o.isSkinnedMesh) { meshes.push(o); o.frustumCulled = false; } });
+    mixer = new THREE.AnimationMixer(body);
+    for (const [k, u] of Object.entries(clipUrls)) { const c = await load(u);
+      clips[k] = CM.fixClip(THREE, c.animations[0], conv, CM.clipHipHeight(THREE, c)); }
+    const bones = meshes[0].skeleton.bones; REST = bones.map(b => [b, b.position.clone(), b.quaternion.clone()]);
+    return {bones: bones.length, names: bones.map(b => b.name), hipH: conv.hipH, clips: Object.fromEntries(Object.entries(clips).map(([k, c]) => [k, c.duration]))};
+  },
+  pose(k, t) {                                                // k null: the rest (T) pose
+    mixer.stopAllAction(); if (act) act = null;
+    if (k) { act = mixer.clipAction(clips[k]); act.play(); mixer.setTime(t); }
+    else for (const [b, p, q] of REST) { b.position.copy(p); b.quaternion.copy(q); }   // (the nodes' rest: Mixamo's T-pose, not the bind)
+    body.updateMatrixWorld(true);
+  },
+  shot(view, w = 360, h = 480) {
+    R.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix();
+    const b = new THREE.Box3(); for (const m of meshes) { m.computeBoundingBox && m.computeBoundingBox(); }
+    const s = skinned(); b.setFromArray(s.pos.filter((_, i) => i % 9 < 3));
+    const c = b.getCenter(new THREE.Vector3()), size = b.getSize(new THREE.Vector3());
+    const V = {front: [0, 0, 1], side: [1, 0, 0], back: [0, 0, -1], three: [0.7, 0.35, 0.7], top: [0.01, 1, 0.3]}[view.dir || view] || view.dir;
+    let target = c, r = Math.max(size.x, size.y, size.z) * 0.5;
+    if (view.focus) { const bn = body.getObjectByName(view.focus); target = bn.getWorldPosition(new THREE.Vector3()); r = view.r || 0.15; }
+    const d = new THREE.Vector3(...V).normalize();
+    cam.position.copy(target).addScaledVector(d, r / Math.tan(THREE.MathUtils.degToRad(15)) * 1.1); cam.lookAt(target);
+    grid.position.y = 0; R.render(scene, cam); return R.domElement.toDataURL("image/jpeg", 0.88);
+  },
+  // the deformation and contact numbers over a clip, every dt seconds
+  measure(k, dt = 0.1) {
+    const reg = regions(), E = edges(), rest = skinned(true), out = {clip: k, frames: 0, strain: {}, collapse: {}, inside: {}, soles: {L: [9, -9], R: [9, -9]}, support: null};
+    const restLen = E.map(([a, b]) => dist(rest.pos, a, b));
+    const nreg = Object.keys(reg.edgeSets);
+    for (const n of nreg) { out.strain[n] = {p95: 0, max: 0, over30: 0}; out.inside[n] = undefined; }
+    const per = {}; const lows = [];
+    // the same pairs in the rest pose: what the mesh already overlaps as modelled (the baggy sleeves on the hoodie)
+    // and with the arms down as v5 was modelled (63 deg under the horizontal): the sleeves against the hoodie as scanned
+    for (const [key, down] of [["insideRest", 0], ["insideArmsDown", 1.1]]) { QA.pose(null, 0);
+      if (down) { for (const [n, sg] of [["LeftArm", -1], ["RightArm", 1]]) body.getObjectByName(n).rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), sg * down); body.updateMatrixWorld(true); }
+      const s0 = skinned(); out[key] = {}; for (const [nm, A, B] of PAIRS) { const r = inside(s0, reg.sets[A], reg.sets[B]); out[key][nm] = {verts: r.n, depth_cm: +(r.d * 100).toFixed(1)}; } }
+    for (let t = 0; t <= clips[k].duration + 1e-6; t += dt) {
+      QA.pose(k, t); const s = skinned(); out.frames++;
+      for (const n of nreg) { const ids = reg.edgeSets[n]; const st = new Float32Array(ids.length);
+        for (let i = 0; i < ids.length; i++) { const e = E[ids[i]]; st[i] = Math.abs(Math.log((dist(s.pos, e[0], e[1]) + 1e-9) / (restLen[ids[i]] + 1e-9))); }
+        const srt = Array.from(st).sort((a, b) => a - b), o = out.strain[n];
+        o.p95 = Math.max(o.p95, srt[Math.floor(srt.length * 0.95)] || 0); o.max = Math.max(o.max, srt[srt.length - 1] || 0);
+        o.over30 = Math.max(o.over30, srt.filter(x => x > Math.log(1.3)).length / Math.max(1, srt.length)); }
+      // self contact: a vertex of one part inside another (behind its nearest vertex's normal by > 5 mm, within 2.5 cm)
+      for (const [nm, A, B] of PAIRS) { const r = inside(s, reg.sets[A], reg.sets[B]);
+        const o = per[nm] || (per[nm] = {frames: 0, maxDepth_cm: 0, maxVerts: 0}); if (r.n) { o.frames++; o.maxDepth_cm = Math.max(o.maxDepth_cm, +(r.d * 100).toFixed(1)); o.maxVerts = Math.max(o.maxVerts, r.n); } }
+      for (const [side, set] of [["L", reg.sets.soleL], ["R", reg.sets.soleR]]) { let lo = 9; for (const i of set) lo = Math.min(lo, s.pos[3 * i + 1]);
+        out.soles[side][0] = Math.min(out.soles[side][0], lo); out.soles[side][1] = Math.max(out.soles[side][1], lo); }
+      const low = {}; for (const n of ["head", "shoulders", "back", "hips", "thighs", "heels"]) { let lo = 9; for (const i of reg.sets[n]) lo = Math.min(lo, s.pos[3 * i + 1]); low[n] = lo; }
+      lows.push(low);
+    }
+    out.inside = per;
+    // lying: the support plane is his lowest skin over the clip; how far each part's lowest skin is above it
+    const plane = Math.min(...lows.map(l => Math.min(...Object.values(l))));
+    out.support = {plane_m: +plane.toFixed(3)};
+    for (const n of Object.keys(lows[0])) { const v = lows.map(l => l[n] - plane); out.support[n + "_cm"] = [+(Math.min(...v) * 100).toFixed(1), +(Math.max(...v) * 100).toFixed(1)]; }
+    for (const n of nreg) for (const f of ["p95", "max"]) out.strain[n][f] = +((Math.exp(out.strain[n][f]) - 1) * 100).toFixed(1);   // (as % of length)
+    for (const n of nreg) out.strain[n].over30 = +(out.strain[n].over30 * 100).toFixed(2);
+    out.soles = {L_cm: out.soles.L.map(v => +(v * 100).toFixed(1)), R_cm: out.soles.R.map(v => +(v * 100).toFixed(1))};
+    return out;
+  },
+  // a crossfade from clip a (at ta) into clip b (from tb) over dur seconds, as the page blends: hands vs thighs and the
+  // arms vs the torso every frame (1/30 s)
+  blend(a, b, dur = 0.8, ta = 0, tb = 0) {
+    const reg = regions(); mixer.stopAllAction(); const A = mixer.clipAction(clips[a]), B = mixer.clipAction(clips[b]);
+    A.reset().play(); A.time = ta; mixer.update(0); B.reset().play(); B.time = tb; A.crossFadeTo(B, dur, false);
+    const out = {from: a, to: b, dur, frames: 0, hits: {}};
+    for (let f = 0; f <= Math.round(dur * 30) + 3; f++) { body.updateMatrixWorld(true); const s = skinned(); out.frames++;
+      for (const [nm, X, Y] of PAIRS.slice(0, 3)) { const r = inside(s, reg.sets[X], reg.sets[Y]);
+        const o = out.hits[nm] || (out.hits[nm] = {frames: 0, maxVerts: 0, maxDepth_cm: 0}); if (r.n) { o.frames++; o.maxVerts = Math.max(o.maxVerts, r.n); o.maxDepth_cm = Math.max(o.maxDepth_cm, +(r.d * 100).toFixed(1)); } }
+      mixer.update(1 / 30); }
+    mixer.stopAllAction(); return out;
+  },
+  // the vertices of pair nm inside at (k, t): [index, depth m, the other part's nearest vertex], for diagnosis
+  insideList(k, t, nm) { QA.pose(k, t); const reg = regions(), s = skinned(), pr = PAIRS.find(p => p[0] === nm), {offs} = cat(), names = meshes[0].skeleton.bones.map(b => b.name);
+    const info = i => { let m = meshes.length - 1; while (offs[m] > i) m--; const g = meshes[m].geometry, j = i - offs[m], A = g.attributes;
+      return {p: [A.position.getX(j), A.position.getY(j), A.position.getZ(j)].map(x => +x.toFixed(3)), at: [0, 1, 2].map(c => +s.pos[3 * i + c].toFixed(3)),
+        w: [0, 1, 2, 3].filter(c => A.skinWeight.getComponent(j, c) > 0).map(c => names[A.skinIndex.getComponent(j, c)] + ":" + A.skinWeight.getComponent(j, c).toFixed(2)).join(" ")}; };
+    return inside(s, reg.sets[pr[1]], reg.sets[pr[2]], true).list.map(([i, d, b]) => [i, d, b, info(i), info(b)]); },
+  // world rotation and position of every bone, for the comparison against the FBX's own skeleton
+  bones() { const o = {}; for (const b of meshes[0].skeleton.bones) { o[b.name] = [...b.getWorldPosition(new THREE.Vector3()).toArray(), ...b.getWorldQuaternion(new THREE.Quaternion()).toArray()]; } return o; },
+};
+
+const dist = (P, a, b) => Math.hypot(P[3 * a] - P[3 * b], P[3 * a + 1] - P[3 * b + 1], P[3 * a + 2] - P[3 * b + 2]);
+// all meshes as one vertex list (skinned on the CPU, as the GPU does)
+let _cat = null;
+function cat() {
+  if (_cat) return _cat; let n = 0; const offs = []; for (const m of meshes) { offs.push(n); n += m.geometry.attributes.position.count; }
+  return (_cat = {n, offs});
+}
+function skinned(rest) {
+  const {n, offs} = cat(), pos = new Float32Array(3 * n), nrm = new Float32Array(3 * n), v = new THREE.Vector3(), m4 = new THREE.Matrix4(), acc = new THREE.Matrix4();
+  meshes.forEach((m, k) => { const g = m.geometry, P = g.attributes.position, N = g.attributes.normal, J = g.attributes.skinIndex, W = g.attributes.skinWeight;
+    if (rest) { m.skeleton.pose(); body.updateMatrixWorld(true); }   // (the bind: the mesh as modelled, the stretch's reference)
+    m.skeleton.update(); const BM = m.skeleton.boneMatrices, o = offs[k];
+    const mw = m.matrixWorld.clone().multiply(m.bindMatrixInverse), bm = m.bindMatrix;
+    for (let i = 0; i < P.count; i++) { const e = acc.elements; e.fill(0);
+      for (let c = 0; c < 4; c++) { const w = W.getComponent(i, c); if (!w) continue; const j = J.getComponent(i, c);
+        for (let q = 0; q < 16; q++) e[q] += w * BM[16 * j + q]; }
+      m4.multiplyMatrices(mw, acc).multiply(bm);
+      v.fromBufferAttribute(P, i).applyMatrix4(m4); pos.set([v.x, v.y, v.z], 3 * (o + i));
+      v.fromBufferAttribute(N, i).transformDirection(m4); nrm.set([v.x, v.y, v.z], 3 * (o + i)); } });
+  if (rest) { for (const [b, p, q] of REST) { b.position.copy(p); b.quaternion.copy(q); } body.updateMatrixWorld(true); }   // (the bones back on their rest)
+  return {pos, nrm};
+}
+// the unique edges of every mesh (indices into the concatenated list)
+let _E = null;
+function edges() {
+  if (_E) return _E; const {offs} = cat(), seen = new Set(), E = [];
+  meshes.forEach((m, k) => { const I = m.geometry.index.array, o = offs[k];
+    for (let t = 0; t < I.length; t += 3) for (const [a, b] of [[I[t], I[t + 1]], [I[t + 1], I[t + 2]], [I[t + 2], I[t]]]) {
+      const x = o + Math.min(a, b), y = o + Math.max(a, b), key = x * 400000 + y; if (!seen.has(key)) { seen.add(key); E.push([x, y]); } } });
+  return (_E = E);
+}
+// the body's parts by their weights: a joint region is where both of its bones carry >= 15 %
+let _reg = null;
+function regions() {
+  if (_reg) return _reg; const {n, offs} = cat(), sets = {}, names = meshes[0].skeleton.bones.map(b => b.name);
+  const add = (k, i) => (sets[k] = sets[k] || []).push(i);
+  const W = new Float32Array(n * 4), J = new Uint16Array(n * 4);
+  meshes.forEach((m, k) => { const g = m.geometry; for (let i = 0; i < g.attributes.position.count; i++) for (let c = 0; c < 4; c++) {
+    W[4 * (offs[k] + i) + c] = g.attributes.skinWeight.getComponent(i, c); J[4 * (offs[k] + i) + c] = g.attributes.skinIndex.getComponent(i, c); } });
+  const has = (i, re, min = 0.15) => { for (let c = 0; c < 4; c++) if (W[4 * i + c] >= min && re.test(names[J[4 * i + c]])) return true; return false; };
+  const domName = i => { let b = 0; for (let c = 1; c < 4; c++) if (W[4 * i + c] > W[4 * i + b]) b = c; return names[J[4 * i + b]]; };
+  for (let i = 0; i < n; i++) { const d = domName(i);
+    for (const S of ["Left", "Right"]) { const s = S[0];
+      if (has(i, new RegExp(`^${S}Arm$`)) && (has(i, new RegExp(`^${S}Shoulder$`)) || has(i, /^Spine$/))) add("j_shoulders", i);
+      if (has(i, new RegExp(`^${S}Arm$`)) && has(i, new RegExp(`^${S}ForeArm$`))) add("j_elbows", i);
+      if (has(i, new RegExp(`^${S}ForeArm$`)) && has(i, new RegExp(`^${S}Hand$`))) add("j_wrists", i);
+      if (has(i, new RegExp(`^${S}UpLeg$`)) && has(i, /^Hips$/)) add("j_hips", i);
+      if (has(i, new RegExp(`^${S}UpLeg$`)) && has(i, new RegExp(`^${S}Leg$`))) add("j_knees", i);
+      if (d === `${S}Hand` || d.startsWith("finger") && d.endsWith(s)) add("hand" + s, i);
+      if (d.startsWith("finger") && d.endsWith(s)) add("j_fingers", i);
+      if (d === `${S}UpLeg` || d === `${S}Leg`) add("leg" + s, i);
+      if (d === `${S}UpLeg`) add("thighs", i);
+      if (d === `${S}Foot` || d === `${S}ToeBase`) add("sole" + s, i);
+      if (d === `${S}Foot`) add("heels", i);
+      if (d === `${S}ForeArm` || d === `${S}Arm`) add("arm" + s, i); }
+    if (/^(Spine0[12]|Spine|Hips)$/.test(d)) add("torso", i);
+    if (d === "Spine01" || d === "Spine02") add("back", i);
+    if (d === "Hips") add("hips", i);
+    if (d === "Head" || d === "neck") add("head", i);
+    if (/Shoulder$/.test(d)) add("shoulders", i);
+  }
+  for (const k of ["handL", "handR", "j_fingers", "j_shoulders", "j_elbows", "j_wrists", "j_hips", "j_knees", "back", "shoulders", "hips", "head", "thighs", "heels"]) sets[k] = sets[k] || [];
+  sets.handsAll = [...sets.handL, ...sets.handR];
+  _reg = {sets, edgeSets: {}};
+  // edge sets: an edge is in a joint region if both its ends are
+  const E = edges();
+  sets.j_torso = sets.torso || [];                                        // (the hoodie's body)
+  for (const k of Object.keys(sets).filter(k => k.startsWith("j_"))) { const inS = new Uint8Array(n); for (const i of sets[k]) inS[i] = 1;
+    const ids = []; for (let e = 0; e < E.length; e++) if (inS[E[e][0]] && inS[E[e][1]]) ids.push(e); _reg.edgeSets[k.slice(2)] = ids; }
+  _reg.edgeSets.all = E.map((_, e) => e).filter(e => e % 4 === 0);           // (every 4th edge of the whole body)
+  return _reg;
+}
+const PAIRS = [["hands in thighs", "handsAll", "thighs"], ["left arm in torso", "armL", "torso"], ["right arm in torso", "armR", "torso"],
+  ["left leg in right leg", "legL", "legR"], ["left hand in right hand", "handL", "handR"]];
+// A's vertices inside B: B hashed in 1 cm cells; for each A vertex, B's nearest vertex within 2.5 cm; inside when it is
+// behind that vertex's normal by > 5 mm
+function inside(s, A, B, wantList) {
+  const H = new Map(), c = 0.025, key = (x, y, z) => `${Math.floor(x / c)},${Math.floor(y / c)},${Math.floor(z / c)}`;
+  for (let k = 0; k < B.length; k += 2) { const i = B[k], kk = key(s.pos[3 * i], s.pos[3 * i + 1], s.pos[3 * i + 2]); (H.get(kk) || H.set(kk, []).get(kk)).push(i); }
+  let n = 0, d = 0; const list = [];
+  for (let k = 0; k < A.length; k += 2) { const i = A[k], x = s.pos[3 * i], y = s.pos[3 * i + 1], z = s.pos[3 * i + 2];
+    const gx = Math.floor(x / c), gy = Math.floor(y / c), gz = Math.floor(z / c); let best = -1, bd = c * c;
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (let e = -1; e <= 1; e++) { const L = H.get(`${gx + a},${gy + b},${gz + e}`); if (!L) continue;
+      for (const j of L) { const dd = (s.pos[3 * j] - x) ** 2 + (s.pos[3 * j + 1] - y) ** 2 + (s.pos[3 * j + 2] - z) ** 2; if (dd < bd) { bd = dd; best = j; } } }
+    if (best < 0) continue;
+    const dot = (x - s.pos[3 * best]) * s.nrm[3 * best] + (y - s.pos[3 * best + 1]) * s.nrm[3 * best + 1] + (z - s.pos[3 * best + 2]) * s.nrm[3 * best + 2];
+    if (dot < -0.005) { n++; d = Math.max(d, -dot); if (wantList) list.push([i, -dot, best]); } }
+  return {n, d, list};
+}
+window.QA_READY = true;
+</script></body></html>

@@ -1,0 +1,32 @@
+# raw MRI stays on OpenNeuro (ds000031): scripts re-download it
+/data/
+.venv/
+__pycache__/
+*.log
+out_2022/
+# large intermediates / media
+out/*.nii.gz
+out/*.webm
+out/*.mp4
+out/hf_*.png
+out/orbit_frame.png
+out/check_labels.png
+out/*_raw.png
+.DS_Store
+# small subject-space files process_rest.py needs (so a fresh clone can run it without the DWI step)
+!out/labels_t1.nii.gz
+!out/t1_brain_1mm.nii.gz
+!out/brainmask_t1.nii.gz
+# QC-rejected resting-state runs and interrupted writes (see process_rest.py)
+out/rest/rejected/
+out/rest/*.part.npz
+
+# secrets (API keys) never go to git
+.env
+out/anatomy_work/
+# the window plates' photographic sources (~120 MB): room_build/window_cards.py --fetch re-downloads them
+room_build/plates/
+
+# visual QA harness (tests/visual): screenshots and the CDN cache are never committed
+tests/visual/out/
+tests/visual/.cdn_cache/

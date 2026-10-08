@@ -1,0 +1,26 @@
+{
+ "_note": "Shape of GET https://api.spotify.com/v1/search?type=track (Spotify Web API reference), trimmed; IDs from music_curated.json. Hand-made fixture for the mocked API: no key was used to make it.",
+ "tracks": {
+  "href": "https://api.spotify.com/v1/search?offset=0&limit=10&query=japanese%20city%20pop&type=track&market=JP",
+  "limit": 10, "offset": 0, "total": 3, "next": null, "previous": null,
+  "items": [
+   {"id": "2BHj31ufdEqVK5CkYDp9mA", "name": "Mayonaka no Door / Stay With Me", "type": "track", "explicit": false,
+    "is_playable": true, "duration_ms": 312293, "popularity": 70,
+    "preview_url": "https://p.scdn.co/mp3-preview/0000000000000000000000000000000000000000",
+    "uri": "spotify:track:2BHj31ufdEqVK5CkYDp9mA",
+    "external_urls": {"spotify": "https://open.spotify.com/track/2BHj31ufdEqVK5CkYDp9mA"},
+    "artists": [{"id": "0000000000000000000001", "name": "Miki Matsubara", "type": "artist"}],
+    "album": {"id": "0000000000000000000002", "name": "Pocket Park", "album_type": "album",
+              "images": [{"url": "https://i.scdn.co/image/ab67616d0000b27381052badd62d5e14c3377786", "width": 640, "height": 640},
+                         {"url": "https://i.scdn.co/image/ab67616d00001e0281052badd62d5e14c3377786", "width": 300, "height": 300},
+                         {"url": "https://i.scdn.co/image/ab67616d0000485181052badd62d5e14c3377786", "width": 64, "height": 64}]}},
+   {"id": "1111111111111111111111", "name": "An Explicit Track", "type": "track", "explicit": true,
+    "is_playable": true, "duration_ms": 200000, "preview_url": null,
+    "artists": [{"name": "Someone"}], "album": {"name": "X", "images": []}},
+   {"id": "2222222222222222222222", "name": "Night Drive", "type": "track", "explicit": false,
+    "is_playable": true, "duration_ms": 245000, "preview_url": null,
+    "artists": [{"name": "Tokyo Band"}, {"name": "Guest"}],
+    "album": {"name": "Neon", "images": [{"url": "https://i.scdn.co/image/ab67616d00001e02aaaaaaaaaaaaaaaaaaaaaaaa", "width": 300, "height": 300}]}}
+  ]
+ }
+}

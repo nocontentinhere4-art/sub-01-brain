@@ -1,0 +1,16 @@
+{
+ "_": "G10d's Tripo props (PR #131): ?props=old (before) vs the default (after), the visual QA 'eating' scene at 14:00; cameras are world metres (position -> target), 'to' is a dolly end",
+ "hour": 14,
+ "query_old": "props=old",
+ "query_new": "",
+ "scene": {"life": {"activity": "eat", "place": "table", "doing": "eating ramen from the delivery", "eating": "ramen", "food": 1, "hunger": 0.7,
+                    "x": 0, "z": 0, "heading": 0, "walking": false, "pose": "standing", "vitals": {"hr_bpm": 66, "resp_per_min": 14, "glucose_mg_dl": 92},
+                    "boredom": 0.2, "bread": 0, "phone": null, "geo": null, "say": "", "music": null, "food_items": [], "order": null, "courier": null, "log": []}},
+ "shots": [
+  {"label": "overview", "seconds": 10, "cam": {"pos": [5.2, 5.0, 6.0], "target": [0, 0.6, 0], "to": [4.6, 4.2, 5.4]}},
+  {"label": "mug", "seconds": 3, "cam": {"pos": [-0.30, 1.22, -0.62], "target": [-0.50, 1.02, -0.98]}},
+  {"label": "headphones", "seconds": 3, "cam": {"pos": [-0.20, 1.45, -0.80], "target": [-0.24, 1.36, -1.40]}},
+  {"label": "sneakers", "seconds": 3, "cam": {"pos": [1.05, 0.80, 0.75], "target": [1.70, 0.22, 1.32]}},
+  {"label": "ramen", "seconds": 3, "cam": {"pos": [-1.78, 1.62, -0.70], "target": [-1.32, 1.10, -1.00]}}
+ ]
+}

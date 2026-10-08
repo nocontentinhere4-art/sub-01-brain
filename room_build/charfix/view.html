@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#888}</style>
+<script type="importmap">{"imports":{"three":"/room_build/node_modules/three/build/three.module.js","three/addons/":"/room_build/node_modules/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+// a bare viewer for room_build/charfix: one GLB at its rest pose (or a clip's frame), a floor, fixed cameras (Playwright drives it)
+import * as THREE from "three"; import {GLTFLoader} from "three/addons/loaders/GLTFLoader.js"; import {MeshoptDecoder} from "three/addons/libs/meshopt_decoder.module.js";
+const W = +(new URLSearchParams(location.search).get("w") || 640), H = +(new URLSearchParams(location.search).get("h") || 640);
+const R = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true}); R.setSize(W, H); R.outputColorSpace = THREE.SRGBColorSpace; document.body.appendChild(R.domElement);
+const S = new THREE.Scene(); S.background = new THREE.Color(0x9a9a9a);
+S.add(new THREE.HemisphereLight(0xffffff, 0x666666, 1.6)); const d = new THREE.DirectionalLight(0xffffff, 1.6); d.position.set(2, 4, 3); S.add(d);
+const d2 = new THREE.DirectionalLight(0xffffff, 0.6); d2.position.set(-3, 1, -2); S.add(d2);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(4, 4), new THREE.MeshStandardMaterial({color:0xb8b0a0, roughness:0.9})); floor.rotation.x = -Math.PI / 2; S.add(floor);
+const cam = new THREE.PerspectiveCamera(30, W / H, 0.01, 50);
+let root = null; const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+window.load = async (url, opt = {}) => { if (root && !opt.add) S.remove(root); const g = await loader.loadAsync(url); root = g.scene;
+  if (opt.rotY) root.rotation.y = opt.rotY; if (opt.scale) root.scale.setScalar(opt.scale); if (opt.pos) root.position.fromArray(opt.pos);
+  root.traverse(o => { if (o.isMesh) { o.frustumCulled = false; if (opt.hide && new RegExp(opt.hide).test(o.name)) o.visible = false; if (opt.double) o.material.side = THREE.DoubleSide; } });
+  S.add(root); root.updateMatrixWorld(true); const b = new THREE.Box3().setFromObject(root); window._gltf = g; return [b.min.toArray(), b.max.toArray()]; };
+window.wire = (re, v) => S.traverse(o => { if (o.isMesh && new RegExp(re).test(o.name)) o.material.wireframe = v; });
+window.vis = (re, v) => S.traverse(o => { if (o.isMesh && new RegExp(re).test(o.name)) o.visible = v; });
+window.floorVis = v => { floor.visible = v; };
+window.shot = (p, t, fov = 30) => { cam.fov = fov; cam.updateProjectionMatrix(); cam.position.fromArray(p); cam.lookAt(new THREE.Vector3().fromArray(t)); R.render(S, cam); return R.domElement.toDataURL("image/png"); };
+window.THREE = THREE; window.S = S; window.ready = true;
+</script></body></html>

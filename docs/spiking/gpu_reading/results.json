@@ -1,0 +1,849 @@
+{
+ "session_id": "validate-20261001-171816",
+ "day": "2026-10-01",
+ "validate": true,
+ "phases": {
+  "bench": [
+   {
+    "plasticity_off": {
+     "steps_per_s": 1448.1,
+     "realtime_x": 1.448,
+     "mean_rate_hz": 2.601
+    },
+    "plasticity_on": {
+     "steps_per_s": 361.8,
+     "realtime_x": 0.362,
+     "mean_rate_hz": 3.492
+    },
+    "n_neurons": 1000000,
+    "synapses": 100972600,
+    "gpu": "NVIDIA RTX A5000",
+    "gpu_mem_gb": 5.71,
+    "steps_per_s": 361.8,
+    "realtime_x": 0.362
+   }
+  ],
+  "encode": [
+   {
+    "stored": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "item": "good morning little brain, the sun is warm today",
+      "source": "chat",
+      "words": [
+       "good",
+       "morning",
+       "little",
+       "brain",
+       "sun",
+       "warm",
+       "today"
+      ],
+      "drive_rate": 31.67
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "item": "a red bicycle crossed the bridge near the river",
+      "source": "chat",
+      "words": [
+       "red",
+       "bicycle",
+       "crossed",
+       "bridge",
+       "near",
+       "river"
+      ],
+      "drive_rate": 30.76
+     },
+     {
+      "text": "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+      "item": "Inokashira Park",
+      "source": "reading",
+      "words": [
+       "inokashira",
+       "park",
+       "pond",
+       "cherry",
+       "blossoms",
+       "kichijoji",
+       "zoo",
+       "boats"
+      ],
+      "drive_rate": 31.28
+     },
+     {
+      "text": "Bread flour dough yeast baking oven crust wheat",
+      "item": "Bread",
+      "source": "reading",
+      "words": [
+       "bread",
+       "flour",
+       "dough",
+       "yeast",
+       "baking",
+       "oven",
+       "crust",
+       "wheat"
+      ],
+      "drive_rate": 30.97
+     },
+     {
+      "text": "Moon orbit tides craters lunar apollo satellite phases",
+      "item": "Moon",
+      "source": "reading",
+      "words": [
+       "moon",
+       "orbit",
+       "tides",
+       "craters",
+       "lunar",
+       "apollo",
+       "satellite",
+       "phases"
+      ],
+      "drive_rate": 30.69
+     },
+     {
+      "text": "Origami paper folding crane sheet japanese craft",
+      "item": "Origami",
+      "source": "reading",
+      "words": [
+       "origami",
+       "paper",
+       "folding",
+       "crane",
+       "sheet",
+       "japanese",
+       "craft"
+      ],
+      "drive_rate": 30.1
+     }
+    ],
+    "n_registry": 6
+   },
+   {
+    "stored": [
+     {
+      "text": "do you dream about the ocean and its waves",
+      "item": "do you dream about the ocean and its waves",
+      "source": "chat",
+      "words": [
+       "dream",
+       "about",
+       "ocean",
+       "waves"
+      ],
+      "drive_rate": 31.21
+     },
+     {
+      "text": "Tea leaves brewing ceremony matcha kettle cups",
+      "item": "Tea",
+      "source": "reading",
+      "words": [
+       "tea",
+       "leaves",
+       "brewing",
+       "ceremony",
+       "matcha",
+       "kettle",
+       "cups"
+      ],
+      "drive_rate": 32.07
+     },
+     {
+      "text": "Lighthouse tower lamp coast ships beacon keeper",
+      "item": "Lighthouse",
+      "source": "reading",
+      "words": [
+       "lighthouse",
+       "tower",
+       "lamp",
+       "coast",
+       "ships",
+       "beacon",
+       "keeper"
+      ],
+      "drive_rate": 31.9
+     },
+     {
+      "text": "Snow crystals winter flakes cold mountains white",
+      "item": "Snow",
+      "source": "reading",
+      "words": [
+       "snow",
+       "crystals",
+       "winter",
+       "flakes",
+       "cold",
+       "mountains",
+       "white"
+      ],
+      "drive_rate": 31.74
+     }
+    ],
+    "n_registry": 10
+   }
+  ],
+  "memory_test": [
+   {
+    "day": "2026-09-30",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "inokashira park pond cherry",
+     "bread flour dough yeast",
+     "moon orbit tides craters",
+     "origami paper folding"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Moon orbit tides craters lunar apollo satellite phases",
+     "Origami paper folding crane sheet japanese craft"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "item": "good morning little brain, the sun is warm today",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 1.862,
+      "ctx": 0.256,
+      "hc_full": 30.15,
+      "ctx_full": 25.95,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "item": "a red bicycle crossed the bridge near the river",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 1.693,
+      "ctx": 0.187,
+      "hc_full": 26.67,
+      "ctx_full": 25.73,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+      "item": "Inokashira Park",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.678,
+      "ctx": 0.301,
+      "hc_full": 28.25,
+      "ctx_full": 26.03,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Bread flour dough yeast baking oven crust wheat",
+      "item": "Bread",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 2.359,
+      "ctx": 0.364,
+      "hc_full": 29.07,
+      "ctx_full": 26.23,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Moon orbit tides craters lunar apollo satellite phases",
+      "item": "Moon",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.928,
+      "ctx": 0.355,
+      "hc_full": 27.12,
+      "ctx_full": 26.19,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Origami paper folding crane sheet japanese craft",
+      "item": "Origami",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.543,
+      "ctx": 0.204,
+      "hc_full": 26.75,
+      "ctx_full": 25.9,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": 0.091,
+      "ctx": 0.008
+     },
+     {
+      "hc": 0.057,
+      "ctx": 0.007
+     },
+     {
+      "hc": 0.003,
+      "ctx": 0.018
+     },
+     {
+      "hc": 0.021,
+      "ctx": -0.011
+     },
+     {
+      "hc": 0.051,
+      "ctx": -0.008
+     },
+     {
+      "hc": 0.039,
+      "ctx": 0.017
+     }
+    ],
+    "thresholds": {
+     "hc": 0.091,
+     "ctx": 0.018
+    },
+    "n_stored": 6,
+    "false_positive_rate_per_message": 0.143,
+    "label": "after encoding"
+   },
+   {
+    "day": "2026-09-30",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "inokashira park pond cherry",
+     "bread flour dough yeast",
+     "moon orbit tides craters",
+     "origami paper folding"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Moon orbit tides craters lunar apollo satellite phases",
+     "Origami paper folding crane sheet japanese craft"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "item": "good morning little brain, the sun is warm today",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 2.516,
+      "ctx": 0.968,
+      "hc_full": 30.9,
+      "ctx_full": 27.85,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "item": "a red bicycle crossed the bridge near the river",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 1.869,
+      "ctx": 0.424,
+      "hc_full": 27.68,
+      "ctx_full": 26.42,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+      "item": "Inokashira Park",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 2.094,
+      "ctx": 0.641,
+      "hc_full": 28.94,
+      "ctx_full": 26.85,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Bread flour dough yeast baking oven crust wheat",
+      "item": "Bread",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 2.765,
+      "ctx": 0.781,
+      "hc_full": 29.5,
+      "ctx_full": 27.27,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Moon orbit tides craters lunar apollo satellite phases",
+      "item": "Moon",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.932,
+      "ctx": 0.501,
+      "hc_full": 27.46,
+      "ctx_full": 26.42,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Origami paper folding crane sheet japanese craft",
+      "item": "Origami",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.724,
+      "ctx": 0.511,
+      "hc_full": 26.95,
+      "ctx_full": 26.83,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": 0.282,
+      "ctx": 0.009
+     },
+     {
+      "hc": -0.186,
+      "ctx": -0.014
+     },
+     {
+      "hc": -0.104,
+      "ctx": -0.041
+     },
+     {
+      "hc": -0.2,
+      "ctx": 0.003
+     },
+     {
+      "hc": -0.04,
+      "ctx": -0.034
+     },
+     {
+      "hc": -0.136,
+      "ctx": 0.024
+     }
+    ],
+    "thresholds": {
+     "hc": 0.282,
+     "ctx": 0.024
+    },
+    "n_stored": 6,
+    "false_positive_rate_per_message": 0.143,
+    "label": "after sleep"
+   },
+   {
+    "day": "2026-10-01",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "inokashira park pond cherry",
+     "bread flour dough yeast",
+     "moon orbit tides craters",
+     "origami paper folding"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Moon orbit tides craters lunar apollo satellite phases",
+     "Origami paper folding crane sheet japanese craft"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "item": "good morning little brain, the sun is warm today",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 1.018,
+      "ctx": 0.807,
+      "hc_full": 27.35,
+      "ctx_full": 27.59,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "item": "a red bicycle crossed the bridge near the river",
+      "source": "chat",
+      "item_day": "2026-09-30",
+      "hc": 1.303,
+      "ctx": 0.368,
+      "hc_full": 26.55,
+      "ctx_full": 26.23,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+      "item": "Inokashira Park",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.721,
+      "ctx": 0.585,
+      "hc_full": 26.67,
+      "ctx_full": 26.75,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Bread flour dough yeast baking oven crust wheat",
+      "item": "Bread",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.831,
+      "ctx": 0.817,
+      "hc_full": 27.04,
+      "ctx_full": 27.26,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Moon orbit tides craters lunar apollo satellite phases",
+      "item": "Moon",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.553,
+      "ctx": 0.453,
+      "hc_full": 26.57,
+      "ctx_full": 26.41,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Origami paper folding crane sheet japanese craft",
+      "item": "Origami",
+      "source": "reading",
+      "item_day": "2026-09-30",
+      "hc": 1.046,
+      "ctx": 0.464,
+      "hc_full": 25.49,
+      "ctx_full": 26.76,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": 0.139,
+      "ctx": -0.002
+     },
+     {
+      "hc": 0.09,
+      "ctx": -0.025
+     },
+     {
+      "hc": -0.364,
+      "ctx": 0.005
+     },
+     {
+      "hc": -0.041,
+      "ctx": -0.01
+     },
+     {
+      "hc": 0.152,
+      "ctx": 0.031
+     },
+     {
+      "hc": 0.186,
+      "ctx": -0.002
+     }
+    ],
+    "thresholds": {
+     "hc": 0.186,
+     "ctx": 0.031
+    },
+    "n_stored": 6,
+    "false_positive_rate_per_message": 0.143,
+    "label": "next day"
+   },
+   {
+    "day": "2026-10-01",
+    "cues": [
+     "dream about",
+     "tea leaves brewing",
+     "lighthouse tower lamp",
+     "snow crystals winter"
+    ],
+    "recalled": [
+     "do you dream about the ocean and its waves",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Lighthouse tower lamp coast ships beacon keeper",
+     "Snow crystals winter flakes cold mountains white"
+    ],
+    "scores": [
+     {
+      "text": "do you dream about the ocean and its waves",
+      "item": "do you dream about the ocean and its waves",
+      "source": "chat",
+      "item_day": "2026-10-01",
+      "hc": 2.494,
+      "ctx": 0.191,
+      "hc_full": 28.27,
+      "ctx_full": 25.71,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Tea leaves brewing ceremony matcha kettle cups",
+      "item": "Tea",
+      "source": "reading",
+      "item_day": "2026-10-01",
+      "hc": 2.565,
+      "ctx": 0.544,
+      "hc_full": 30.87,
+      "ctx_full": 26.76,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Lighthouse tower lamp coast ships beacon keeper",
+      "item": "Lighthouse",
+      "source": "reading",
+      "item_day": "2026-10-01",
+      "hc": 2.509,
+      "ctx": 0.263,
+      "hc_full": 29.63,
+      "ctx_full": 26.01,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "Snow crystals winter flakes cold mountains white",
+      "item": "Snow",
+      "source": "reading",
+      "item_day": "2026-10-01",
+      "hc": 1.51,
+      "ctx": 0.28,
+      "hc_full": 28.46,
+      "ctx_full": 25.95,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": -0.181,
+      "ctx": 0.003
+     },
+     {
+      "hc": -0.399,
+      "ctx": 0.001
+     },
+     {
+      "hc": -0.057,
+      "ctx": -0.013
+     },
+     {
+      "hc": 0.303,
+      "ctx": -0.025
+     },
+     {
+      "hc": -0.216,
+      "ctx": 0.023
+     },
+     {
+      "hc": -0.039,
+      "ctx": -0.015
+     }
+    ],
+    "thresholds": {
+     "hc": 0.303,
+     "ctx": 0.023
+    },
+    "n_stored": 10,
+    "false_positive_rate_per_message": 0.143,
+    "label": "after sleep"
+   }
+  ],
+  "sleep": [
+   {
+    "minutes_sim": 4.0,
+    "replay": true,
+    "label": "day 1 sleep with REM replay",
+    "replays": [
+     "a red bicycle crossed the bridge near the river",
+     "good morning little brain, the sun is warm today",
+     "Origami paper folding crane sheet japanese craft",
+     "Origami paper folding crane sheet japanese craft",
+     "Origami paper folding crane sheet japanese craft",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Origami paper folding crane sheet japanese craft",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Bread flour dough yeast baking oven crust wheat",
+     "good morning little brain, the sun is warm today",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Inokashira Park park pond cherry blossoms kichijoji zoo boats",
+     "Origami paper folding crane sheet japanese craft",
+     "Moon orbit tides craters lunar apollo satellite phases",
+     "Bread flour dough yeast baking oven crust wheat",
+     "a red bicycle crossed the bridge near the river"
+    ]
+   },
+   {
+    "minutes_sim": 4.0,
+    "replay": true,
+    "label": "day 2 sleep with REM replay",
+    "replays": [
+     "Origami paper folding crane sheet japanese craft",
+     "a red bicycle crossed the bridge near the river",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Lighthouse tower lamp coast ships beacon keeper",
+     "Snow crystals winter flakes cold mountains white",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Moon orbit tides craters lunar apollo satellite phases",
+     "good morning little brain, the sun is warm today",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Snow crystals winter flakes cold mountains white",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Tea leaves brewing ceremony matcha kettle cups",
+     "Bread flour dough yeast baking oven crust wheat",
+     "Origami paper folding crane sheet japanese craft",
+     "Origami paper folding crane sheet japanese craft",
+     "Snow crystals winter flakes cold mountains white",
+     "Origami paper folding crane sheet japanese craft",
+     "do you dream about the ocean and its waves",
+     "do you dream about the ocean and its waves"
+    ]
+   }
+  ]
+ },
+ "files": [
+  "results.json",
+  "session.log"
+ ],
+ "build": {
+  "device": "cuda",
+  "gpu": "NVIDIA RTX A5000",
+  "n_neurons": 1000000,
+  "synapses": 100972600,
+  "max_delay_ms": 60,
+  "plastic_synapses": 60778400,
+  "build_s": 4.8,
+  "config_hash": "46439342c79e7f9c",
+  "config": {
+   "n_neurons": 1000000,
+   "seed": 1,
+   "frac_exc": 0.8,
+   "min_region": 10,
+   "hc_scale": 1.0,
+   "k_e_local": 45,
+   "k_i_local": 25,
+   "k_long": 30,
+   "k_hc_rec": 100,
+   "k_hc_rec_i": 100,
+   "k_vis_sm": 0,
+   "j_vis_sm": 0.1,
+   "dt": 1.0,
+   "tau_m": 20.0,
+   "v_th": 20.0,
+   "v_reset": 10.0,
+   "t_ref": 2.0,
+   "j_e": 0.5,
+   "g_i": 5.0,
+   "j_hc_rec": 0.05,
+   "j_hc_ei": 0.3,
+   "delay_local": [
+    1,
+    2
+   ],
+   "velocity_mm_ms": 6.0,
+   "mu_ext": 15.0,
+   "sigma_ext": 4.0,
+   "baseline_gain": 0.05,
+   "baseline_dt_ms": 50,
+   "plastic": true,
+   "tau_plus": 20.0,
+   "tau_minus": 20.0,
+   "a_plus": 1.0,
+   "a_minus": 0.5,
+   "x_theta": 0.1,
+   "h_pre": 0.1,
+   "tau_elig": 1000.0,
+   "elig_every": 10,
+   "tau_da": 200.0,
+   "w_max_ctx": 2.0,
+   "w_max_hc": 2.0,
+   "eta": {
+    "ctx": {
+     "da": 0.5,
+     "enc": 0.0005,
+     "cons": 0.002
+    },
+    "hc": {
+     "da": 0.0,
+     "enc": 0.025,
+     "cons": 0.0
+    }
+   },
+   "da_groups": [
+    "somatomotor"
+   ],
+   "hebb_theta": 10.0,
+   "hebb_ltd": 0.25,
+   "homeo_every": 1000,
+   "rate_target": 5.0,
+   "tau_rate": 10000.0,
+   "eta_theta": 0.0001,
+   "theta_max": 3.0,
+   "eta_scale": 0.0001,
+   "tau_forget_hc_days": 3.0,
+   "tau_forget_ctx_days": 60.0
+  },
+  "torch": "2.8.0+cu128",
+  "baseline_runs": 3,
+  "weights_loaded": false
+ },
+ "timing": {
+  "0:bench": {
+   "wall_s": 17.7
+  },
+  "1:validate_reading": {
+   "wall_s": 372.8
+  }
+ },
+ "weights": {
+  "nonzero": 60724450,
+  "P": 60778400,
+  "dense": true,
+  "stats": {
+   "plastic_synapses": 60778400,
+   "updates": 440,
+   "ctx": {
+    "w_mean": 0.4928191602230072,
+    "dw_mean": -0.007180812768638134,
+    "dw_absmax": 0.8605107069015503,
+    "frac_changed": 0.9909532070159912
+   },
+   "hc": {
+    "w_mean": 0.21005769073963165,
+    "dw_mean": -0.03279945254325867,
+    "dw_absmax": 1.9500000476837158,
+    "frac_changed": 0.9999023079872131
+   }
+  },
+  "bytes": 123653578
+ },
+ "wall_s": 396.5,
+ "sim_s": 572.5,
+ "error": null
+}

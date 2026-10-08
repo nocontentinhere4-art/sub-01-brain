@@ -1,0 +1,924 @@
+{
+ "session_id": "validate-20261001-012236",
+ "day": "2026-10-01",
+ "validate": true,
+ "phases": {
+  "bench": [
+   {
+    "plasticity_off": {
+     "steps_per_s": 1353.2,
+     "realtime_x": 1.353,
+     "mean_rate_hz": 2.606
+    },
+    "plasticity_on": {
+     "steps_per_s": 206.0,
+     "realtime_x": 0.206,
+     "mean_rate_hz": 3.492
+    },
+    "n_neurons": 1000000,
+    "synapses": 100972600,
+    "gpu": "NVIDIA RTX 4000 Ada Generation",
+    "gpu_mem_gb": 5.71,
+    "steps_per_s": 206.0,
+    "realtime_x": 0.206
+   }
+  ],
+  "rates": [
+   {
+    "seconds": 60,
+    "mean_e_hz": 3.915,
+    "mean_i_hz": 3.93,
+    "region_rate_pct": {
+     "1": 2.065,
+     "5": 2.297,
+     "50": 3.908,
+     "95": 5.536,
+     "99": 6.168
+    },
+    "region_rate_max": 7.362,
+    "groups": {
+     "visual": 3.885,
+     "somatomotor": 3.898,
+     "attention": 3.911,
+     "salience": 3.968,
+     "limbic": 3.967,
+     "control": 3.95,
+     "default": 3.936,
+     "reward": 3.918,
+     "fear": 3.99,
+     "memory": 2.842,
+     "relay": 3.979,
+     "language": 3.923
+    },
+    "per_second_e": [
+     3.332,
+     2.996,
+     2.746,
+     2.565,
+     2.479,
+     2.542,
+     2.637,
+     2.841,
+     3.121,
+     3.367,
+     3.551,
+     3.739,
+     3.735,
+     3.676,
+     3.606,
+     3.507,
+     3.405,
+     3.4,
+     3.407,
+     3.457,
+     3.548,
+     3.668,
+     3.845,
+     4.02,
+     4.221,
+     4.492,
+     4.756,
+     4.938,
+     5.122,
+     5.184,
+     5.124,
+     5.043,
+     4.917,
+     4.763,
+     4.665,
+     4.583,
+     4.53,
+     4.441,
+     4.346,
+     4.243,
+     4.144,
+     4.065,
+     4.149,
+     4.232,
+     4.389,
+     4.532,
+     4.674,
+     4.513,
+     4.295,
+     3.992,
+     3.591,
+     3.227,
+     3.173,
+     3.208,
+     3.38,
+     3.762,
+     4.106,
+     4.242,
+     4.326,
+     4.315
+    ],
+    "neuron_rate_pct": {
+     "5": 2.0,
+     "50": 4.0,
+     "95": 6.5,
+     "99": 7.5
+    },
+    "frac_silent_2s": 0.0004,
+    "runaway": false
+   }
+  ],
+  "delays": [
+   {
+    "n_long_synapses": 30000000,
+    "max_abs_error_ms": 0.0,
+    "delay_ms_pct": {
+     "5": 5.0,
+     "50": 12.0,
+     "95": 27.0
+    },
+    "fibre_mm_pct": {
+     "5": 30.7,
+     "50": 72.7,
+     "95": 163.5
+    },
+    "velocity_m_s": 6.0
+   }
+  ],
+  "encode": [
+   {
+    "stored": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "words": [
+       "good",
+       "morning",
+       "little",
+       "brain",
+       "sun",
+       "warm",
+       "today"
+      ],
+      "drive_rate": 32.32
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "words": [
+       "red",
+       "bicycle",
+       "crossed",
+       "bridge",
+       "near",
+       "river"
+      ],
+      "drive_rate": 31.91
+     },
+     {
+      "text": "do you dream about the ocean and its waves",
+      "words": [
+       "dream",
+       "about",
+       "ocean",
+       "waves"
+      ],
+      "drive_rate": 30.96
+     },
+     {
+      "text": "the bakery smells of fresh bread and coffee",
+      "words": [
+       "bakery",
+       "smells",
+       "fresh",
+       "bread",
+       "coffee"
+      ],
+      "drive_rate": 31.47
+     },
+     {
+      "text": "we watched the stars over the quiet mountain",
+      "words": [
+       "watched",
+       "stars",
+       "over",
+       "quiet",
+       "mountain"
+      ],
+      "drive_rate": 31.51
+     }
+    ],
+    "n_registry": 5
+   }
+  ],
+  "memory_test": [
+   {
+    "day": "2026-10-01",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "dream about",
+     "bakery smells",
+     "watched stars"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "do you dream about the ocean and its waves",
+     "the bakery smells of fresh bread and coffee",
+     "we watched the stars over the quiet mountain"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "hc": 3.968,
+      "ctx": 0.353,
+      "hc_full": 35.8,
+      "ctx_full": 26.46,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "hc": 3.225,
+      "ctx": 0.316,
+      "hc_full": 32.58,
+      "ctx_full": 26.19,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "do you dream about the ocean and its waves",
+      "hc": 2.116,
+      "ctx": 0.119,
+      "hc_full": 29.42,
+      "ctx_full": 25.84,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "the bakery smells of fresh bread and coffee",
+      "hc": 2.125,
+      "ctx": 0.207,
+      "hc_full": 30.25,
+      "ctx_full": 26.01,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "we watched the stars over the quiet mountain",
+      "hc": 2.597,
+      "ctx": 0.2,
+      "hc_full": 31.25,
+      "ctx_full": 25.96,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": -0.13,
+      "ctx": -0.014
+     },
+     {
+      "hc": 0.256,
+      "ctx": 0.005
+     },
+     {
+      "hc": 0.086,
+      "ctx": 0.025
+     },
+     {
+      "hc": 0.165,
+      "ctx": 0.026
+     },
+     {
+      "hc": -0.466,
+      "ctx": -0.027
+     },
+     {
+      "hc": 0.153,
+      "ctx": 0.004
+     },
+     {
+      "hc": 0.362,
+      "ctx": 0.01
+     },
+     {
+      "hc": -0.119,
+      "ctx": 0.028
+     },
+     {
+      "hc": -0.076,
+      "ctx": -0.007
+     },
+     {
+      "hc": 0.133,
+      "ctx": -0.012
+     }
+    ],
+    "thresholds": {
+     "hc": 0.362,
+     "ctx": 0.028
+    },
+    "n_stored": 5,
+    "false_positive_rate_per_message": 0.091,
+    "label": "after encoding"
+   },
+   {
+    "day": "2026-10-01",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "dream about",
+     "bakery smells",
+     "watched stars"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "do you dream about the ocean and its waves",
+     "the bakery smells of fresh bread and coffee",
+     "we watched the stars over the quiet mountain"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "hc": 4.491,
+      "ctx": 0.331,
+      "hc_full": 35.64,
+      "ctx_full": 26.45,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "hc": 4.204,
+      "ctx": 0.283,
+      "hc_full": 33.43,
+      "ctx_full": 26.19,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "do you dream about the ocean and its waves",
+      "hc": 2.042,
+      "ctx": 0.222,
+      "hc_full": 29.05,
+      "ctx_full": 25.87,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "the bakery smells of fresh bread and coffee",
+      "hc": 2.603,
+      "ctx": 0.229,
+      "hc_full": 29.47,
+      "ctx_full": 26.17,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "we watched the stars over the quiet mountain",
+      "hc": 2.466,
+      "ctx": 0.247,
+      "hc_full": 30.75,
+      "ctx_full": 26.22,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": -0.106,
+      "ctx": -0.035
+     },
+     {
+      "hc": 0.101,
+      "ctx": 0.01
+     },
+     {
+      "hc": -0.042,
+      "ctx": 0.026
+     },
+     {
+      "hc": 0.068,
+      "ctx": 0.002
+     },
+     {
+      "hc": -0.056,
+      "ctx": -0.024
+     },
+     {
+      "hc": -0.012,
+      "ctx": 0.022
+     },
+     {
+      "hc": 0.224,
+      "ctx": 0.009
+     },
+     {
+      "hc": -0.128,
+      "ctx": -0.01
+     },
+     {
+      "hc": 0.186,
+      "ctx": 0.007
+     },
+     {
+      "hc": -0.015,
+      "ctx": 0.016
+     }
+    ],
+    "thresholds": {
+     "hc": 0.224,
+     "ctx": 0.026
+    },
+    "n_stored": 5,
+    "false_positive_rate_per_message": 0.091,
+    "label": "after sleep without replay (control)"
+   },
+   {
+    "day": "2026-10-01",
+    "cues": [
+     "good morning little",
+     "red bicycle crossed",
+     "dream about",
+     "bakery smells",
+     "watched stars"
+    ],
+    "recalled": [
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "do you dream about the ocean and its waves",
+     "the bakery smells of fresh bread and coffee",
+     "we watched the stars over the quiet mountain"
+    ],
+    "scores": [
+     {
+      "text": "good morning little brain, the sun is warm today",
+      "hc": 4.416,
+      "ctx": 1.592,
+      "hc_full": 35.66,
+      "ctx_full": 29.67,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "a red bicycle crossed the bridge near the river",
+      "hc": 3.568,
+      "ctx": 0.755,
+      "hc_full": 34.2,
+      "ctx_full": 27.15,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "do you dream about the ocean and its waves",
+      "hc": 1.986,
+      "ctx": 0.276,
+      "hc_full": 29.26,
+      "ctx_full": 25.88,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "the bakery smells of fresh bread and coffee",
+      "hc": 2.299,
+      "ctx": 0.348,
+      "hc_full": 30.09,
+      "ctx_full": 26.42,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     },
+     {
+      "text": "we watched the stars over the quiet mountain",
+      "hc": 2.534,
+      "ctx": 0.618,
+      "hc_full": 31.93,
+      "ctx_full": 27.01,
+      "hc_recalled": true,
+      "ctx_recalled": true
+     }
+    ],
+    "unit": "Hz",
+    "control_scores": [
+     {
+      "hc": -0.216,
+      "ctx": -0.032
+     },
+     {
+      "hc": 0.005,
+      "ctx": -0.022
+     },
+     {
+      "hc": -0.114,
+      "ctx": 0.007
+     },
+     {
+      "hc": 0.026,
+      "ctx": 0.003
+     },
+     {
+      "hc": -0.183,
+      "ctx": 0.012
+     },
+     {
+      "hc": -0.223,
+      "ctx": -0.013
+     },
+     {
+      "hc": 0.151,
+      "ctx": 0.012
+     },
+     {
+      "hc": 0.009,
+      "ctx": -0.015
+     },
+     {
+      "hc": 0.075,
+      "ctx": 0.019
+     },
+     {
+      "hc": 0.099,
+      "ctx": -0.014
+     }
+    ],
+    "thresholds": {
+     "hc": 0.151,
+     "ctx": 0.019
+    },
+    "n_stored": 5,
+    "false_positive_rate_per_message": 0.091,
+    "label": "after sleep with replay"
+   }
+  ],
+  "sleep": [
+   {
+    "minutes_sim": 6.0,
+    "replay": false,
+    "label": "control: same time, no replay",
+    "replays": []
+   },
+   {
+    "minutes_sim": 6.0,
+    "replay": true,
+    "label": "sleep with REM replay",
+    "replays": [
+     "a red bicycle crossed the bridge near the river",
+     "good morning little brain, the sun is warm today",
+     "we watched the stars over the quiet mountain",
+     "do you dream about the ocean and its waves",
+     "we watched the stars over the quiet mountain",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "we watched the stars over the quiet mountain",
+     "a red bicycle crossed the bridge near the river",
+     "we watched the stars over the quiet mountain",
+     "we watched the stars over the quiet mountain",
+     "a red bicycle crossed the bridge near the river",
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "do you dream about the ocean and its waves",
+     "we watched the stars over the quiet mountain",
+     "a red bicycle crossed the bridge near the river",
+     "do you dream about the ocean and its waves",
+     "a red bicycle crossed the bridge near the river",
+     "good morning little brain, the sun is warm today",
+     "the bakery smells of fresh bread and coffee",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "the bakery smells of fresh bread and coffee",
+     "good morning little brain, the sun is warm today",
+     "good morning little brain, the sun is warm today",
+     "a red bicycle crossed the bridge near the river",
+     "the bakery smells of fresh bread and coffee",
+     "the bakery smells of fresh bread and coffee",
+     "good morning little brain, the sun is warm today",
+     "we watched the stars over the quiet mountain",
+     "we watched the stars over the quiet mountain"
+    ]
+   }
+  ],
+  "exam": [
+   {
+    "label": "before training (no learning yet)",
+    "exams": [
+     {
+      "rallies": 20,
+      "hits": 3,
+      "hit_rate": 0.15,
+      "frozen": true,
+      "mean_abs_v": 0.644
+     },
+     {
+      "rallies": 20,
+      "hits": 1,
+      "hit_rate": 0.05,
+      "frozen": true,
+      "mean_abs_v": 0.512
+     }
+    ],
+    "hits": 4,
+    "rallies": 40,
+    "hit_rate": 0.1
+   },
+   {
+    "label": "after training (frozen)",
+    "exams": [
+     {
+      "rallies": 20,
+      "hits": 6,
+      "hit_rate": 0.3,
+      "frozen": true,
+      "mean_abs_v": 0.589
+     },
+     {
+      "rallies": 20,
+      "hits": 1,
+      "hit_rate": 0.05,
+      "frozen": true,
+      "mean_abs_v": 0.513
+     }
+    ],
+    "hits": 7,
+    "rallies": 40,
+    "hit_rate": 0.175,
+    "controls": {
+     "no_plasticity": 0.25,
+     "no_plasticity_exams": [
+      {
+       "rallies": 20,
+       "hits": 5,
+       "hit_rate": 0.25,
+       "frozen": true,
+       "mean_abs_v": 0.453
+      },
+      {
+       "rallies": 20,
+       "hits": 5,
+       "hit_rate": 0.25,
+       "frozen": true,
+       "mean_abs_v": 0.657
+      }
+     ],
+     "random": 0.239,
+     "ideal_tracker": 1.0
+    }
+   }
+  ],
+  "pong_curve": [
+   {
+    "points": [
+     {
+      "block": 0,
+      "rallies": 20,
+      "hit_rate": 0.1,
+      "mean_abs_v": 0.442
+     },
+     {
+      "block": 1,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.535
+     },
+     {
+      "block": 2,
+      "rallies": 20,
+      "hit_rate": 0.25,
+      "mean_abs_v": 0.633
+     },
+     {
+      "block": 3,
+      "rallies": 20,
+      "hit_rate": 0.25,
+      "mean_abs_v": 0.452
+     },
+     {
+      "block": 4,
+      "rallies": 20,
+      "hit_rate": 0.35,
+      "mean_abs_v": 0.577
+     },
+     {
+      "block": 5,
+      "rallies": 20,
+      "hit_rate": 0.2,
+      "mean_abs_v": 0.527
+     },
+     {
+      "block": 6,
+      "rallies": 20,
+      "hit_rate": 0.15,
+      "mean_abs_v": 0.438
+     },
+     {
+      "block": 7,
+      "rallies": 20,
+      "hit_rate": 0.2,
+      "mean_abs_v": 0.639
+     },
+     {
+      "block": 8,
+      "rallies": 20,
+      "hit_rate": 0.2,
+      "mean_abs_v": 0.484
+     },
+     {
+      "block": 9,
+      "rallies": 20,
+      "hit_rate": 0.25,
+      "mean_abs_v": 0.419
+     },
+     {
+      "block": 10,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.59
+     },
+     {
+      "block": 11,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.585
+     },
+     {
+      "block": 12,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.508
+     },
+     {
+      "block": 13,
+      "rallies": 20,
+      "hit_rate": 0.15,
+      "mean_abs_v": 0.615
+     },
+     {
+      "block": 14,
+      "rallies": 20,
+      "hit_rate": 0.35,
+      "mean_abs_v": 0.523
+     },
+     {
+      "block": 15,
+      "rallies": 20,
+      "hit_rate": 0.1,
+      "mean_abs_v": 0.533
+     },
+     {
+      "block": 16,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.455
+     },
+     {
+      "block": 17,
+      "rallies": 20,
+      "hit_rate": 0.25,
+      "mean_abs_v": 0.562
+     },
+     {
+      "block": 18,
+      "rallies": 20,
+      "hit_rate": 0.0,
+      "mean_abs_v": 0.683
+     },
+     {
+      "block": 19,
+      "rallies": 20,
+      "hit_rate": 0.3,
+      "mean_abs_v": 0.465
+     }
+    ],
+    "block_rallies": 20
+   }
+  ]
+ },
+ "files": [
+  "results.json",
+  "session.log"
+ ],
+ "build": {
+  "device": "cuda",
+  "gpu": "NVIDIA RTX 4000 Ada Generation",
+  "n_neurons": 1000000,
+  "synapses": 100972600,
+  "max_delay_ms": 60,
+  "plastic_synapses": 60778400,
+  "build_s": 4.2,
+  "config_hash": "46439342c79e7f9c",
+  "config": {
+   "n_neurons": 1000000,
+   "seed": 1,
+   "frac_exc": 0.8,
+   "min_region": 10,
+   "hc_scale": 1.0,
+   "k_e_local": 45,
+   "k_i_local": 25,
+   "k_long": 30,
+   "k_hc_rec": 100,
+   "k_hc_rec_i": 100,
+   "k_vis_sm": 0,
+   "j_vis_sm": 0.1,
+   "dt": 1.0,
+   "tau_m": 20.0,
+   "v_th": 20.0,
+   "v_reset": 10.0,
+   "t_ref": 2.0,
+   "j_e": 0.5,
+   "g_i": 5.0,
+   "j_hc_rec": 0.05,
+   "j_hc_ei": 0.3,
+   "delay_local": [
+    1,
+    2
+   ],
+   "velocity_mm_ms": 6.0,
+   "mu_ext": 15.0,
+   "sigma_ext": 4.0,
+   "baseline_gain": 0.05,
+   "baseline_dt_ms": 50,
+   "plastic": true,
+   "tau_plus": 20.0,
+   "tau_minus": 20.0,
+   "a_plus": 1.0,
+   "a_minus": 0.5,
+   "x_theta": 0.1,
+   "h_pre": 0.1,
+   "tau_elig": 1000.0,
+   "elig_every": 10,
+   "tau_da": 200.0,
+   "w_max_ctx": 2.0,
+   "w_max_hc": 2.0,
+   "eta": {
+    "ctx": {
+     "da": 0.5,
+     "enc": 0.0005,
+     "cons": 0.002
+    },
+    "hc": {
+     "da": 0.0,
+     "enc": 0.025,
+     "cons": 0.0
+    }
+   },
+   "da_groups": [
+    "somatomotor"
+   ],
+   "hebb_theta": 10.0,
+   "hebb_ltd": 0.25,
+   "homeo_every": 1000,
+   "rate_target": 5.0,
+   "tau_rate": 10000.0,
+   "eta_theta": 0.0001,
+   "theta_max": 3.0,
+   "eta_scale": 0.0001,
+   "tau_forget_hc_days": 3.0,
+   "tau_forget_ctx_days": 60.0
+  },
+  "torch": "2.8.0+cu128",
+  "baseline_runs": 3,
+  "weights_loaded": false
+ },
+ "timing": {
+  "0:bench": {
+   "wall_s": 28.4
+  },
+  "1:rates": {
+   "wall_s": 49.9
+  },
+  "2:delays": {
+   "wall_s": 0.8
+  },
+  "3:validate_memory": {
+   "wall_s": 647.2
+  },
+  "4:validate_pong": {
+   "wall_s": 1761.2
+  }
+ },
+ "weights": {
+  "nonzero": 60751097,
+  "P": 60778400,
+  "dense": true,
+  "stats": {
+   "plastic_synapses": 60778400,
+   "updates": 8393,
+   "ctx": {
+    "w_mean": 0.49978452920913696,
+    "dw_mean": -0.00021548873337451369,
+    "dw_absmax": 1.5,
+    "frac_changed": 0.995388388633728
+   },
+   "hc": {
+    "w_mean": 0.23363086581230164,
+    "dw_mean": -0.009226270951330662,
+    "dw_absmax": 1.9500000476837158,
+    "frac_changed": 0.9999882578849792
+   }
+  },
+  "bytes": 123595802
+ },
+ "wall_s": 2493.2,
+ "sim_s": 1806.1,
+ "error": null
+}

@@ -1,0 +1,143 @@
+{
+ "_note": "preview/room-mh: the complete MakeHuman character (G2 dressed by G4, G11's hair) in the room, Prima (main) | Dopo; 5-8 s locked-camera shots, the owner's format (clean: the shot's own label only). Scenes are JS run on both sides; mh.* only exists on the new side.",
+ "hour": 14,
+ "clean": true,
+ "screen_stub": true,
+ "shots": [
+  {
+   "label": "Cerca qualcosa: scrive sulla tastiera, poi usa il mouse",
+   "hour": 14,
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'q-ramen', kind: 'search', search: {query: 'ricetta ramen facile'}}}); }",
+   "settle": 1.0,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     -0.18,
+     1.52,
+     -0.5
+    ],
+    "target": [
+     -1.08,
+     1.12,
+     -0.9
+    ],
+    "fov": 52
+   }
+  },
+  {
+   "label": "Si alza e va alla finestra",
+   "scene": "() => { live('window', {activity: 'window', place: 'room'}); }",
+   "settle": 0.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     1.6,
+     2.3,
+     1.9
+    ],
+    "target": [
+     -0.7,
+     0.8,
+     -0.2
+    ],
+    "fov": 50
+   }
+  },
+  {
+   "label": "Legge un libro (gira le pagine)",
+   "scene": "() => { act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'p1', kind: 'page'}}); if (window.mh && mh.show) mh.show('read'); }",
+   "settle": 2.0,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     -0.42,
+     1.55,
+     -0.98
+    ],
+    "target": [
+     -1.12,
+     0.92,
+     -0.32
+    ],
+    "fov": 52
+   }
+  },
+  {
+   "label": "Beve: versa l'acqua dalla bottiglia nel bicchiere",
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('home', {activity: 'home', place: 'room'}); if (window.mh && mh.show) mh.show('drink'); }",
+   "settle": 1.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     -0.45,
+     1.6,
+     1.05
+    ],
+    "target": [
+     0.45,
+     1.05,
+     0.55
+    ],
+    "fov": 55
+   }
+  },
+  {
+   "label": "Guarda i video brevi sul telefono (scorre col pollice)",
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'p1', kind: 'page'}}); if (window.mh && mh.show) mh.show('phone_scroll'); }",
+   "settle": 1.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     -0.42,
+     1.55,
+     -0.98
+    ],
+    "target": [
+     -1.12,
+     0.92,
+     -0.32
+    ],
+    "fov": 52
+   }
+  },
+  {
+   "label": "Di notte: si stira sulla sedia e si alza per andare a letto",
+   "hour": 23,
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'p1', kind: 'page'}}); live('sleep', {activity: 'sleep', place: 'room'}); }",
+   "settle": 2.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     0.5,
+     1.65,
+     0.9
+    ],
+    "target": [
+     -0.95,
+     0.9,
+     -0.55
+    ],
+    "fov": 52
+   }
+  },
+  {
+   "label": "Si siede sul letto e si sdraia sotto il piumone",
+   "scene": "",
+   "settle": 14.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     0.7,
+     1.9,
+     1.1
+    ],
+    "target": [
+     -1.1,
+     0.8,
+     0.7
+    ],
+    "fov": 55
+   }
+  }
+ ]
+}

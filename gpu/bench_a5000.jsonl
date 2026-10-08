@@ -1,0 +1,9 @@
+{"gpu": "NVIDIA RTX A5000", "torch": "2.8.0+cu128"}
+{"neurons": 250000, "synapses_per_neuron": 100, "synapses": 25000000, "wall_s_per_sim_s": 0.312, "realtime_x": 3.2, "mean_rate_hz": 17.1, "gpu_mem_gb": 0.73}
+{"neurons": 1000000, "synapses_per_neuron": 100, "synapses": 100000000, "wall_s_per_sim_s": 0.508, "realtime_x": 1.97, "mean_rate_hz": 17.1, "gpu_mem_gb": 2.9}
+{"neurons": 2000000, "synapses_per_neuron": 100, "synapses": 200000000, "wall_s_per_sim_s": 1.128, "realtime_x": 0.89, "mean_rate_hz": 17.1, "gpu_mem_gb": 5.8}
+{"neurons": 4000000, "synapses_per_neuron": 100, "synapses": 400000000, "wall_s_per_sim_s": 2.632, "realtime_x": 0.38, "mean_rate_hz": 17.1, "gpu_mem_gb": 11.6}
+{"neurons": 8000000, "synapses_per_neuron": 100, "synapses": 800000000, "wall_s_per_sim_s": 5.942, "realtime_x": 0.17, "mean_rate_hz": 17.1, "gpu_mem_gb": 23.2}
+{"neurons": 1000000, "synapses_per_neuron": 1000, "error": "out of GPU memory"}
+{"neurons": 2000000, "synapses_per_neuron": 500, "error": "out of GPU memory"}
+DONE

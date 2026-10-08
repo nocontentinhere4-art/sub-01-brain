@@ -1,0 +1,398 @@
+{
+ "offline_1920": {
+  "button": "neurons offline",
+  "caption": "neurons offline — the 1M network runs while he is awake when the GPU is on · static cells, no activity\ncells enlarged ~14× for visibility · 2,901 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.",
+  "panel": {
+   "cards": [
+    1476,
+    24,
+    1896,
+    683
+   ],
+   "dock": [
+    1476,
+    697,
+    1896,
+    1058
+   ],
+   "layers": [
+    1476,
+    697,
+    1896,
+    757
+   ],
+   "caption": [
+    1476,
+    827,
+    1896,
+    977
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "forest": {
+   "live": false,
+   "net": null,
+   "tint": null,
+   "race": false,
+   "recorded": 0,
+   "shown": 0,
+   "points": 2901,
+   "cells": 2901,
+   "shaped": 2889,
+   "segments": 115511,
+   "drawCalls": 7,
+   "enlarge": 14,
+   "spikes": 0,
+   "types": [
+    {
+     "type": "pyramidal",
+     "n": 2213,
+     "segs": 40,
+     "id": "NMO_107146",
+     "species": "human"
+    },
+    {
+     "type": "basket",
+     "n": 522,
+     "segs": 40,
+     "id": "NMO_107145",
+     "species": "human"
+    },
+    {
+     "type": "relay",
+     "n": 49,
+     "segs": 39,
+     "id": "NMO_115363",
+     "species": "rat"
+    },
+    {
+     "type": "medium_spiny",
+     "n": 59,
+     "segs": 40,
+     "id": "NMO_10032",
+     "species": "rat"
+    },
+    {
+     "type": "ca1_pyramidal",
+     "n": 28,
+     "segs": 40,
+     "id": "NMO_00222",
+     "species": "rat"
+    },
+    {
+     "type": "amygdala_principal",
+     "n": 18,
+     "segs": 40,
+     "id": "NMO_139102",
+     "species": "mouse"
+    }
+   ]
+  }
+ },
+ "live_1920": {
+  "caption": "live · 20k-neuron network on CPU · last frame: 5,739 spikes recorded, none sent (the stream's 3 KB/s budget was used up)\ncells enlarged ~14× for visibility · 2,901 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · a spike glows soma → axon, slowed ~250×; region rates tint the dendrites · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each drawn cell stands for a sampled model neuron; a model, not a mind.",
+  "panel": {
+   "cards": [
+    1476,
+    24,
+    1896,
+    666
+   ],
+   "dock": [
+    1476,
+    680,
+    1896,
+    1058
+   ],
+   "layers": [
+    1476,
+    680,
+    1896,
+    707
+   ],
+   "caption": [
+    1476,
+    777,
+    1896,
+    977
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "errors": []
+ },
+ "offline_1280": {
+  "button": "neurons offline",
+  "caption": "neurons offline — the 1M network runs while he is awake when the GPU is on · static cells, no activity\ncells enlarged ~14× for visibility · 2,901 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.",
+  "panel": {
+   "cards": [
+    916,
+    24,
+    1256,
+    377
+   ],
+   "dock": [
+    916,
+    391,
+    1256,
+    778
+   ],
+   "layers": [
+    916,
+    391,
+    1256,
+    451
+   ],
+   "caption": [
+    916,
+    521,
+    1256,
+    697
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "forest": {
+   "live": false,
+   "net": null,
+   "tint": null,
+   "race": false,
+   "recorded": 0,
+   "shown": 0,
+   "points": 2901,
+   "cells": 2901,
+   "shaped": 2889,
+   "segments": 115511,
+   "drawCalls": 7,
+   "enlarge": 14,
+   "spikes": 0,
+   "types": [
+    {
+     "type": "pyramidal",
+     "n": 2213,
+     "segs": 40,
+     "id": "NMO_107146",
+     "species": "human"
+    },
+    {
+     "type": "basket",
+     "n": 522,
+     "segs": 40,
+     "id": "NMO_107145",
+     "species": "human"
+    },
+    {
+     "type": "relay",
+     "n": 49,
+     "segs": 39,
+     "id": "NMO_115363",
+     "species": "rat"
+    },
+    {
+     "type": "medium_spiny",
+     "n": 59,
+     "segs": 40,
+     "id": "NMO_10032",
+     "species": "rat"
+    },
+    {
+     "type": "ca1_pyramidal",
+     "n": 28,
+     "segs": 40,
+     "id": "NMO_00222",
+     "species": "rat"
+    },
+    {
+     "type": "amygdala_principal",
+     "n": 18,
+     "segs": 40,
+     "id": "NMO_139102",
+     "species": "mouse"
+    }
+   ]
+  }
+ },
+ "live_1280": {
+  "caption": "live · 20k-neuron network on CPU · last frame: 5,930 spikes recorded, none sent (the stream's 3 KB/s budget was used up)\ncells enlarged ~14× for visibility · 2,901 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · a spike glows soma → axon, slowed ~250×; region rates tint the dendrites · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each drawn cell stands for a sampled model neuron; a model, not a mind.",
+  "panel": {
+   "cards": [
+    916,
+    24,
+    1256,
+    377
+   ],
+   "dock": [
+    916,
+    391,
+    1256,
+    778
+   ],
+   "layers": [
+    916,
+    391,
+    1256,
+    451
+   ],
+   "caption": [
+    916,
+    521,
+    1256,
+    697
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "errors": []
+ },
+ "offline_390": {
+  "button": "neurons offline",
+  "caption": "neurons offline — the 1M network runs while he is awake when the GPU is on · static cells, no activity\ncells enlarged ~14× for visibility · 1,407 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.",
+  "panel": {
+   "cards": [
+    0,
+    557,
+    390,
+    867
+   ],
+   "dock": [
+    0,
+    507,
+    390,
+    844
+   ],
+   "layers": [
+    16,
+    517,
+    374,
+    544
+   ],
+   "caption": [
+    16,
+    614,
+    374,
+    749
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "forest": {
+   "live": false,
+   "net": null,
+   "tint": null,
+   "race": false,
+   "recorded": 0,
+   "shown": 0,
+   "points": 1407,
+   "cells": 1407,
+   "shaped": 1401,
+   "segments": 56016,
+   "drawCalls": 7,
+   "enlarge": 14,
+   "spikes": 0,
+   "types": [
+    {
+     "type": "pyramidal",
+     "n": 1083,
+     "segs": 40,
+     "id": "NMO_107146",
+     "species": "human"
+    },
+    {
+     "type": "basket",
+     "n": 242,
+     "segs": 40,
+     "id": "NMO_107145",
+     "species": "human"
+    },
+    {
+     "type": "relay",
+     "n": 24,
+     "segs": 39,
+     "id": "NMO_115363",
+     "species": "rat"
+    },
+    {
+     "type": "medium_spiny",
+     "n": 31,
+     "segs": 40,
+     "id": "NMO_10032",
+     "species": "rat"
+    },
+    {
+     "type": "ca1_pyramidal",
+     "n": 13,
+     "segs": 40,
+     "id": "NMO_00222",
+     "species": "rat"
+    },
+    {
+     "type": "amygdala_principal",
+     "n": 8,
+     "segs": 40,
+     "id": "NMO_139102",
+     "species": "mouse"
+    }
+   ]
+  }
+ },
+ "live_390": {
+  "caption": "live · 20k-neuron network on CPU · last frame: 5,674 spikes recorded, none sent (the stream's 3 KB/s budget was used up)\ncells enlarged ~14× for visibility · 1,407 cells (pyramidal, basket, thalamic relay, medium spiny, CA1 pyramidal, amygdala principal; ≤ 40 segments each) · a spike glows soma → axon, slowed ~250×; region rates tint the dendrites · NeuroMorpho.Org, CC BY 4.0 · credits on /about\nShapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each drawn cell stands for a sampled model neuron; a model, not a mind.",
+  "panel": {
+   "cards": [
+    0,
+    557,
+    390,
+    974
+   ],
+   "dock": [
+    0,
+    507,
+    390,
+    844
+   ],
+   "layers": [
+    16,
+    517,
+    374,
+    544
+   ],
+   "caption": [
+    16,
+    614,
+    374,
+    749
+   ],
+   "cards_end_above_dock": true,
+   "buttons_fit": true
+  },
+  "errors": []
+ },
+ "mini": {
+  "text": "simulated spiking neurons, live · each cell a sampled model neuron, enlarged · a model, not a mind",
+  "errors": []
+ },
+ "fps_x4_390px_fibres_cortex_hidden": {
+  "neurons_off": {
+   "fps": 0.0,
+   "js_ms_per_frame": null
+  },
+  "neurons_on": {
+   "fps": 2.0,
+   "js_ms_per_frame": 7.15
+  }
+ },
+ "off_screen_390px": {
+  "on_screen": false,
+  "renders_in_2s": 0
+ },
+ "neurons_layer_js_cost_x4": {
+  "cells": 1407,
+  "segments": 56016,
+  "draw_calls": 7,
+  "build_ms": 674,
+  "per_frame_msg_ms": 0.167,
+  "per_render_ms": 0.0401
+ },
+ "fps_errors": []
+}

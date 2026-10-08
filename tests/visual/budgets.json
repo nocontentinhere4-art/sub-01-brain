@@ -1,0 +1,10 @@
+{
+  "_note": "hard limits of the visual QA suite (tests/visual/harness.py); null = report only. bed/chair/desk/below_floor count sampled skinned vertices (every 2nd) inside that surface; desk went to 0 with #80 (defect 7). desk_things: inside the monitor or the game controller (not the room's static mesh; docs/qa/desk_penetration). Promote below_floor_vertices to 0 once G3's fix for defect 8 (docs/qa/defects.md) lands. pip_draw_calls is the room's mini brain (/brain?mini): 2 on main, 9 with the neuron forest on (#116). pip_specks counts the fibres' beads too (140 on main): report only.",
+  "bed_vertices": 0,
+  "chair_vertices": 0,
+  "desk_vertices": 0,
+  "desk_things_vertices": 0,
+  "below_floor_vertices": null,
+  "pip_draw_calls": 4,
+  "pip_specks": null
+}

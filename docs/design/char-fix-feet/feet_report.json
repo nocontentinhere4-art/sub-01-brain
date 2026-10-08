@@ -1,0 +1,74 @@
+{
+ "sides": {
+  "L": {
+   "scale": 1.0198,
+   "v5_sole_length_m": 0.2992,
+   "ref_sole_length_m": 0.2934,
+   "hem_y_m": 0.1156,
+   "strap_top_y_m": 0.0995,
+   "sock_top_y_m": 0.1549
+  },
+  "R": {
+   "scale": 1.0179,
+   "v5_sole_length_m": 0.2993,
+   "ref_sole_length_m": 0.294,
+   "hem_y_m": 0.1155,
+   "strap_top_y_m": 0.0995,
+   "sock_top_y_m": 0.1548
+  }
+ },
+ "checks": {
+  "socks": {
+   "triangles": 25801,
+   "open_edges": 445,
+   "orientation_conflicts": 4,
+   "conflict_heights_m": [
+    0.056,
+    0.054,
+    0.059,
+    0.06
+   ],
+   "signed_volume_cm3": 2331.6
+  },
+  "slides": {
+   "triangles": 28848,
+   "open_edges": 0,
+   "orientation_conflicts": 0,
+   "conflict_heights_m": [],
+   "signed_volume_cm3": 2084.6
+  }
+ },
+ "sock_slide_rest": {
+  "sock_vertices_inside_slides": 170,
+  "deepest_mm": 0.41,
+  "inside_by_depth": {
+   "<0.5mm": 170,
+   "0.5-1mm": 0,
+   "1-2mm": 0,
+   ">2mm": 0
+  },
+  "shared_seam_vertices": 1984,
+  "tube_gap_mm": [
+   0,
+   0.408
+  ]
+ },
+ "soles_rest": {
+  "L": {
+   "lowest_mm": 0,
+   "within_1mm_of_floor": 297
+  },
+  "R": {
+   "lowest_mm": 0,
+   "within_1mm_of_floor": 388
+  }
+ },
+ "output": "web/room/char_v5.glb",
+ "triangles": {
+  "body_removed": 12612,
+  "old_slides": 19854,
+  "socks": 25801,
+  "slides": 28848,
+  "added": 22183
+ }
+}

@@ -1,0 +1,50 @@
+{
+ "what": "mouse mode, the left hand at rest on the keys (the owner's typing take, OT_REST 0.2 pace, OT_DRIFT 0.35 of his travel, index track centred on F); desk_14, 128 samples over 32 s, contact on the keyboard mesh (tools/motion/key_contact_mesh.py method; self-check -2.0/+3.0 mm every sample)",
+ "fingertips_2_5": {
+  "n": 509,
+  "median_mm": 1.1,
+  "in_0_to_2mm_pct": 87,
+  "within_3mm_pct": 94,
+  "min_mm": -0.5,
+  "max_mm": 9,
+  "over_2mm_in": 0,
+  "over_5mm_up": 4,
+  "samples_not_over_keyboard": 3
+ },
+ "per_finger": {
+  "L2": {
+   "median": 1.2,
+   "max": 9,
+   "not_over_keyboard": 3
+  },
+  "L3": {
+   "median": 1.1,
+   "max": 5,
+   "not_over_keyboard": 0
+  },
+  "L4": {
+   "median": 1.1,
+   "max": 2.4,
+   "not_over_keyboard": 0
+  },
+  "L5": {
+   "median": 1.4,
+   "max": 4.3,
+   "not_over_keyboard": 0
+  }
+ },
+ "thumb": {
+  "median_mm": 3.3499999999999996,
+  "min_mm": 0.5
+ },
+ "left_hand_deepest_inside_mm_by_bone": {
+  "finger1-1L": -0.1,
+  "finger5-3L": -0.5
+ },
+ "index_tip_along_keys_cm": [
+  -3.8,
+  -1.2
+ ],
+ "F_cm": -2.85,
+ "keyboard_left_edge_cm": -13.3
+}

@@ -1,0 +1,231 @@
+{
+ "issue": 55,
+ "cost_20k_one_core": {
+  "n_neurons": 20000,
+  "synapses": 2019400,
+  "plastic": 754,
+  "build_s": 0.36,
+  "startup_cpu_s": 2.16,
+  "calibration": {
+   "pool_rate_mean_hz": 5.48,
+   "pool_rate_sd_hz": 0.87,
+   "threshold_hz": 7.23
+  },
+  "cpu_ms_per_decision_with_twin": {
+   "mean": 374.6,
+   "p95": 595.4,
+   "max": 756.6
+  },
+  "cpu_ms_per_decision_without_twin": 202.7,
+  "simulated_decision_ms": {
+   "mean": 109.6,
+   "timeouts": 22
+  }
+ },
+ "synthetic_20k_150_decisions": {
+  "with_eta_decay": [
+   {
+    "trials": 150,
+    "seed": 0,
+    "learned": 0.647,
+    "twin": 0.32,
+    "chance": 0.281,
+    "learned_last50": 0.7,
+    "twin_last50": 0.3,
+    "curve": [
+     0.4,
+     0.92,
+     0.52,
+     0.64,
+     0.8,
+     0.6
+    ],
+    "twin_curve": [
+     0.32,
+     0.36,
+     0.32,
+     0.32,
+     0.36,
+     0.24
+    ],
+    "n_neurons": 20000,
+    "eta_half": 50.0,
+    "cpu_s": 54.8
+   },
+   {
+    "trials": 150,
+    "seed": 1,
+    "learned": 0.573,
+    "twin": 0.293,
+    "chance": 0.289,
+    "learned_last50": 0.56,
+    "twin_last50": 0.32,
+    "curve": [
+     0.36,
+     0.72,
+     0.72,
+     0.52,
+     0.56,
+     0.56
+    ],
+    "twin_curve": [
+     0.36,
+     0.2,
+     0.32,
+     0.24,
+     0.2,
+     0.44
+    ],
+    "n_neurons": 20000,
+    "eta_half": 50.0,
+    "cpu_s": 55.4
+   },
+   {
+    "trials": 150,
+    "seed": 2,
+    "learned": 0.62,
+    "twin": 0.28,
+    "chance": 0.29,
+    "learned_last50": 0.64,
+    "twin_last50": 0.38,
+    "curve": [
+     0.4,
+     0.72,
+     0.6,
+     0.72,
+     0.68,
+     0.6
+    ],
+    "twin_curve": [
+     0.24,
+     0.2,
+     0.28,
+     0.2,
+     0.36,
+     0.4
+    ],
+    "n_neurons": 20000,
+    "eta_half": 50.0,
+    "cpu_s": 56.6
+   }
+  ],
+  "without_eta_decay": [
+   {
+    "trials": 150,
+    "seed": 0,
+    "learned": 0.56,
+    "twin": 0.32,
+    "chance": 0.281,
+    "learned_last50": 0.44,
+    "twin_last50": 0.3,
+    "curve": [
+     0.32,
+     0.68,
+     0.68,
+     0.8,
+     0.52,
+     0.36
+    ],
+    "twin_curve": [
+     0.32,
+     0.36,
+     0.32,
+     0.32,
+     0.36,
+     0.24
+    ],
+    "n_neurons": 20000,
+    "eta_half": 1000000000000.0,
+    "cpu_s": 49.4
+   },
+   {
+    "trials": 150,
+    "seed": 1,
+    "learned": 0.533,
+    "twin": 0.293,
+    "chance": 0.289,
+    "learned_last50": 0.38,
+    "twin_last50": 0.32,
+    "curve": [
+     0.48,
+     0.76,
+     0.72,
+     0.48,
+     0.28,
+     0.48
+    ],
+    "twin_curve": [
+     0.36,
+     0.2,
+     0.32,
+     0.24,
+     0.2,
+     0.44
+    ],
+    "n_neurons": 20000,
+    "eta_half": 1000000000000.0,
+    "cpu_s": 52.6
+   },
+   {
+    "trials": 150,
+    "seed": 2,
+    "learned": 0.533,
+    "twin": 0.28,
+    "chance": 0.29,
+    "learned_last50": 0.46,
+    "twin_last50": 0.38,
+    "curve": [
+     0.4,
+     0.76,
+     0.56,
+     0.56,
+     0.32,
+     0.6
+    ],
+    "twin_curve": [
+     0.24,
+     0.2,
+     0.28,
+     0.2,
+     0.36,
+     0.4
+    ],
+    "n_neurons": 20000,
+    "eta_half": 1000000000000.0,
+    "cpu_s": 53.0
+   }
+  ]
+ },
+ "tick_smoke_demo_ms": {
+  "main": [
+   9.1,
+   9.0,
+   8.9,
+   9.2
+  ],
+  "this_branch": [
+   9.2,
+   9.0,
+   9.5
+  ],
+  "this_branch_with_frames": [
+   9.4,
+   8.8
+  ]
+ },
+ "child_between_decisions_pct_of_core": {
+  "idle_pulse_50ms_every_2s": [
+   1.4,
+   2.0
+  ],
+  "no_pulse": 0.0
+ },
+ "night_replay_cpu_20k_torch_dropped_scope": {
+  "frozen": 0.347,
+  "learning_pass_1": 0.531,
+  "learned_removed": 0.286,
+  "chance": 0.317,
+  "paid_off": 49,
+  "choices": 120
+ }
+}

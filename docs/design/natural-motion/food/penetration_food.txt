@@ -1,0 +1,62 @@
+# Penetration, part 2 food cycles (every skinned vertex inside the bed or the chair), every 0.25 s
+# Sequence: order ramen, delivery, eat, window (the bowl to the bin), bakery, bread, konbini, onigiri, pizza delivery, eat, phone, sushi, music, konbini bento, window.
+
+## seed 5
+research      max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+window        max 0 
+buy_bread     max 0 
+eat           max 0 
+research      max 0 
+buy_konbini   max 0 
+eat           max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+listen_music  max 0 
+buy_konbini   max 0 
+eat           max 0 
+window        max 0 
+WORST 0
+
+## seed 21
+research      max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+window        max 0 
+buy_bread     max 0 
+eat           max 0 
+research      max 0 
+buy_konbini   max 0 
+eat           max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+get_delivery  max 0 
+eat           max 0 
+listen_music  max 0 
+buy_konbini   max 0 
+eat           max 0 
+window        max 0 
+WORST 0
+
+# Captured cases:
+ramen_1_order max 0
+ramen_2_door max 0
+ramen_3_eat max 0
+ramen_4_bin max 0
+pizza_eat max 0
+sushi_eat max 0
+bakery max 0
+bread_eat max 0
+konbini max 0
+onigiri_eat max 0

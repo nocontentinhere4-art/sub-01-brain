@@ -1,0 +1,6 @@
+eval: "steps 147, nonzero 4: 3.85 0/2 chair:1 | 4.25 0/14 walk:-0.32394952096326013,-0.6018116688719273 | 4.3 0/3 - | 5.3 0/2 turn"
+eval: "steps 111, nonzero 3: 1.85 0/1 pose | 1.9 0/2 - | 3.3 0/2 chair"
+eval: "steps 65, nonzero 0: "
+eval: "steps 77, nonzero 0: "
+eval: "steps 17, nonzero 4: 0.65 0/3 pose:desk | 0.7 0/3 pose:desk | 0.75 0/3 pose:desk | 0.8 0/3 desk"
+eval: "steps 45, nonzero 0: "

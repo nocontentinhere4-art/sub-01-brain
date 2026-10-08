@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUB-01 · life</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  :root { --bg:#050507; --fg:#ececf2; --dim:#80808f; --or:#ff6a00; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); font-family: ui-monospace, "SF Mono", Menlo, monospace; overflow:hidden; }
+  #wrap { display:flex; height:100%; }
+  #scene { flex:1; position:relative; min-width:0; }
+  #scene canvas { display:block; }
+  #hud { position:absolute; left:16px; top:14px; pointer-events:none; max-width:60%; }
+  #hud h1 { margin:0; font-size:20px; letter-spacing:.12em; display:inline-block; background:var(--or); color:#0a0a0a; padding:2px 10px; }
+  #nav { display:inline-block; margin-left:10px; font-size:12px; pointer-events:auto; }
+  #nav a { color:var(--dim); text-decoration:none; margin-right:10px; } #nav a.on { color:var(--fg); }
+  #doing { margin-top:10px; font-size:15px; text-shadow:0 1px 6px #000; }
+  #meta { color:var(--dim); font-size:12px; margin-top:4px; text-shadow:0 1px 6px #000; }
+  #thought { margin-top:8px; font-size:15px; font-style:italic; color:#fff; text-shadow:0 1px 8px #000; max-width:560px; }
+  #tools { position:absolute; right:14px; top:14px; display:flex; gap:6px; }
+  #tools button { background:rgba(10,10,14,.75); color:var(--fg); border:1px solid #2a2a36; font:inherit; font-size:11px; padding:5px 9px; cursor:pointer; }
+  #tools button.on { border-color:var(--or); color:var(--or); }
+  #phone { position:absolute; left:16px; bottom:16px; width:210px; height:400px; border-radius:26px; background:#0b0b10;
+    border:3px solid #26262f; box-shadow:0 10px 40px rgba(0,0,0,.6); padding:34px 10px 14px; display:none; }
+  #phone .top { position:absolute; top:12px; left:0; right:0; text-align:center; font-size:10px; color:var(--dim); }
+  #phone canvas, #phone img, #phone iframe { width:100%; height:100%; border:0; border-radius:10px; background:#000; display:block; object-fit:cover; object-position:top; }
+  #screens div { font-size:12px; color:var(--dim); padding:2px 0; } #screens b { color:#ececf2; font-weight:500; }
+  #foot { position:absolute; left:16px; right:16px; bottom:8px; color:#5a5a6a; font-size:10px; pointer-events:none; text-align:right; }
+  #side { width:330px; border-left:1px solid #1c1c26; padding:14px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; }
+  .lbl { color:var(--dim); font-size:11px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+  .bar { display:flex; align-items:center; gap:8px; font-size:12px; margin:4px 0; }
+  .bar span:first-child { width:70px; color:var(--dim); }
+  .track { flex:1; height:6px; background:#15151d; border-radius:3px; overflow:hidden; }
+  .fill { height:100%; background:linear-gradient(90deg,#5a189a,#ff6a00); width:0; transition:width .4s; }
+  #log div { font-size:12px; padding:3px 0; border-bottom:1px solid #111118; }
+  #log span { color:var(--dim); margin-right:6px; }
+  #chat { font-size:12px; max-height:180px; overflow-y:auto; }
+  #chat div { padding:3px 0; border-bottom:1px solid #111118; }
+  form { display:flex; gap:6px; }
+  input { flex:1; background:#0c0c12; color:var(--fg); border:1px solid #2a2a36; padding:8px; font:inherit; font-size:12px; }
+  form button { background:var(--fg); color:#0a0a0a; border:0; padding:0 12px; font:inherit; font-size:12px; }
+  #ack { font-size:11px; color:var(--dim); min-height:1.2em; }
+  #note { font-size:10px; color:#55556a; }
+  #music .mu { display:flex; gap:8px; align-items:center; margin-bottom:6px; font-size:12px; }
+  #music .mu img { width:44px; height:44px; border-radius:4px; flex:none; object-fit:cover; }
+  #music .mu span { color:var(--dim); display:block; font-size:11px; }
+  #music iframe { width:100%; height:80px; border:0; border-radius:12px; display:block; background:#111; }
+  #music .m { font-size:10px; color:var(--dim); margin-top:5px; line-height:1.45; }
+  @media (max-width: 900px) { #wrap { flex-direction:column; overflow-y:auto; } #scene { flex:none; height:62vh; }
+    #side { width:auto; border-left:none; } html,body { overflow:auto; } #phone { width:150px; height:280px; } }
+  #brainpip { position:absolute; right:14px; bottom:26px; width:min(34%, 380px); aspect-ratio:4/3; border:1px solid #2a2a36;
+    border-radius:8px; overflow:hidden; background:#000; box-shadow:0 10px 40px rgba(0,0,0,.6); display:block; }
+  #brainpip iframe { width:100%; height:100%; border:0; pointer-events:none; display:block; }
+  #brainpip span { position:absolute; left:8px; bottom:6px; right:8px; font-size:10px; color:#bdbdca; text-shadow:0 1px 4px #000; }
+  #brainpip b { color:#ff6a00; font-weight:normal; }
+  @media (max-width: 900px) { #brainpip { width:46%; bottom:12px; } }
+  #sv, #walk { position:absolute; inset:0; display:none; z-index:1; background:#000; overflow:hidden; }
+  #scene { overflow:hidden; }
+  #walk iframe { width:100%; height:100%; border:0; pointer-events:none; transform:scale(1.18); }
+  #map { position:absolute; right:14px; top:52px; width:min(30%, 320px); aspect-ratio:1/1; z-index:3; border:1px solid #2a2a36; border-radius:8px; background:#0d0e13; }
+  @media (max-width: 900px) { #map { width:40%; } }
+  #map .leaflet-control-attribution { background:rgba(8,8,11,.6); color:#6a6a7e; font-size:8px; line-height:1.3; }
+  #map .leaflet-control-attribution a { color:#8f8fa3; }
+  #svlabel { position:absolute; left:16px; bottom:30px; z-index:2; font-size:11px; color:#e8e8ee; background:rgba(0,0,0,.55);
+    padding:4px 8px; border-radius:3px; display:none; }
+  #hud, #tools, #phone, #brainpip, #foot { z-index:3; }
+  #neurons { min-width:0; }
+</style>
+<link rel="stylesheet" href="/neurons.css">
+</head>
+<body>
+<div id="wrap">
+  <div id="scene">
+    <div id="hud">
+      <h1>SUB-01</h1><span id="nav"><a class="on" href="/">LIFE</a><a href="/brain">BRAIN</a><a href="/world.html">DREAMS</a></span>
+      <div id="doing">connecting…</div>
+      <div id="meta"></div>
+      <div id="thought"></div>
+    </div>
+    <div id="tools"><button id="b-follow" class="on">follow</button><button id="b-lab">lab mode</button></div>
+    <div id="phone"><div class="top">SUB-01's phone · <span id="app"></span></div><img id="phoneimg" alt="" style="display:none"><iframe id="phonefr" title="TikTok (official embed)" allow="encrypted-media; fullscreen; picture-in-picture" style="display:none"></iframe></div>
+    <div id="sv"></div>
+    <div id="walk"><iframe id="walkvid" allow="autoplay; encrypted-media" title="real street footage"></iframe></div>
+    <div id="map"></div>
+    <div id="svlabel">first person · the real streets of Kichijōji, Tokyo · Google Street View</div>
+    <a id="brainpip" href="/brain" title="open the brain">
+      <iframe src="/brain?mini" tabindex="-1" loading="lazy"></iframe>
+      <span>its brain, live · real fibres from MRI · <b id="pipstage">AWAKE</b></span>
+    </a>
+    <div id="foot">A life simulated in real time, driven by a brain model built from one real person's public MRI. Not a mind, not the person.</div>
+  </div>
+  <div id="side">
+    <div><div class="lbl">Needs</div>
+      <div class="bar"><span>hunger</span><div class="track"><div class="fill" id="n-hunger"></div></div></div>
+      <div class="bar"><span>boredom</span><div class="track"><div class="fill" id="n-boredom"></div></div></div>
+      <div class="bar"><span>sleepiness</span><div class="track"><div class="fill" id="n-sleep"></div></div></div>
+      <div class="bar"><span>bread</span><span id="n-bread" style="color:#ececf2">0</span></div>
+    </div>
+    <div id="music" hidden><div class="lbl">Now playing · <span id="mu-k"></span></div>
+      <div class="mu"><img id="mu-art" alt="" hidden><div><div id="mu-t"></div><span id="mu-a"></span></div></div>
+      <iframe id="mu-embed" title="Spotify player" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <div class="m" id="mu-card">his brain model picked this track; press play to listen on your own device</div>
+      <div class="m" id="mu-why"></div>
+    </div>
+    <div><div class="lbl">Today</div><div id="log"></div></div>
+    <div><div class="lbl">His screens</div><div id="screens">…</div><div id="scr-music"></div><div id="scr-tt"></div></div>
+    <div><div class="lbl">Talk to it · messages become desires and stimuli</div>
+      <div id="chat"></div>
+      <form id="f"><input id="in" maxlength="280" placeholder="e.g. go and buy some bread" autocomplete="off"><button>send</button></form>
+      <div id="ack"></div>
+    </div>
+    <div id="neurons"></div>
+    <div id="note">It decides with its own needs and brain state: a suggestion makes an activity more likely, it does not command it. Phone: the real screen of his phone's browser (shown only when there is one); public TikTok videos play in TikTok's official embed player, muted, no autoplay.</div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="/neurons.js"></script>
+<script>
+// "Neurons" panel in the side column: 1M simulated spiking neurons (a model, not a mind)
+Neurons.init({mount: document.getElementById("neurons"), open: true});
+// ---------------- scene ----------------
+const host = document.getElementById("scene");
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 500);
+camera.position.set(4, 16, 22);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.47; controls.target.set(4, 0, 4);
+function resize(){ const w=host.clientWidth, h=host.clientHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+const hemi = new THREE.HemisphereLight(0xdfe8ff, 0x3a3226, 0.7); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(-20, 30, 10); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left:-35, right:35, top:35, bottom:-35});
+scene.add(sun);
+
+const M = c => new THREE.MeshStandardMaterial({color:c, roughness:0.85, metalness:0.0});
+function box(w, h, d, c, x, y, z, parent=scene){ const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), M(c));
+  m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; parent.add(m); return m; }
+function cyl(r, h, c, x, y, z, parent=scene, seg=12){ const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg), M(c));
+  m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; parent.add(m); return m; }
+function label(text, bg, fg, w=2.4, h=0.6){ const c=document.createElement("canvas"); c.width=512; c.height=128; const x=c.getContext("2d");
+  x.fillStyle=bg; x.fillRect(0,0,512,128); x.fillStyle=fg; x.font="bold 64px Menlo, monospace"; x.textAlign="center"; x.textBaseline="middle"; x.fillText(text,256,68);
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c)})); return m; }
+
+const nightLights = [];      // things that glow at night
+let world = null;
+
+function buildWorld(W){
+  world = W;
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 90), M(0x6f7a5a)); ground.rotation.x = -Math.PI/2; ground.position.set(4,0,10);
+  ground.receiveShadow = true; scene.add(ground);
+  const [sx0, sz0, sx1, sz1] = W.street;
+  box(sx1-sx0+30, 0.04, sz1-sz0, 0x2c2e33, (sx0+sx1)/2, 0.02, (sz0+sz1)/2);
+  box(sx1-sx0+30, 0.12, 1.2, 0x9a9a96, (sx0+sx1)/2, 0.06, sz0-0.6); box(sx1-sx0+30, 0.12, 1.2, 0x9a9a96, (sx0+sx1)/2, 0.06, sz1+0.6);
+  for (let x = sx0-10; x < sx1+10; x += 4) box(1.6, 0.05, 0.12, 0xe8e2c8, x, 0.05, (sz0+sz1)/2);
+  // apartment (cut-away: low front wall so we can see inside)
+  const [ax0, az0, ax1, az1] = W.apartment, aw = ax1-ax0, ad = az1-az0, cx = (ax0+ax1)/2, cz = (az0+az1)/2;
+  box(aw, 0.1, ad, 0xb99a74, cx, 0.05, cz);                                            // wooden floor
+  box(aw, 2.8, 0.2, 0xe9e4da, cx, 1.4, az0);                                           // back wall
+  box(0.2, 2.8, ad, 0xe9e4da, ax0, 1.4, cz); box(0.2, 2.8, ad, 0xe9e4da, ax1, 1.4, cz);
+  box(3.3, 0.7, 0.2, 0xe9e4da, ax0+1.65, 0.35, az1); box(3.3, 0.7, 0.2, 0xe9e4da, ax1-1.65, 0.35, az1); // low front wall + door gap
+  const glass = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.3), new THREE.MeshStandardMaterial({color:0x9fd3ff, emissive:0x223344, transparent:true, opacity:0.55}));
+  glass.position.set(4, 1.7, az0+0.11); scene.add(glass); nightLights.push([glass.material, 0x223344, 0xffc46b]);
+  box(2.4, 0.08, 0.1, 0x6b5a48, 4, 1.02, az0+0.14); box(2.4, 0.08, 0.1, 0x6b5a48, 4, 2.38, az0+0.14);
+  // bed, table + chair, desk + monitor
+  const bp = W.places.bed; box(2.0, 0.45, 1.5, 0x46506e, bp[0]-0.2, 0.3, bp[1]-0.1); box(0.5, 0.2, 1.2, 0xf1efe8, bp[0]-1.0, 0.62, bp[1]-0.1);
+  box(1.3, 0.12, 1.4, 0x7d8bb0, bp[0]+0.15, 0.58, bp[1]-0.1);
+  const tp = W.places.table; box(1.4, 0.08, 0.9, 0x8a6a4a, tp[0], 0.78, tp[1]-0.7); for (const [dx,dz] of [[-0.6,-0.35],[0.6,-0.35],[-0.6,0.35],[0.6,0.35]]) cyl(0.04, 0.75, 0x5a4636, tp[0]+dx, 0.38, tp[1]-0.7+dz, scene, 6);
+  box(0.5, 0.06, 0.5, 0x5a4636, tp[0], 0.46, tp[1]); box(0.5, 0.55, 0.06, 0x5a4636, tp[0], 0.75, tp[1]+0.24);
+  // desk against the back wall: the screen faces the room (and the camera), SUB-01 sits with its back to us
+  const dp = W.places.desk; box(1.5, 0.07, 0.7, 0x2e2e33, dp[0], 0.76, dp[1]-0.65); box(0.05, 0.75, 0.6, 0x222226, dp[0]-0.7, 0.38, dp[1]-0.65); box(0.05, 0.75, 0.6, 0x222226, dp[0]+0.7, 0.38, dp[1]-0.65);
+  box(1.08, 0.66, 0.04, 0x111114, dp[0], 1.2, dp[1]-0.93);
+  monitor = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.6), new THREE.MeshBasicMaterial({map: chartTex}));
+  monitor.position.set(dp[0], 1.2, dp[1]-0.9); scene.add(monitor);
+  box(0.5, 0.06, 0.5, 0x333338, dp[0], 0.46, dp[1]); // stool
+  const lamp = new THREE.PointLight(0xffd6a0, 0, 9); lamp.position.set(4, 2.5, 3); scene.add(lamp); roomLamp = lamp;
+  // neighbours along the street
+  for (const [x, w, h, c] of [[-16,7,6,0xb9a38c],[-7,5,4.5,0x8e9aa6],[13,6,4.5,0xa89484],[27,7,8,0x9aa39a],[-24,6,5,0x8b8f99]])
+    { const b = box(w, h, 6, c, x, h/2, 2.5); for (let y = 1.5; y < h-0.5; y += 2) for (let k = -w/2+1; k < w/2; k += 1.6) {
+        const win = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.9), new THREE.MeshStandardMaterial({color:0x33404d, emissive:0x000000}));
+        win.position.set(x+k, y, 5.51); scene.add(win); nightLights.push([win.material, 0x000000, Math.random() < 0.55 ? 0xffc46b : 0x000000]); } }
+  // bakery (cut-away towards the street)
+  const [bx0, bz0, bx1, bz1] = W.bakery, bcx = (bx0+bx1)/2, bcz = (bz0+bz1)/2;
+  box(bx1-bx0, 0.1, bz1-bz0, 0xd9cbb5, bcx, 0.05, bcz);
+  // street side (north) is the real facade with the door; the far side (south) is cut low so the camera sees in
+  box(3.2, 3.2, 0.2, 0xd8b98a, bx0+1.6, 1.6, bz0); box(3.2, 3.2, 0.2, 0xd8b98a, bx1-1.6, 1.6, bz0); box(bx1-bx0, 0.8, 0.2, 0xd8b98a, bcx, 2.8, bz0);
+  box(bx1-bx0, 0.9, 0.2, 0xd8b98a, bcx, 0.45, bz1);
+  box(0.2, 3.2, bz1-bz0, 0xd8b98a, bx0, 1.6, bcz); box(0.2, 3.2, bz1-bz0, 0xd8b98a, bx1, 1.6, bcz);
+  const cp = W.places.counter; box(3.2, 1.0, 0.7, 0x7b5236, cp[0], 0.5, cp[1]+0.75);
+  for (let i = 0; i < 9; i++) { const loaf = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), M(0xc98b43)); loaf.scale.set(1.6, 0.8, 1);
+    loaf.position.set(bx0+1.2+(i%3)*0.7 + (i>=6?5:0) - (i>=3&&i<6?-5.6:0), 1.35, bz0+0.45); scene.add(loaf); }
+  box(2.4, 0.08, 0.4, 0x6b4a30, bx0+1.9, 1.2, bz0+0.45); box(2.4, 0.08, 0.4, 0x6b4a30, bx1-1.9, 1.2, bz0+0.45);
+  const sign = label("BAKERY · PANE", "#1a1208", "#ffcf8a", 4.2, 0.8); sign.position.set(bcx, 3.6, bz0-0.12); sign.rotation.y = Math.PI; scene.add(sign);
+  for (let i = 0; i < 8; i++) box(1, 0.08, 1.4, i % 2 ? 0xffffff : 0xd8452b, bx0+0.5+i, 3.05, bz0-0.6).rotation.x = -0.35;
+  // park
+  const [px0, pz0, px1, pz1] = W.park;
+  box(px1-px0, 0.06, pz1-pz0, 0x5f8f4e, (px0+px1)/2, 0.03, (pz0+pz1)/2);
+  box(1.4, 0.07, pz1-pz0-1, 0xc2b28f, W.places.bench[0], 0.07, (pz0+pz1)/2);
+  for (const [x, z] of [[-17,15],[-16,21],[-10,16],[-9,21.5],[-17.5,18],[-8.5,14.5]]) { cyl(0.18, 1.6, 0x6b4a30, x, 0.8, z, scene, 8);
+    const c = new THREE.Mesh(new THREE.SphereGeometry(1.1, 12, 10), M(0x3f7a3a)); c.position.set(x, 2.3, z); c.castShadow = true; scene.add(c); }
+  const bp2 = W.places.bench; box(1.8, 0.08, 0.5, 0x7a5638, bp2[0], 0.48, bp2[1]+0.3); box(1.8, 0.45, 0.08, 0x7a5638, bp2[0], 0.75, bp2[1]+0.55);
+  // street lights
+  for (let x = sx0; x <= sx1; x += 9) { cyl(0.06, 4, 0x2b2b30, x, 2, sz1+1.3, scene, 6);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.18, 8, 8), new THREE.MeshStandardMaterial({color:0xffffff, emissive:0x000000}));
+    bulb.position.set(x, 4.05, sz1+1.3); scene.add(bulb); nightLights.push([bulb.material, 0x000000, 0xffd48a]);
+    const pl = new THREE.PointLight(0xffc988, 0, 11); pl.position.set(x, 3.9, sz1+1.2); scene.add(pl); streetLamps.push(pl); }
+}
+let monitor = null, roomLamp = null; const streetLamps = [];
+
+// ---------------- the character (stylised, no face: never the real person) ----------------
+const body = new THREE.Group(); scene.add(body);
+const skin = M(0xe0c4a4), shirt = M(0xeeeeee), pants = M(0x3a4a6a);
+const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.26, 0.7, 12), shirt); torso.position.y = 1.15; torso.castShadow = true; body.add(torso);
+const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 14), skin); head.position.y = 1.72; head.castShadow = true; body.add(head);
+const tag = label("SUB-01", "#ff6a00", "#0a0a0a", 0.36, 0.1); tag.position.set(0, 1.28, 0.265); body.add(tag);
+const legs = [], arms = [];
+for (const s of [-1, 1]) { const l = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.8, 8), pants); l.geometry.translate(0, -0.4, 0);
+  l.position.set(0.11*s, 0.8, 0); l.castShadow = true; body.add(l); legs.push(l);
+  const a = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.62, 8), shirt); a.geometry.translate(0, -0.31, 0);
+  a.position.set(0.3*s, 1.45, 0); a.castShadow = true; body.add(a); arms.push(a); }
+const phoneMesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.17, 0.015), new THREE.MeshBasicMaterial({color:0x111111}));
+const phoneScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.15), new THREE.MeshBasicMaterial({map:null, color:0x88aaff}));
+phoneScreen.position.z = 0.009; phoneMesh.add(phoneScreen); phoneMesh.visible = false; body.add(phoneMesh);
+const loafHand = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), M(0xc98b43)); loafHand.scale.set(1.8, 0.8, 1); loafHand.visible = false; body.add(loafHand);
+const zzz = label("z z z", "rgba(0,0,0,0)", "#bcd0ff", 0.8, 0.25); zzz.visible = false; scene.add(zzz);
+
+// ---------------- chart / phone canvases (its real inputs: live trades + chat) ----------------
+const chartCv = document.createElement("canvas"); chartCv.width = 512; chartCv.height = 300;
+const chartTex = new THREE.CanvasTexture(chartCv);
+const flow = []; let flowSum = 0; const chatLines = [];
+function drawChart(cv, tall){
+  const x = cv.getContext("2d"), W = cv.width, H = cv.height;
+  x.fillStyle = "#07080c"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#ff6a00"; x.fillRect(0, 0, W, tall ? 44 : 30); x.fillStyle = "#0a0a0a"; x.font = `bold ${tall?24:18}px Menlo, monospace`;
+  x.fillText(`${poolName} · order flow`, 10, tall ? 30 : 21);
+  if (flow.length > 1) { const lo = Math.min(...flow), hi = Math.max(...flow), top = tall ? 70 : 44;
+    const n = flow.length, cw = W / Math.max(40, n);
+    for (let i = 1; i < n; i++) { const up = flow[i] >= flow[i-1], y0 = top + (H-top-20) * (1 - (flow[i-1]-lo)/(hi-lo||1)), y1 = top + (H-top-20) * (1 - (flow[i]-lo)/(hi-lo||1));
+      x.fillStyle = up ? "#39f5a0" : "#ff4d6d"; x.fillRect(i*cw, Math.min(y0,y1), Math.max(2, cw-2), Math.max(2, Math.abs(y1-y0))); } }
+  chartTex.needsUpdate = true;
+}
+function drawChat(cv){
+  const x = cv.getContext("2d"), W = cv.width, H = cv.height;
+  x.fillStyle = "#0a0a10"; x.fillRect(0, 0, W, H); x.fillStyle = "#ff6a00"; x.fillRect(0, 0, W, 44);
+  x.fillStyle = "#0a0a0a"; x.font = "bold 24px Menlo, monospace"; x.fillText("chat", 12, 30);
+  x.font = "20px Menlo, monospace"; let y = 80;
+  for (const m of chatLines.slice(-9)) { x.fillStyle = "#9a9aae"; x.fillText(m.t || "", 12, y); x.fillStyle = "#ececf2";
+    const words = m.text.split(" "); let line = ""; y += 26;
+    for (const w of words) { if ((line + w).length > 26) { x.fillText(line, 12, y); y += 24; line = ""; } line += w + " "; }
+    x.fillText(line, 12, y); y += 34; if (y > H - 20) break; }
+}
+
+// ---------------- live state ----------------
+const phoneBroken = {}, embedFailed = {};             // screenshots that failed to load; embeds that never loaded
+document.getElementById("phoneimg").onerror = e => { phoneBroken[e.target.dataset.id] = true; document.getElementById("phone").style.display = "none"; };
+document.getElementById("phonefr").onload = e => { if (e.target.dataset.src) e.target.dataset.loaded = "1"; };
+let life = null, prev = null, poolName = "", stage = "AWAKE", clock = "--:--", lab = false, follow = true;
+// #89: what is really on his screens (the browser up or down, the last pages, today's share by kind)
+function renderScreens(d){
+  const el = document.getElementById("screens"); if (!d) return;
+  const b = d.browser || {}, esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  const share = Object.entries((d.today || {}).share || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => `${esc(k)} ${Math.round(v * 100)}%`).join(" · ");
+  el.innerHTML = `<div>browser <b>${esc(b.state || "?")}</b>${b.why ? ` — ${esc(b.why)}` : ""} (since ${esc(b.since || "")})</div>`
+    + (d.notes || []).map(n => `<div>${esc(n.t)} · ${esc(n.text)}</div>`).join("")
+    + `<div>today: ${share || "nothing yet"}</div>`
+    + ((d.sources || {}).blocked || []).map(x => `<div>set aside: ${esc(x.label)} (${esc(x.why)}, until ${esc(x.until)})</div>`).join("")
+    + (d.youtube ? `<div>${d.youtube.key_set ? `YouTube API: ${esc(d.youtube.units_used)}/${esc(d.youtube.units_cap)} units today` : "YouTube API key not set"}</div>` : "")
+    + Object.entries(d.feeds || {}).map(([k, v]) => `<div>${esc(k)} logged in, no video: ${esc(v.reason)}${v.captcha ? " (captcha)" : ""}</div>`).join("")
+    + (d.music ? `<div>${d.music.now ? `now playing: <b>${esc(d.music.now.title)}</b> — ${esc(d.music.now.artist)} · ` : "no music playing · "}${esc(d.music.source)}</div>` : "")
+    + (d.last || []).slice(0, 10).map(x => `<div>${esc(x.t)} · <b>${esc(x.kind)}</b> · ${esc(x.host)} · ${esc(x.title)}</div>`).join("");
+  const mu = (d.music || {}).now, tt = (d.last || []).find(x => x.embed);
+  screenEmbed("scr-music", mu && mu.embed, (mu && mu.embed_height) || 80, (d.music || {}).label || "Spotify (official embed)", esc);
+  screenEmbed("scr-tt", tt && tt.embed.src, 340, tt ? `${tt.embed.label}: ${tt.title}` : "", esc);
+}
+// official embed players (Spotify, TikTok) under the screens block: replaced only when the source changes, no autoplay
+function screenEmbed(id, src, h, label, esc){
+  const el = document.getElementById(id); if (!el || (el.dataset.src || "") === (src || "")) return;
+  el.dataset.src = src || "";
+  el.innerHTML = src ? `<div>${esc(label)}</div><iframe src="${esc(src)}" title="${esc(label)}" style="width:100%;height:${+h || 80}px;border:0;border-radius:8px" allow="encrypted-media; fullscreen; picture-in-picture"></iframe>` : "";
+  const fr = el.querySelector("iframe"); if (!fr) return;
+  fr.onload = () => { fr.dataset.loaded = "1"; };
+  setTimeout(() => { if (el.dataset.src === src && !fr.dataset.loaded) el.innerHTML = `<div>${esc(label)} — the player did not load</div>`; }, 8000);
+}
+function pollScreens(){ fetch("/api/screens").then(r => r.ok ? r.json() : null).then(renderScreens).catch(() => {}); }
+pollScreens(); setInterval(pollScreens, 5000);
+const shown = {x: 1.6, z: 1.3, h: 0};
+
+function connect(){
+  const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`);
+  ws.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.type === "spiking") { Neurons.onMessage(m); return; }
+    if (m.type === "hello") { if (m.world && !world) buildWorld(m.world); (m.chat || []).forEach(addChat); return; }
+    if (m.type === "chat") { addChat(m); return; }
+    if (m.type === "music") { if (m.playing) showMusic(m); else if (musicNow && musicNow.id === m.id) showMusic(null); return; }
+    if (m.type === "chat_ack") { document.getElementById("ack").textContent = m.ok ? "sent — it heard you" : "not sent: " + m.reason; return; }
+    if (m.type === "eye") { if (m.thought) document.getElementById("thought").textContent = `“${m.thought}”`; return; }
+    if (m.type !== "tick") return;
+    poolName = m.pool || ""; stage = (m.sleep && m.sleep.stage) || "AWAKE"; clock = (m.sleep && m.sleep.clock) || clock;
+    for (const t of m.trades || []) { flowSum += (t.kind === "buy" ? 1 : -1) * Math.log10(1 + t.usd); flow.push(flowSum); if (flow.length > 90) flow.shift(); }
+    if (m.life) onLife(m.life, m.sleep);
+  };
+  ws.onclose = () => setTimeout(connect, 1500);
+  document.getElementById("f").onsubmit = ev => { ev.preventDefault(); const i = document.getElementById("in");
+    if (i.value.trim()) ws.send(JSON.stringify({type: "chat", text: i.value})); i.value = ""; };
+}
+// music (#68): his brain model picks; Spotify's official embed, played on the visitor's own device (never by the server)
+let musicNow = null, musicEmbed = "";
+const SPOTIFY_EMBED = /^https:\/\/open\.spotify\.com\/embed\/track\/[A-Za-z0-9]{22}(\?[\w=&]*)?$/;
+function showMusic(m){
+  musicNow = m; const $m = id => document.getElementById(id);
+  $m("music").hidden = !m; if (!m) return;
+  $m("mu-k").textContent = m.mode === "background" ? "in the background" : "headphones on";
+  $m("mu-t").textContent = m.title; $m("mu-a").textContent = [m.artist, m.genre_label].filter(Boolean).join(" · ");
+  const art = $m("mu-art"); art.hidden = !m.art; if (m.art && art.src !== m.art) art.src = m.art;
+  if (SPOTIFY_EMBED.test(m.embed || "") && m.embed !== musicEmbed) { musicEmbed = m.embed; $m("mu-embed").src = m.embed; }
+  $m("mu-why").textContent = [m.reason, m.why].filter(Boolean).join(" · ");
+}
+fetch("/api/music").then(r => r.json()).then(d => { if (d.now) showMusic(d.now); }).catch(() => {});
+function addChat(m){ chatLines.push(m); if (chatLines.length > 40) chatLines.shift();
+  const d = document.createElement("div"); d.textContent = `${m.t || ""} ${m.text}`; const c = document.getElementById("chat"); c.appendChild(d); c.scrollTop = 1e9; }
+
+let lastLog = "";
+// ---------------- the real neighbourhood: live map (OpenStreetMap) + real street footage ----------------
+let tokyo = null, walkFeed = null, marker = null, walkOn = null;
+const map = L.map("map", {zoomControl: false, attributionControl: true, minZoom: 14, maxZoom: 18}).setView([35.7050, 139.5735], 16);
+map.attributionControl.setPrefix(false).addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL)');
+// no tile server (OSMF's tile policy, issue #43): his ~2 x 1.5 km area is one static OSM extract (room_build/osm_area.py),
+// drawn as dark vector layers on one canvas
+const AREA_STYLE = {green:{fill:"#141f19"}, water:{fill:"#122033"}, stream:{line:"#1b2f4a", w:1.5},
+  building:{fill:"#191a22", line:"#20212b", w:0.5}, path:{line:"#282934", w:0.8, dash:"2 3"},
+  minor:{line:"#30313c", w:1.4}, major:{line:"#464755", w:2.6}, rail:{line:"#55556a", w:1.6, dash:"6 4"}};
+function drawArea(a){
+  const S = a.scale, o = [Math.round(a.origin[0] * S), Math.round(a.origin[1] * S)], lines = [];
+  map.createPane("area").style.zIndex = 250;                 // under the routes and markers, whichever loads first
+  const canvas = L.canvas({padding:0.5, pane:"area"});
+  const decode = f => { const p = []; for (let i = 0, y = o[0], x = o[1]; i < f.length; i += 2) { y += f[i]; x += f[i + 1]; p.push([y / S, x / S]); } return p; };
+  for (const k in AREA_STYLE) {
+    const st = AREA_STYLE[k], shapes = (a.layers[k] || []).map(decode), opt = {renderer:canvas, interactive:false, color:st.line,
+      weight:st.w || 0, stroke:!!st.line, dashArray:st.dash, fill:!!st.fill, fillColor:st.fill, fillOpacity:1, opacity:1};
+    if (!shapes.length) continue;
+    const lay = (st.fill ? L.polygon(shapes.map(r => [r]), opt) : L.polyline(shapes, opt)).addTo(map);
+    if (!st.fill) lines.push([lay, st.w]);
+  }
+  const widen = () => { const z = Math.pow(1.6, map.getZoom() - 15); for (const [lay, w] of lines) lay.setStyle({weight:w * z}); };
+  map.on("zoomend", widen); widen();
+  const [s, w, n, e] = a.bbox; map.setMaxBounds([[s - 0.004, w - 0.004], [n + 0.004, e + 0.004]]);
+}
+fetch("/tokyo_area.json").then(r => r.json()).then(drawArea);
+fetch("/tokyo_routes.json").then(r => r.json()).then(d => { tokyo = d;
+  for (const k in d.routes) L.polyline(d.routes[k].latlng, {color: "#ff6a00", weight: 3, opacity: 0.55}).addTo(map);
+  const [hl, hg] = d.places.home;
+  marker = L.circleMarker([hl, hg], {radius: 7, color: "#0a0a0a", weight: 2, fillColor: "#ff6a00", fillOpacity: 1}).addTo(map)
+    .bindTooltip("SUB-01", {permanent: true, direction: "top", className: "sublabel"});
+  L.circleMarker(d.places.bakery, {radius: 4, color: "#ececf2"}).addTo(map).bindTooltip("bakery");
+  L.circleMarker(d.places.park, {radius: 4, color: "#39f5a0"}).addTo(map).bindTooltip("Inokashira Park");
+});
+fetch("/walk_feed.json").then(r => r.json()).then(f => walkFeed = f).catch(() => {});
+function updateWalk(geo, hourLocal){
+  if (tokyo && marker) { const p = geo ? [geo.lat, geo.lng] : tokyo.places.home; marker.setLatLng(p); if (geo) map.panTo(p, {animate: true}); }
+  const div = document.getElementById("walk"), vid = document.getElementById("walkvid");
+  const useStreetView = !!(gm && svWorks);              // Google Street View wins only when it really works
+  const want = geo && walkFeed && !useStreetView ? geo.route + (hourLocal >= 18 || hourLocal < 6 ? "@night" : "@day") : null;
+  if (want === walkOn) return;
+  walkOn = want;
+  if (!want) { div.style.display = "none"; vid.removeAttribute("src"); document.getElementById("svlabel").style.display = "none"; return; }
+  const [route, when] = want.split("@"), list = (walkFeed[when] || walkFeed.day)[route] || [];
+  if (!list.length) return;
+  const clip = list[Math.floor(Math.random() * list.length)];
+  vid.src = `https://www.youtube-nocookie.com/embed/${clip.id}?autoplay=1&mute=1&controls=0&start=${clip.start}&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
+  vid.onload = () => {                                   // muted autoplay, nudged through the official IFrame API
+    const cmd = f => vid.contentWindow.postMessage(JSON.stringify({event: "command", func: f, args: []}), "*");
+    [300, 1200, 3000].forEach(ms => setTimeout(() => { cmd("mute"); cmd("playVideo"); }, ms));
+  };
+  div.style.display = "block";
+  const lab = document.getElementById("svlabel"); lab.style.display = "block";
+  lab.textContent = `first person · real footage of its neighbourhood, Kichijōji, Tokyo · ${clip.label} (YouTube)`;
+}
+
+// ---------------- first person on the real streets (Google Street View) ----------------
+let gm = null, pano = null, svService = null, lastQ = null, svHeading = 0, wantHeading = 0, svOn = false;
+let svWorks = null;                                        // null = untested, true after a real panorama came back
+window.gm_authFailure = () => { svWorks = false; gm = null; };   // invalid key / no billing -> fall back to footage
+fetch("/api/config").then(r => r.json()).then(c => {
+  if (!c.gmaps) return;
+  window.initGmaps = () => { gm = google.maps; svService = new gm.StreetViewService(); };
+  const sc = document.createElement("script");
+  sc.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(c.gmaps)}&v=weekly&callback=initGmaps&loading=async`;
+  sc.async = true; document.head.appendChild(sc);
+}).catch(() => {});
+function metres(a, b){ const k = 111320, dy = (a.lat - b.lat) * k, dx = (a.lng - b.lng) * k * Math.cos(a.lat * Math.PI / 180); return Math.hypot(dx, dy); }
+function updateStreet(geo){
+  const div = document.getElementById("sv"), lab = document.getElementById("svlabel");
+  const show = !!(geo && gm && svWorks);
+  if (show !== svOn) { svOn = show; div.style.display = lab.style.display = show ? "block" : "none"; }
+  if (geo && gm && svService && svWorks === null && !lastQ) {   // probe once whether Street View really answers
+    lastQ = {lat: geo.lat, lng: geo.lng};
+    svService.getPanorama({location: lastQ, radius: 35}, (d, st) => { svWorks = st === "OK"; lastQ = null; });
+  }
+  if (!show) return;
+  if (!pano) pano = new gm.StreetViewPanorama(div, {disableDefaultUI: true, clickToGo: false, linksControl: false,
+    showRoadLabels: false, motionTracking: false, scrollwheel: false, addressControl: false});
+  wantHeading = geo.heading;
+  if (!lastQ || metres(lastQ, geo) > 7) {                  // step to the nearest real panorama every ~7 m
+    lastQ = {lat: geo.lat, lng: geo.lng};
+    svService.getPanorama({location: lastQ, radius: 35, source: gm.StreetViewSource.OUTDOOR,
+      preference: gm.StreetViewPreference.NEAREST}, (data, status) => {
+      if (status === "OK" && data && data.location) pano.setPano(data.location.pano);
+    });
+  }
+}
+function turnStreet(){                                    // smooth look direction
+  if (!pano || !svOn) return;
+  let d = ((wantHeading - svHeading + 540) % 360) - 180; svHeading += d * 0.06;
+  pano.setPov({heading: svHeading, pitch: -2});
+}
+setInterval(turnStreet, 50);
+
+function onLife(L, S){
+  updateStreet(L.geo);
+  updateWalk(L.geo, romeHour());
+  life = L;
+  const asleep = stage !== "AWAKE";
+  document.getElementById("pipstage").textContent = stage;
+  document.getElementById("doing").textContent = asleep ? `${stage === "REM" ? "dreaming" : "deeply asleep"} in bed` : L.doing + (L.walking ? " · on the way" : "");
+  document.getElementById("meta").textContent = `${clock} ${(S && S.tz) || ""} · ${stage}${L.say ? " · " + L.say : ""}`;
+  document.getElementById("n-hunger").style.width = (L.hunger * 100) + "%";
+  document.getElementById("n-boredom").style.width = (L.boredom * 100) + "%";
+  document.getElementById("n-sleep").style.width = Math.min(100, ((S && S.tired) || 0) * 100) + "%";
+  document.getElementById("n-bread").textContent = L.bread;
+  const logKey = JSON.stringify(L.log);
+  if (logKey !== lastLog) { lastLog = logKey; document.getElementById("log").innerHTML = "";
+    for (const e of L.log.slice().reverse()) { const d = document.createElement("div"); const s = document.createElement("span");
+      const dt = new Date(e.t * 1000); s.textContent = dt.toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit", timeZone:"Asia/Tokyo"});
+      d.appendChild(s); d.appendChild(document.createTextNode(e.what)); document.getElementById("log").appendChild(d); } }
+  // phone overlay (#89): the real phone screen only: TikTok's official embed player for a public TikTok, else the
+  // screenshot of what the browser shows. No screenshot (asleep, browser down or restarting): no overlay at all.
+  const ph = document.getElementById("phone"), im = document.getElementById("phoneimg"), fr = document.getElementById("phonefr");
+  const sc = L.screen && L.screen.device === "phone" && !L.screen.restarting && L.screen.id ? L.screen : null;
+  if (L.phone && !asleep && sc && !phoneBroken[sc.id]) {
+    ph.style.display = "block";
+    const src = `/api/screen/phone.jpg?id=${sc.id}`; if (im.getAttribute("src") !== src) { im.dataset.id = sc.id; im.src = src; }
+    const emb = sc.embed && !embedFailed[sc.embed.src] ? sc.embed : null;
+    document.getElementById("app").textContent = emb ? emb.label : `${sc.host || "browser"} · real screen`;
+    if (emb) {
+      if (fr.dataset.src !== emb.src) {          // TikTok's own player, loaded by the viewer's browser; muted, no autoplay
+        fr.dataset.src = emb.src; fr.dataset.loaded = ""; fr.src = emb.src;
+        setTimeout(() => { if (fr.dataset.src === emb.src && !fr.dataset.loaded) { embedFailed[emb.src] = true; fr.style.display = "none"; im.style.display = "block"; document.getElementById("app").textContent = `${sc.host || "tiktok.com"} · card`; } }, 8000);
+      }
+      fr.style.display = "block"; im.style.display = "none";
+    } else { fr.style.display = "none"; im.style.display = "block"; if (fr.dataset.src) { fr.dataset.src = ""; fr.removeAttribute("src"); } }
+  } else { ph.style.display = "none"; }
+}
+
+// ---------------- animation ----------------
+document.getElementById("b-follow").onclick = e => { follow = !follow; e.target.classList.toggle("on", follow); };
+document.getElementById("b-lab").onclick = e => { lab = !lab; e.target.classList.toggle("on", lab); };
+controls.addEventListener("start", () => { follow = false; document.getElementById("b-follow").classList.remove("on"); });
+
+function romeHour(){ const [h, m] = clock.split(":").map(Number); return isNaN(h) ? 12 : h + m / 60; }
+function animate(t){
+  requestAnimationFrame(animate);
+  const time = t / 1000;
+  if (life) {
+    shown.x += (life.x - shown.x) * 0.15; shown.z += (life.z - shown.z) * 0.15;
+    let dh = life.heading - shown.h; dh = Math.atan2(Math.sin(dh), Math.cos(dh)); shown.h += dh * 0.2;
+    body.position.set(shown.x, 0, shown.z); body.rotation.set(0, shown.h, 0);
+    const pose = stage !== "AWAKE" ? "lying" : life.pose, walk = pose === "walking";
+    legs.forEach((l, i) => { l.rotation.x = walk ? Math.sin(time * 7 + i * Math.PI) * 0.6 : 0; });
+    arms.forEach((a, i) => { a.rotation.x = walk ? Math.sin(time * 7 + i * Math.PI + Math.PI) * 0.5 : 0; a.rotation.z = 0; });
+    body.position.y = walk ? Math.abs(Math.sin(time * 7)) * 0.05 : 0;
+    if (pose === "sitting" || pose === "sitting_desk") { body.position.y = -0.35; legs.forEach(l => l.rotation.x = -1.45);
+      body.rotation.y = Math.PI; if (pose === "sitting_desk") arms.forEach(a => a.rotation.x = -1.0); }
+    if (pose === "lying" || pose === "lying_phone") { body.rotation.set(-Math.PI / 2, 0, Math.PI / 2); body.position.set(1.35, 0.95, 1.2);
+      if (pose === "lying_phone") { arms[1].rotation.x = -2.3; } }
+    phoneMesh.visible = pose === "lying_phone";
+    if (phoneMesh.visible) { phoneMesh.position.set(0.25, 1.5, 0.55); phoneMesh.rotation.set(-0.3, 0, 0); phoneScreen.material.color.setHex(0xaad0ff); }
+    loafHand.visible = walk && life.bread > 0; loafHand.position.set(0.32, 1.0, 0.18);
+    zzz.visible = stage !== "AWAKE"; zzz.position.set(1.5, 2.1 + Math.sin(time) * 0.1, 1.2); zzz.lookAt(camera.position);
+    if (follow) { const target = new THREE.Vector3(shown.x, 0.8, shown.z);
+      controls.target.lerp(target, 0.05); const desired = target.clone().add(new THREE.Vector3(0, 9, 12));
+      camera.position.lerp(desired, 0.02); }
+  }
+  // light: Rome time of day; lab mode = cold, dark, orange accents
+  const h = romeHour(), dayK = Math.max(0, Math.sin(Math.PI * (h - 6) / 14));
+  const night = dayK < 0.15;
+  const sky = lab ? new THREE.Color(0x07080c) : new THREE.Color().setHSL(0.58, 0.45, 0.08 + 0.55 * dayK);
+  scene.background = sky; scene.fog = new THREE.Fog(sky, 40, 110);
+  sun.intensity = lab ? 0.25 : 0.15 + 0.95 * dayK; sun.color.setHex(lab ? 0x9fb6ff : 0xfff2dc);
+  sun.position.set(-30 + 60 * ((h - 6) / 14), 10 + 30 * dayK, 12);
+  hemi.intensity = lab ? 0.25 : 0.25 + 0.5 * dayK;
+  nightLights.forEach(([mat, off, on]) => mat.emissive.setHex(night || lab ? on : off));
+  streetLamps.forEach(l => l.intensity = night || lab ? 1.2 : 0);
+  if (roomLamp) roomLamp.intensity = (night || lab) && stage === "AWAKE" ? 1.4 : 0;
+  if (monitor && Math.floor(time * 2) !== animate.k) { animate.k = Math.floor(time * 2); drawChart(chartCv, false); }
+  controls.update(); renderer.render(scene, camera);
+}
+requestAnimationFrame(animate);
+connect();
+</script>
+</body>
+</html>

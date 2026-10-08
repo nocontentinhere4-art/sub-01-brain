@@ -1,0 +1,24 @@
+# Mid phone profile: 390x844, DPR 2, CPU throttled x4 (CDP Emulation.setCPUThrottlingRate), headless Chromium, SwiftShader
+# anim: ms of script per animation step (untouch + mixer + plan + seat IK + the new layers + phone + head), measured with
+# the page's own sim() (200 steps). This is the part this PR changes. Main = before this PR.
+#
+#                  main (before)   this PR
+# window / sill    0.23 ms         1.21 ms
+# desk, reading    0.57 ms         1.45 ms
+# phone (bed)      0.66 ms         0.59 ms
+# eating           0.29 ms         0.99 ms
+# walking          0.39 ms         0.86 ms
+#
+# So at most about +1 ms of script per frame at CPU x4, against the 33 ms a frame has at 30 FPS.
+#
+# Draw calls / triangles per frame (renderer.info), same states:
+#                  main            this PR
+# window           41 / 158,658    45 / 158,930
+# desk             41 / 158,658    45 / 158,930
+# eating           41 / 158,658    53 / 158,990   (bento box, chopsticks, the bottle of tea)
+# phone            43 / 170,184    47 / 170,456
+# No new skinned meshes and no new textures over 256 px; the door leaf and the bag are drawn only while in use.
+#
+# The real frame rate cannot be measured here: SwiftShader renders WebGL on the CPU, and at 390x844 the page runs at
+# ~0.1 FPS headless both before and after. On a phone's GPU the render cost is unchanged (above), and the script cost
+# stays far under budget. The page's adaptive resolution (adapt()) is unchanged.

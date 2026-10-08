@@ -1,0 +1,402 @@
+{
+ "source": "NVIDIA ARDY (ARDY-Core-RP-20FPS-Horizon40), retargeted by room_build/ardy_to_boy.mjs",
+ "hipRatio": 0.9629,
+ "clips": {
+  "type": {
+   "file": "boy_m_type.glb",
+   "frames": 61,
+   "duration": 3,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.005,
+    0.535,
+    0.018
+   ],
+   "hips0": [
+    -0.005,
+    0.535,
+    0.018
+   ],
+   "floorFix": 0.006,
+   "lowestFoot": -0.01,
+   "bytes": 33652,
+   "prompt": "A person sits on an office chair at a desk and types on a keyboard with both hands, then uses the mouse with the right hand, then types again.",
+   "seed": 1,
+   "score": {
+    "skate": 0.002,
+    "jitter": 0.0026,
+    "below": 0,
+    "total": 0.0046
+   }
+  },
+  "stretch": {
+   "file": "boy_m_stretch.glb",
+   "frames": 118,
+   "duration": 5.85,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.004,
+    0.526,
+    0.018
+   ],
+   "hips0": [
+    -0.004,
+    0.527,
+    0.018
+   ],
+   "floorFix": 0.024,
+   "lowestFoot": -0.011,
+   "bytes": 57920,
+   "prompt": "A person sitting on a chair raises both arms high above the head and stretches, arching the back and yawning, then lowers the arms and relaxes.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0023,
+    "jitter": 0.0065,
+    "below": 0,
+    "total": 0.0088,
+    "speed": 0
+   }
+  },
+  "eat": {
+   "file": "boy_m_eat.glb",
+   "frames": 64,
+   "duration": 3.15,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.006,
+    0.541,
+    0.018
+   ],
+   "hips0": [
+    -0.005,
+    0.54,
+    0.018
+   ],
+   "floorFix": 0.035,
+   "lowestFoot": -0.01,
+   "bytes": 35840,
+   "prompt": "A person sits on a chair holding a bowl in the left hand near the chest and eats from it with chopsticks in the right hand, bringing food to the mouth several times.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0011,
+    "jitter": 0.0027,
+    "below": 0,
+    "total": 0.0038
+   }
+  },
+  "idle": {
+   "file": "boy_m_idle.glb",
+   "frames": 68,
+   "duration": 3.35,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.006,
+    0.915,
+    0.001
+   ],
+   "hips0": [
+    -0.008,
+    0.915,
+    -0.001
+   ],
+   "floorFix": 0,
+   "lowestFoot": -0.001,
+   "bytes": 38060,
+   "prompt": "A person stands relaxed, shifting weight from one foot to the other now and then, and looks around calmly.",
+   "seed": 0,
+   "score": {
+    "skate": 0.003,
+    "jitter": 0.0012,
+    "below": 0,
+    "total": 0.0043
+   }
+  },
+  "walk": {
+   "file": "boy_m_walk.glb",
+   "frames": 22,
+   "duration": 1.884,
+   "fps": 20,
+   "loop": true,
+   "stride": 0.65,
+   "hips": [
+    -0.005,
+    0.887,
+    0.018
+   ],
+   "hips0": [
+    -0.005,
+    0.869,
+    0.018
+   ],
+   "floorFix": 0,
+   "lowestFoot": -0.007,
+   "bytes": 17840,
+   "prompt": "A person walks forward at a normal everyday pace, taking full steps and swinging the arms naturally, and keeps walking straight ahead.",
+   "seed": 4,
+   "score": {
+    "skate": 0.0164,
+    "jitter": 0.0426,
+    "below": 0,
+    "total": 0.0589,
+    "speed": 1.204
+   }
+  },
+  "turn": {
+   "file": "boy_m_turn.glb",
+   "frames": 80,
+   "duration": 3.95,
+   "fps": 20,
+   "loop": false,
+   "hips": [
+    -0.005,
+    0.912,
+    0.018
+   ],
+   "hips0": [
+    -0.005,
+    0.912,
+    0.018
+   ],
+   "floorFix": 0,
+   "lowestFoot": -0.005,
+   "bytes": 44552,
+   "prompt": "A person standing still turns around in place with small steps to face the opposite direction, then stands still.",
+   "seed": 0,
+   "score": {
+    "skate": 0.0089,
+    "jitter": 0.0153,
+    "below": 0,
+    "total": 0.0242
+   }
+  },
+  "window": {
+   "file": "boy_m_window.glb",
+   "frames": 62,
+   "duration": 3.05,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.006,
+    0.914,
+    -0.006
+   ],
+   "hips0": [
+    -0.002,
+    0.914,
+    0
+   ],
+   "floorFix": 0,
+   "lowestFoot": -0.004,
+   "bytes": 36836,
+   "prompt": "A person stands at a window and leans forward resting both forearms on the window sill, looking out, then looks around slowly.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0021,
+    "jitter": 0.0055,
+    "below": 0,
+    "total": 0.0077
+   }
+  },
+  "door": {
+   "file": "boy_m_door.glb",
+   "frames": 100,
+   "duration": 4.95,
+   "fps": 20,
+   "loop": false,
+   "hips": [
+    -0.008,
+    0.896,
+    0.004
+   ],
+   "hips0": [
+    -0.005,
+    0.897,
+    0.018
+   ],
+   "floorFix": 0,
+   "lowestFoot": -0.007,
+   "bytes": 50816,
+   "prompt": "A person reaches forward with the left hand, grabs a door handle, pulls the door open while stepping back, and lets go.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0055,
+    "jitter": 0.0086,
+    "below": 0,
+    "total": 0.0141
+   }
+  },
+  "lie_back": {
+   "file": "boy_m_lie_back.glb",
+   "frames": 63,
+   "duration": 3.1,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.006,
+    0.099,
+    0.023
+   ],
+   "hips0": [
+    -0.006,
+    0.096,
+    0.022
+   ],
+   "floorFix": 0.06,
+   "lowestFoot": -0.011,
+   "bytes": 33468,
+   "prompt": "A person lies flat on their back on the floor and holds a phone up above the face with both arms raised, looking at the phone and scrolling.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0065,
+    "jitter": 0.0099,
+    "below": 0,
+    "total": 0.0164,
+    "speed": 0.001
+   }
+  },
+  "lie_side": {
+   "file": "boy_m_lie_side.glb",
+   "frames": 62,
+   "duration": 3.05,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.002,
+    0.174,
+    0.014
+   ],
+   "hips0": [
+    -0.002,
+    0.176,
+    0.014
+   ],
+   "floorFix": 0.049,
+   "lowestFoot": -0.011,
+   "bytes": 34420,
+   "prompt": "A person lies on their left side on the floor, knees bent, holding a phone in front of the face with the right hand and scrolling on it.",
+   "seed": 1,
+   "score": {
+    "skate": 0.0041,
+    "jitter": 0.0075,
+    "below": 0,
+    "total": 0.0116
+   }
+  },
+  "turn_over": {
+   "file": "boy_m_turn_over.glb",
+   "frames": 120,
+   "duration": 5.95,
+   "fps": 20,
+   "loop": false,
+   "hips": [
+    0.001,
+    0.13,
+    0.026
+   ],
+   "hips0": [
+    -0.005,
+    0.117,
+    0.018
+   ],
+   "floorFix": 0.036,
+   "lowestFoot": -0.011,
+   "bytes": 55104,
+   "prompt": "A person sleeping on their back on the floor slowly rolls over onto their side and settles, staying asleep.",
+   "seed": 1,
+   "score": {
+    "skate": 0.005,
+    "jitter": 0.0068,
+    "below": 0,
+    "total": 0.0118
+   }
+  },
+  "sleep": {
+   "file": "boy_m_sleep.glb",
+   "frames": 66,
+   "duration": 3.25,
+   "fps": 20,
+   "loop": true,
+   "hips": [
+    -0.004,
+    0.129,
+    0.025
+   ],
+   "hips0": [
+    -0.006,
+    0.131,
+    0.024
+   ],
+   "floorFix": 0.069,
+   "lowestFoot": -0.012,
+   "bytes": 33864,
+   "prompt": "A person lies on their back on the floor asleep, breathing slowly, barely moving.",
+   "seed": 0,
+   "score": {
+    "skate": 0.0059,
+    "jitter": 0.0103,
+    "below": 0,
+    "total": 0.0161
+   }
+  },
+  "sit_down": {
+   "file": "boy_m_sit_down.glb",
+   "frames": 100,
+   "duration": 4.95,
+   "fps": 20,
+   "loop": false,
+   "hips": [
+    -0.03,
+    0.631,
+    -0.282
+   ],
+   "hips0": [
+    -0.005,
+    0.909,
+    0.018
+   ],
+   "floorFix": 0.037,
+   "lowestFoot": -0.011,
+   "bytes": 50500,
+   "prompt": "A person standing in front of a chair turns around and sits down on the chair, then sits still.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0023,
+    "jitter": 0.0067,
+    "below": 0,
+    "total": 0.009
+   }
+  },
+  "stand_up": {
+   "file": "boy_m_stand_up.glb",
+   "frames": 80,
+   "duration": 3.95,
+   "fps": 20,
+   "loop": false,
+   "hips": [
+    -0.013,
+    0.819,
+    0.403
+   ],
+   "hips0": [
+    -0.005,
+    0.523,
+    0.018
+   ],
+   "floorFix": 0.037,
+   "lowestFoot": -0.011,
+   "bytes": 43428,
+   "prompt": "A person sitting on a chair stands up and stands still.",
+   "seed": 2,
+   "score": {
+    "skate": 0.0026,
+    "jitter": 0.0087,
+    "below": 0,
+    "total": 0.0112
+   }
+  }
+ }
+}

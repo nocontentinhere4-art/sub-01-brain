@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUB-01 · live</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  :root { --bg:#030305; --fg:#ececf2; --dim:#8a8a9c; --faint:#55556a; --line:rgba(255,255,255,.08); --or:#ff6a00;
+          --card:rgba(10,10,16,.74); --st:#ff9a3c;
+          --panel-w:clamp(340px, 22vw, 420px); --dock-h:150px; }   /* --dock-h: the dock's real height, set by a ResizeObserver */
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); overflow:hidden;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  a { color:inherit; }
+  #scene { position:fixed; inset:0; }
+  #vignette { position:fixed; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse at 50% 48%, transparent 40%, rgba(0,0,0,.75) 100%); }
+
+  #top { position:fixed; left:28px; top:24px; max-width:min(640px, 58vw); pointer-events:none; }
+  #top a, #top nav { pointer-events:auto; }
+  #brand { display:flex; align-items:center; gap:14px; }
+  #brand h1 { margin:0; font-size:20px; letter-spacing:.16em; background:var(--or); color:#0a0a0a; padding:3px 10px 2px; border-radius:2px; }
+  #brand nav { font-size:12px; color:var(--dim); display:flex; gap:2px; }
+  #brand nav a { color:inherit; text-decoration:none; padding:4px 7px; border-radius:4px; transition:color .2s, background .2s; }
+  #brand nav a:hover { color:var(--fg); background:rgba(255,255,255,.06); }
+  #brand nav a.on { color:var(--fg); }
+  #brand nav a.on::after { content:""; display:block; height:1px; margin-top:2px; background:var(--or); }
+  #state { margin-top:22px; display:flex; align-items:center; gap:12px; font-size:12.5px; color:var(--dim); flex-wrap:wrap; text-shadow:0 1px 8px #000; }
+  #chip { color:#0a0a0a; background:var(--st); padding:3px 9px 2px; letter-spacing:.14em; font-size:11px; border-radius:2px; transition:background 1.5s; }
+  /* the connection's state, as a word (#88 follow-up: no unexplained dots) */
+  #live { font-size:11px; letter-spacing:.08em; color:var(--faint); }
+  #live::after { content:"offline"; }
+  #live.on { color:#39f5a0; } #live.on::after { content:"live"; }
+  #story { margin-top:12px; font-size:28px; line-height:1.3; letter-spacing:-.01em; text-shadow:0 2px 24px #000; min-height:1.3em; }
+  #story em { font-style:normal; color:var(--st); transition:color 1.5s; }
+  #sub { margin-top:8px; font-size:12px; color:var(--dim); text-shadow:0 1px 8px #000; }
+
+  #honest { position:fixed; left:28px; bottom:128px; font-size:11px; color:var(--faint); max-width:520px; line-height:1.5;
+    text-shadow:0 1px 6px #000; }
+  #ticker { position:fixed; left:28px; bottom:22px; right:calc(var(--panel-w) + 56px); font-size:12px; color:var(--dim); display:flex; flex-direction:column; gap:5px;
+    text-shadow:0 1px 6px #000; }
+  #ticker div { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #ticker div:first-child { color:var(--fg); }
+  #ticker b { color:var(--st); font-weight:normal; }
+  #ticker .buy { color:#39f5a0; } #ticker .sell { color:#ff4d6d; }
+
+  /* the right column: the cards end 14 px above the dock, however tall the dock grows (layer row, close-up row, caption) */
+  #cards { position:fixed; right:24px; top:24px; width:var(--panel-w); display:flex; flex-direction:column; gap:12px;
+    max-height:calc(100vh - var(--dock-h) - 60px); overflow-y:auto; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; backdrop-filter:blur(14px) saturate(1.2);
+    -webkit-backdrop-filter:blur(14px) saturate(1.2); text-decoration:none; display:block;
+    box-shadow:0 10px 30px -14px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.05); transition:border-color .25s; }
+  a.card:hover { border-color:rgba(255,255,255,.22); }
+  .card .k { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin-bottom:9px; display:flex; justify-content:space-between; }
+  .card .t { font-size:14.5px; line-height:1.4; }
+  .card img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:7px; margin-bottom:10px; display:block;
+    background:radial-gradient(ellipse at 50% 60%, #15151d, #08080b); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+  .card .m { font-size:11px; color:var(--dim); margin-top:6px; line-height:1.5; }
+  .card .q { font-style:italic; }
+  #music .mu { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+  #music .mu img { width:52px; height:52px; aspect-ratio:1/1; margin:0; border-radius:6px; flex:none; }
+  #music iframe { width:100%; height:80px; border:0; border-radius:12px; display:block; background:#111; }
+  #music ul { list-style:none; margin:8px 0 0; padding:0; font-size:11px; color:var(--dim); }
+  #music li { display:flex; justify-content:space-between; gap:8px; padding:2px 0; }
+  #music li.c { color:var(--fg); }
+
+  #dock { position:fixed; right:24px; bottom:22px; width:var(--panel-w); display:flex; flex-direction:column; gap:10px; }
+  #layers { display:flex; flex-wrap:wrap; gap:6px; }
+  #layers button { flex:1 1 auto; background:transparent; color:var(--dim); border:1px solid var(--line); padding:6px 7px; font:inherit; font-size:11px;
+    border-radius:5px; cursor:pointer; white-space:nowrap; }
+  #layers button.on { color:var(--fg); border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.05); }
+  #layers button[data-l="neurons"].on { color:var(--or); border-color:rgba(255,106,0,.55); }
+  #layers button[data-l="neurons"].off { color:var(--faint); }
+  #n3cap { font-size:10px; line-height:1.5; color:var(--dim); max-height:min(22vh, 200px); overflow-y:auto; }
+  #n3cap b { color:var(--fg); font-weight:normal; } #n3cap .s { display:block; color:var(--faint); }
+  #n3mini { display:none; position:fixed; left:6px; right:6px; top:4px; font-size:8px; line-height:1.3; color:#8a8a9c; pointer-events:none;
+    text-shadow:0 1px 4px #000; }
+  body.mini.n3 #n3mini { display:block; }
+  /* brain_anatomy hook (G9, #99): the view row and its provenance caption */
+  #anat { display:flex; gap:6px; align-items:center; font-size:10px; color:var(--dim); flex-wrap:wrap; }
+  #anat button { background:transparent; color:var(--dim); border:1px solid var(--line); padding:4px 8px; font:inherit; font-size:10.5px;
+    border-radius:5px; cursor:pointer; }
+  #anat button.on { color:var(--fg); border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.05); }
+  #anat button[data-a].on { color:#e8a090; border-color:rgba(232,160,144,.5); }
+  #anat input[type=range] { flex:1 1 80px; min-width:80px; accent-color:#e8a090; }
+  #anat [hidden] { display:none !important; }
+  #anatcap { font-size:10px; line-height:1.5; color:var(--dim); max-height:min(18vh, 160px); overflow-y:auto; }
+  #anatcap b { color:var(--fg); font-weight:normal; }
+  body.mini #anat, body.mini #anatcap { display:none !important; }
+  #n3close { display:none; gap:6px; align-items:center; font-size:10px; color:var(--dim); flex-wrap:wrap; }
+  body.n3:not(.mini) #n3close { display:flex; }
+  #n3close button { background:transparent; color:var(--dim); border:1px solid var(--line); padding:4px 8px; font:inherit; font-size:10.5px;
+    border-radius:5px; cursor:pointer; }
+  #n3close button.on { color:var(--or); border-color:rgba(255,106,0,.55); }
+  #n3scale { position:absolute; left:28px; bottom:200px; font-size:10px; color:var(--dim); pointer-events:none; text-shadow:0 1px 4px #000; }
+  #n3scale i { display:block; height:2px; margin-bottom:4px; background:rgba(236,236,242,.7); }
+  #n3labels span { position:absolute; transform:translate(-100%, -50%); font-size:9.5px; color:#8fa3a0; pointer-events:none;
+    padding-right:6px; text-shadow:0 1px 4px #000; white-space:nowrap; }
+  body.zooming #honest, body.zooming #ticker { opacity:.35; }
+  @media (min-width: 901px) { body.closeup #cards { display:none; } }
+  body.closeup #dock { background:rgba(3,3,5,.74); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:12px 14px;
+    margin:-12px -14px; border-radius:10px; }                   /* a close-up's neurons fill the screen: a scrim behind the panel (#88 A follow-up) */
+  #chat { display:flex; gap:6px; }
+  #chat input { flex:1; min-width:0; background:rgba(12,12,18,.86); color:var(--fg); border:1px solid rgba(255,255,255,.14); padding:11px 12px;
+    font:inherit; font-size:13px; border-radius:8px; transition:border-color .2s; }
+  #chat input:focus { outline:none; border-color:rgba(255,154,60,.6); }
+  #chat button { background:var(--fg); color:#0a0a0a; border:0; padding:0 16px; font:inherit; font-size:13px; border-radius:8px; cursor:pointer; }
+  #chat button:hover { background:#fff; }
+  #note { font-size:10px; color:var(--faint); min-height:1.2em; }
+  #note.err { color:#ff8a8a; }
+
+  #teach form { display:flex; flex-direction:column; gap:6px; }
+  #teach .row { display:flex; gap:6px; }
+  #teach input { flex:1; min-width:0; background:rgba(12,12,18,.86); color:var(--fg); border:1px solid rgba(255,255,255,.14);
+    padding:8px 10px; font:inherit; font-size:12.5px; border-radius:7px; }
+  #teach input:focus { outline:none; border-color:rgba(255,154,60,.6); }
+  #teach input#t-nick { flex:0 0 38%; }
+  #teach button { background:var(--fg); color:#0a0a0a; border:0; padding:0 12px; font:inherit; font-size:12.5px; border-radius:7px; cursor:pointer; }
+  #teach ul { list-style:none; margin:8px 0 0; padding:0; font-size:12px; line-height:1.5; }
+  #teach li { margin-bottom:6px; }
+  #teach li .r { display:block; color:var(--dim); font-size:11px; }
+  #teach .ok { color:#39f5a0; } #teach .no { color:#ff8a8a; }
+  #t-note.err { color:#ff8a8a; }
+  #desk [hidden], #cards [hidden] { display:none !important; }   /* .card's display:block beat [hidden] (#89) */
+  #desk .board { display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(8, 1fr); aspect-ratio:1; border-radius:6px; overflow:hidden;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); margin-bottom:10px; }
+  #desk .board div { display:flex; align-items:center; justify-content:center; font-size:min(5.4vw, 26px); line-height:1;
+    color:#111; background:#cdb999; }
+  #desk .board div.d { background:#8a6f4e; }
+  #desk .board div.l { box-shadow:inset 0 0 0 100px rgba(255,154,60,.38); }
+  #desk .board div.w { color:#fffaf0; text-shadow:0 0 2px #000, 0 0 1px #000; }
+  #desk ul { list-style:none; margin:8px 0 0; padding:0; font-size:12px; line-height:1.55; }
+  #desk li { display:flex; justify-content:space-between; gap:8px; color:var(--dim); }
+  #desk li.c { color:var(--fg); }
+  #desk li.c span:first-child::before { content:"▸ "; color:var(--or); }
+  #neurons { min-width:0; }
+  #neurons .nx { background:var(--card); border-color:var(--line); border-radius:10px; padding:12px 14px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  body.mini #top, body.mini #cards, body.mini #dock, body.mini #ticker, body.mini #honest, body.mini #vignette { display:none !important; }
+
+  @media (max-width: 900px) {
+    html,body { overflow:auto; }
+    #top { left:16px; top:14px; max-width:calc(100vw - 32px); } #story { font-size:19px; }
+    #honest { position:static; padding:0 16px; margin-top:8px; }
+    #cards { position:static; width:auto; max-height:none; flex-direction:row; overflow-x:auto; padding:0 16px; margin-top:66vh; }
+    .card, #neurons { min-width:240px; }
+    #ticker { position:static; padding:12px 16px 0; }
+    #dock { position:sticky; bottom:0; width:auto; padding:10px 16px 14px; background:linear-gradient(rgba(3,3,5,0), #030305 24px); }
+    #n3cap { max-height:16vh; }
+    #layers button[data-l="sci"] { display:none; }
+    #n3scale { left:16px; bottom:12px; }
+    #scene, #vignette { position:absolute; inset:auto; top:0; left:0; right:0; height:72vh; }
+    #top { position:absolute; }
+  }
+</style>
+<link rel="stylesheet" href="/neurons.css">
+</head>
+<body>
+<script>if (new URLSearchParams(location.search).has("mini")) document.body.classList.add("mini");</script>
+<div id="scene"></div><div id="vignette"></div>
+
+<div id="top">
+  <div id="brand"><h1>SUB-01</h1><nav><a class="on" href="/brain">brain</a><a href="/">life</a><a href="/diary">diary</a><a href="/world.html">sees</a></nav></div>
+  <div id="state"><span id="live" title="live connection"></span><span id="chip">…</span><span id="clock"></span><span id="where"></span></div>
+  <div id="story">connecting…</div>
+  <div id="sub"></div>
+</div>
+
+<div id="cards">
+  <div class="card" id="screens">
+    <div class="k"><span>His screens</span><span id="sc-k">…</span></div>
+    <div class="m" id="sc-b"></div>
+    <div class="m" id="sc-share"></div>
+    <canvas id="da" width="300" height="64" style="width:100%;height:64px;margin:6px 0 2px"></canvas>
+    <div class="m" id="da-l">simulated dopamine-like reward signal in the model</div>
+    <div class="m" id="sc-src"></div>
+    <div class="m" id="sc-music"></div><div id="sc-music-p"></div>
+    <div id="sc-tt"></div>
+    <ul id="sc-last"></ul>
+  </div>
+  <div class="card" id="desk" hidden>
+    <div class="k"><span>At his desk</span><span id="desk-k"></span></div>
+    <div id="desk-board" class="board" hidden></div>
+    <img id="desk-img" alt="" hidden>
+    <div class="t" id="desk-t"></div>
+    <ul id="desk-opts"></ul>
+    <div class="m" id="desk-m"></div>
+  </div>
+  <div class="card" id="music" hidden>
+    <div class="k"><span>Now playing</span><span id="mu-k"></span></div>
+    <div class="mu"><img id="mu-art" alt="" hidden><div><div class="t" id="mu-t"></div><div class="m" id="mu-a"></div></div></div>
+    <iframe id="mu-embed" title="Spotify player" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="m" id="mu-card"></div>
+    <ul id="mu-opts"></ul>
+    <div class="m" id="mu-why"></div>
+  </div>
+  <a class="card" href="/diary" id="c-diary">
+    <div class="k"><span>Last night</span><span>diary →</span></div>
+    <img id="d-img" alt="" hidden>
+    <div class="t" id="d-title">The first dream entry is written the morning after its first REM sleep.</div>
+    <div class="m" id="d-meta"></div>
+  </a>
+  <a class="card" href="/world.html" id="c-eye" hidden>
+    <div class="k"><span>What it sees</span><span id="e-t"></span></div>
+    <img id="e-img" alt="">
+    <div class="t q" id="e-thought"></div>
+  </a>
+  <div class="card" id="c-night">
+    <div class="k"><span id="n-k">Sleep</span><span id="n-date"></span></div>
+    <div class="t" id="n-t">no night recorded yet</div>
+    <div class="m" id="n-m"></div>
+  </div>
+  <div class="card" id="teach">
+    <div class="k"><span>Teach him something</span><span id="t-left"></span></div>
+    <form id="t-form">
+      <input id="t-text" placeholder="a word or a short phrase (max 6 words)" autocomplete="off" maxlength="80">
+      <div class="row"><input id="t-nick" placeholder="nickname" autocomplete="off" maxlength="16"><button>teach</button></div>
+    </form>
+    <div class="m" id="t-note">nickname optional · one per viewer per day · no links, addresses or tickers</div>
+    <div class="k" style="margin:12px 0 0"><span>Taught today</span></div>
+    <ul id="t-today"><li><span class="m">nothing yet today</span></li></ul>
+    <div id="t-yday" hidden><div class="k" style="margin:12px 0 0"><span id="t-yk">Remembered from yesterday</span></div><ul id="t-ylist"></ul></div>
+    <div class="m" id="t-honest"></div>
+  </div>
+  <div id="neurons"></div>
+</div>
+
+<div id="honest">Simulated activity built from one real person's public MRI: real fibres, real cortex.
+  Messages are stimuli, not conversation. Signals are drawn ~100× slower than real conduction.
+  A model of brain activity, not a mind, and not the person.</div>
+<div id="ticker"></div>
+<div id="n3mini"></div>
+
+<div id="dock">
+  <div id="layers"><button class="on" data-l="fibres">fibres</button><button class="on" data-l="cortex">cortex</button><button data-l="regions">regions</button><button data-l="sci" title="standard tractography colours: red left-right, green front-back, blue up-down">science colours</button><button data-l="neurons" title="his live spiking neurons inside the brain, each drawn as a small real cell">neurons</button></div>
+  <!-- brain_anatomy hook (G9, #99): the brain as a real specimen (web/brain_anatomy.js, loaded on the first click) -->
+  <div id="anat"><span>view:</span><button data-v="glow" class="on" title="the page's own look: additive fibres and a rim-lit cortex (the look before #99)">glow</button><button data-v="fresh" title="a fresh specimen: pinkish-grey cortex, glistening pia, red arteries">fresh brain</button><button data-v="fixed" title="fixed and cut open: his own T1 scan on the cut, grey and white matter">dissected</button><button data-v="bundles" title="his real fibres as muted white-matter bundles, coloured by direction">bundles</button><button data-a="vessels" title="cerebral arteries (atlas, fitted to his brain)">vessels</button><button data-a="nerves" title="the cranial nerves the atlas has (II, IV, V1), the pituitary">nerves</button><button id="anat-axis" title="which way the cut runs" hidden>coronal</button><input id="anat-cut" type="range" min="0" max="1" step="0.005" value="0.5" title="where the cut is" hidden></div>
+  <div id="anatcap" hidden></div>
+  <div id="n3close"><span>close-up:</span><button data-k="cortex">cortex</button><button data-k="striatum">striatum</button><button data-k="thalamus">thalamus</button><button data-k="hippocampus">hippocampus</button><button data-k="amygdala">amygdala</button><button data-k="" title="back to the whole brain">whole brain</button><button id="n3dive" title="one continuous zoom: the brain, a cortical column at true size, the tissue">dive ↓</button></div>
+  <div id="n3cap" hidden></div>
+  <form id="chat"><input id="msg" placeholder="send a stimulus…" autocomplete="off" maxlength="200"><button>send</button></form>
+  <div id="note">every message is a stimulus · max 200 characters · no links, addresses or tickers</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="/neurons.js"></script>
+<script src="/neurons3d.js"></script>
+<script src="/neuron_render/neuron_render.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const MINI = document.body.classList.contains("mini");
+// "Neurons" panel: 1M simulated spiking neurons (model, not a mind). Not started in the mini (embedded) view.
+if (!MINI && window.Neurons) Neurons.init({mount: $("neurons"), open: true});
+
+// ---------- scene ----------
+const host = $("scene");
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.setClearColor(0x030305);
+host.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 1, 3000);
+camera.up.set(0, 0, 1); camera.position.set(-300, 170, 108);
+if (MINI) camera.position.multiplyScalar(0.72);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.35;
+let n3d = null, n3want = new URLSearchParams(location.search).get("neurons") === "1", n3meta = null, cortexPos = null, cortexIdx = null, n3wall = -1e9, n3net = null;
+function resize(){
+  const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h); camera.aspect = w / h;
+  if (!MINI && w > 900) camera.setViewOffset(w, h, 70, -55, w, h); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+  if (n3d) n3d.resize(renderer.domElement.height, camera.fov);
+}
+addEventListener("resize", resize); resize();
+// the right column: the cards stop above the dock whatever its height (#88: the layer row overlapped the cards at 1920 px)
+if ("ResizeObserver" in window) new ResizeObserver(es => document.documentElement.style.setProperty("--dock-h",
+  Math.ceil(es[es.length - 1].target.getBoundingClientRect().height) + "px")).observe($("dock"));
+
+// ---------- neurons: his live spiking neurons as small real cells inside the brain (#62, #88; web/neurons3d.js) ----------
+// Only real frames from a live spiking network light them; with none, the cells stand still and say they are offline.
+const N3_CAPTION = "Simulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each drawn cell stands for a sampled model neuron; a model, not a mind.";
+const N3_HONEST = "Shapes are real reconstructed neurons (public databases); thickness, spines and myelin are drawn from published typical values. The simulated network uses point neurons (no dendrites are simulated); cells are enlarged and pulses slowed to be visible. A model, not a mind.";
+const N3_STATIC = "static cells, no activity";
+let n3morph = null;                                  // neurons_morph.json: the forest's real cells (fetched with the toggle)
+const N3_OFFLINE = "neurons offline — the 1M network runs while he is awake when the GPU is on";
+const N3_NET = {gpu: "1M-neuron network on GPU", cpu: "20k-neuron network on CPU"};
+// close-ups with real neuron shapes at microscopy scale (#88 A, web/neuron_render/): zoom in with neurons on, or a close-up button
+const N3_SHAPES = NeuronRender.CAPTION;             // the honest caption, word for word from #88
+const N3_TYPE = {pyramidal: "pyramidal", basket: "basket", medium_spiny: "medium spiny", relay: "thalamic relay",
+                 ca1_pyramidal: "CA1 pyramidal", amygdala_principal: "amygdala principal", l5_pyramidal: "L5 pyramidal"};
+let n3close = null, n3style = "fluorescence", n3saved = null, n3fit = 1e9, n3lodAt = 0;   // n3fit: the overlay closes itself on zoom-out
+const regionLabel = n => !n ? "" : n.name.replace(/^LH_/, "left ").replace(/^RH_/, "right ").replace(/_/g, " ");
+function closeupRegion(kind){                       // the most active region of that kind (its rate byte), else the first
+  let best = -1, bv = -1;
+  nodes.forEach((n, i) => { if (Neurons3D.kindOf(n) !== kind || (kind === "cortex" && !/^(LH|RH)_/.test(n.name))) return;
+    const v = n3d ? n3d.rate(i) : 0; if (v > bv) { bv = v; best = i; } });
+  return best;
+}
+function closeupOpen(kind, region){
+  if (!kind) return closeupExit();
+  if (!n3want) neuronsOn(true);
+  closeupExit(true);
+  const r = region != null && region >= 0 ? region : closeupRegion(kind);
+  if (r < 0) return;
+  n3saved = n3saved || {pos: camera.position.clone(), target: controls.target.clone()};
+  n3close = NeuronRender.open(host, {THREE, region: r, kind, label: regionLabel(nodes[r]), style: n3style,
+    live: performance.now() - n3wall < 10000, onClose: () => closeupExit(), onInfo: () => neuronsText(),
+    groupRate: m => m.groups && nodes[r] ? m.groups[nodes[r].group] : null});   // a pod without per-region rates
+  document.body.classList.add("closeup"); n3lodAt = performance.now();
+  document.querySelectorAll("#n3close button").forEach(x => x.classList.toggle("on", x.dataset.k === kind));
+  neuronsText();
+}
+function closeupExit(keepCamera){
+  if (n3close) { n3style = n3close.style(); n3close.close(); n3close = null; }
+  if (!keepCamera && n3saved) {
+    camera.position.copy(n3saved.pos); controls.target.copy(n3saved.target); n3saved = null; n3lodAt = performance.now();
+    const d = camera.position.distanceTo(controls.target), min = Neurons3D.LOD_IN * 1.3;   // back outside the zoom-in distance, or the LOD reopens it
+    if (d < min) camera.position.sub(controls.target).multiplyScalar(min / Math.max(1e-6, d)).add(controls.target);
+  }
+  if (!keepCamera) { document.body.classList.remove("closeup"); document.querySelectorAll("#n3close button").forEach(x => x.classList.remove("on")); }
+  neuronsText();
+}
+function closeupLine(){
+  const i = n3close.info(), t = i.types.map(x => `${x.n} ${N3_TYPE[x.type] || x.type} (${x.species})`).join(" + ");
+  const n = x => (x || 0).toLocaleString("en-US");
+  const detail = i.detailLine;                     // #99: the module says what is drawn (real H01 cells, or the NeuroMorpho ones)
+  return `<b>close-up · ${esc(regionLabel(nodes[i.region]))}</b> · ${esc(t)}`
+    + (i.live ? ` · each cell stands for a sampled model neuron here; a spike runs soma → axon, slowed ${n(i.slowdown)}× (node to node where myelinated)`
+              : ` · no live network: static cells, no activity`)
+    + `<span class="s">${esc(detail)}</span>`
+    + `<span class="s">${esc(i.sourceLine)}</span>`;   // #99: and where the shapes come from (H01 or NeuroMorpho.Org), from the module
+}
+function neuronsOn(on){
+  n3want = on;
+  document.body.classList.toggle("n3", on);
+  const b = document.querySelector('#layers button[data-l="neurons"]'); if (b) b.classList.toggle("on", on);
+  if (on && !n3d && nodes.length && cortexPos && !neuronsOn.loading) {
+    // the forest: every sampled neuron a small real cell (<= 40 segments); fewer cells on phones and in the mini
+    const make = () => { if (n3d) return;
+      n3d = Neurons3D.create({THREE, scene, nodes, cortex: cortexPos, cortexIdx, morph: n3morph, sizes: n3meta && n3meta.sizes,
+                              maxCells: MINI ? 240 : innerWidth < 600 ? 300 : 600, somaSize: MINI ? 1.4 : 1.0});
+      n3d.resize(renderer.domElement.height, camera.fov); n3d.setVisible(n3want); neuronsText(); };
+    neuronsOn.loading = true;
+    Promise.all([n3meta || fetch("neurons3d.json").then(r => r.json()).catch(() => null),
+                 n3morph || fetch("neurons_morph.json").then(r => r.json()).catch(() => null)])
+      .then(([meta, morph]) => { n3meta = meta; n3morph = morph; neuronsOn.loading = false; make(); });
+  }
+  if (n3d) n3d.setVisible(on);
+  neuronsText();
+}
+function forestLine(st){                            // what the forest draws, and the caption every view of it carries
+  if (!st || !st.types) return "";
+  const t = st.types.map(x => N3_TYPE[x.type] || x.type).join(", ");
+  return `<span class="s">cells enlarged ~${st.enlarge}× for visibility · ${st.cells.toLocaleString("en-US")} cells (${esc(t)}; ≤ ${Neurons3D.FOREST_SEG} segments each)`
+    + `${st.live ? ` · a spike lights the axon from the soma, slowed ~${Neurons3D.FOREST_SLOWDOWN}×; region rates tint the dendrites` : ""} · NeuroMorpho.Org, CC BY 4.0 · credits on /about</span>`
+    + `<span class="s">${esc(N3_HONEST)}</span>`;
+}
+// ---------- the zoom (#99): the whole brain -> a cortical column at true size -> the tissue block (NeuronRender) ----------
+// With neurons on, zooming in (wheel / pinch, or the "dive" button) aims at the cortex point under the screen's centre,
+// fades the brain and the forest out and a 0.5 mm column of cortex in (web/neurons3d.js column(): H01's measured layers,
+// real reconstructions at true size, sparse label), and below ZOOM.handoff mm hands over to the tissue view. Zooming
+// back out reverses it. The scale bar is always true: at brain scale it measures the brain (the forest's cells are
+// drawn ~6x), from the column on it measures the cells too.
+const ZOOM = { start: 110, exit: 170, colIn: [30, 80], brainOut: [6, 40], handoff: 0.9, colView: 5.5, blockUm: 1400 };
+const N3_COLUMN_HONEST = "Shapes are real data from named public datasets: the cells are NeuroMorpho.Org reconstructions of human cortical neurons and the layers are measured in H01 (human temporal cortex, Shapson-Coe et al. 2024, CC BY 4.0); here they are drawn at true size. The activity is simulated by a network of point neurons (no dendrites are simulated). A model, not a mind.";
+let zoom = null, zoomBrain = 1, zoomBack = null;
+window.zoomBrain = 1;
+const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+function zoomPick(){                                 // the cortex point under the screen's centre that faces the camera
+  const nrm = n3d && n3d.normals; if (!nrm || !cortexPos) return null;
+  const o = camera.position, dir = controls.target.clone().sub(o).normalize();
+  let best = -1, bs = 1e18;
+  for (let v = 0; v < cortexPos.length / 3; v += 3) {
+    const px = cortexPos[3 * v] - o.x, py = cortexPos[3 * v + 1] - o.y, pz = cortexPos[3 * v + 2] - o.z;
+    const t = px * dir.x + py * dir.y + pz * dir.z; if (t <= 0) continue;
+    if (-(nrm[3 * v] * dir.x + nrm[3 * v + 1] * dir.y + nrm[3 * v + 2] * dir.z) < 0.3) continue;   // facing us
+    const s = px * px + py * py + pz * pz - t * t + 0.004 * t * t;      // near the centre ray; the nearer surface wins ties
+    if (s < bs) { bs = s; best = v; }
+  }
+  if (best < 0) return null;
+  const pos = [cortexPos[3 * best], cortexPos[3 * best + 1], cortexPos[3 * best + 2]];
+  let region = -1, rd = 1e18;
+  nodes.forEach((n, i) => { if (!/^(LH|RH)_/.test(n.name)) return; const d = (n.q[0] - pos[0]) ** 2 + (n.q[1] - pos[1]) ** 2 + (n.q[2] - pos[2]) ** 2; if (d < rd) { rd = d; region = i; } });
+  return { vert: best, pos, normal: [nrm[3 * best], nrm[3 * best + 1], nrm[3 * best + 2]], region };
+}
+function zoomStart(animate){
+  if (zoom || !n3d || !n3morph || MINI) return;
+  if (!zoomStart.cells) {                            // the column's own cells (column_morph.json), loaded the first time
+    if (zoomStart.loading) return; zoomStart.loading = true;
+    fetch("column_morph.json").then(r => r.json()).catch(() => ({cells: {}}))
+      .then(m => { zoomStart.cells = Object.assign({}, n3morph.cells, m.cells || {}); zoomStart.loading = false; zoomStart(animate); });
+    return;
+  }
+  const p = zoomPick(); if (!p) return;
+  const N = new THREE.Vector3(...p.normal), P = new THREE.Vector3(...p.pos);
+  const v = camera.position.clone().sub(P), side = v.clone().sub(N.clone().multiplyScalar(v.dot(N)));   // look across the column
+  if (side.lengthSq() < 1e-6) side.crossVectors(N, new THREE.Vector3(0, 0, 1));
+  side.normalize();
+  const block = window.NeuronRender && NeuronRender.BLOCK;
+  const col = Neurons3D.column({THREE, scene, morph: {cells: zoomStart.cells}, pos: p.pos, normal: p.normal, region: p.region, block});
+  const look = new THREE.Vector3(...col.at(col.plan.thickness / 2)), deep = new THREE.Vector3(...col.at(block && block.depthUm ? (block.depthUm[0] + block.depthUm[1]) / 2 : ZOOM.blockUm));
+  zoom = Object.assign(p, { N, P, side, col, look, deep, from: { pos: camera.position.clone(), target: controls.target.clone() },
+    t0: performance.now(), anim: animate ? { t0: performance.now(), dur: 11000 } : null, handed: false, backAt: 0,
+    saved: { min: controls.minDistance, zs: controls.zoomSpeed, rot: controls.autoRotate } });
+  controls.autoRotate = false; controls.minDistance = 0.25; controls.zoomSpeed = 2.2;
+
+  document.body.classList.add("zooming");
+  neuronsText();
+}
+function zoomEnd(){
+  if (!zoom) return;
+  zoom.col.dispose();
+  controls.minDistance = zoom.saved.min; controls.zoomSpeed = zoom.saved.zs; controls.autoRotate = zoom.saved.rot;
+  zoomBack = { t0: performance.now(), from: controls.target.clone(), to: zoom.from.target.clone() };
+  zoom = null; zoomBrain = window.zoomBrain = 1; camera.up.set(0, 0, 1); zoomLayers();
+  if (n3d) { n3d.setZoomFade(1); }
+  camera.near = 1; camera.updateProjectionMatrix();
+  document.body.classList.remove("zooming"); $("n3labels").innerHTML = ""; neuronsText();
+}
+function zoomHandoff(){                              // the tissue block: NeuronRender (#88 A / #99 A) takes over here
+  zoom.handed = true;
+  const r = zoom.region >= 0 ? zoom.region : closeupRegion("cortex");
+  if (typeof NeuronRender.openAt !== "function") return closeupOpen("cortex", r);   // before #99 A: the plain close-up
+  // the same spot, the same direction: A's block turns its pia onto our normal and its entry camera looks along ours
+  closeupExit(true);
+  n3saved = {pos: camera.position.clone(), target: controls.target.clone()};
+  const dir = controls.target.clone().sub(camera.position).normalize();
+  n3close = NeuronRender.openAt(host, {THREE, region: r, kind: "cortex", label: regionLabel(nodes[r]), style: n3style,
+    worldPos: zoom.pos, normal: zoom.normal, cameraDir: dir.toArray(), cameraUp: camera.up.toArray(), entry: {ms: 1200, from: 6},
+    live: performance.now() - n3wall < 10000, onClose: () => closeupExit(), onInfo: () => neuronsText(),
+    groupRate: m => m.groups && nodes[r] ? m.groups[nodes[r].group] : null});
+  document.body.classList.add("closeup"); n3lodAt = performance.now();
+  neuronsText();
+}
+// faded-out brain layers are not drawn at all: inside the column the camera sits within the fibres, and drawing them at
+// zero opacity would still cost a phone's GPU (or a CPU rasteriser) every one of their pixels
+function zoomLayers(){
+  for (const l of ["fibres", "cortex"]) {
+    const o = scene.getObjectByName(l), b = document.querySelector(`#layers button[data-l="${l}"]`);
+    if (o && b) o.visible = b.classList.contains("on") && zoomBrain > 0.003;
+  }
+}
+function zoomFrame(now){                             // once per drawn frame while zooming
+  const d = camera.position.distanceTo(controls.target);
+  if (zoom.anim) {                                   // the dive: aim, approach along log distance, turn to look across
+    const u = zoom.anim.at != null ? zoom.anim.at : (now - zoom.anim.t0) / zoom.anim.dur;   // .at: a capture holds the dive
+    const a = ease(u / 0.7), b = ease((u - 0.7) / 0.3);
+    const d0 = zoom.from.pos.distanceTo(zoom.from.target);
+    const dist = u < 0.7 ? Math.exp(Math.log(d0) + (Math.log(ZOOM.colView) - Math.log(d0)) * a)
+                         : Math.exp(Math.log(ZOOM.colView) + (Math.log(ZOOM.handoff * 0.9) - Math.log(ZOOM.colView)) * b);
+    const tgt = u < 0.7 ? zoom.from.target.clone().lerp(zoom.look, ease(u / 0.35)) : zoom.look.clone().lerp(zoom.deep, b);
+    const dir0 = zoom.from.pos.clone().sub(zoom.from.target).normalize(), dir = dir0.lerp(zoom.side, ease(u / 0.6)).normalize();
+    controls.target.copy(tgt); camera.position.copy(tgt).add(dir.multiplyScalar(dist));
+    if (u >= 1 && zoom.anim.at == null) zoom.anim = null;
+  } else if (now - zoom.t0 < 1400) {                 // a wheel zoom: re-aim at the column, smoothly
+    controls.target.lerp(zoom.look, 0.08);
+  }
+  zoomBrain = window.zoomBrain = smooth(ZOOM.brainOut[0], ZOOM.brainOut[1], d);   // window.zoomBrain: brain_anatomy.js fades with it
+  zoomLayers();
+  if (d < 10 && !zoom.prefetched && typeof NeuronRender.prefetch === "function") {   // the tissue block's assets, early
+    zoom.prefetched = true; try { NeuronRender.prefetch({kind: "cortex"}); } catch (e) {}
+  }
+  n3d.setZoomFade(zoomBrain); n3d.setFocus(d);
+  // the column fades in, and stays dim while it is small on screen: its cells would pile up into a white blob. The
+  // dimming follows the column's height in screen pixels (a phone packs the same cells into fewer pixels than a desktop)
+  const colPx = zoom.col.plan.thickness / 1000 / (2 * d * Math.tan(camera.fov * Math.PI / 360) / host.clientHeight);
+  zoom.col.setOpacity((1 - smooth(ZOOM.colIn[0], ZOOM.colIn[1], d)) * Math.max(0.08, Math.min(1, Math.pow(colPx / 1100, 1.6))));
+  // the pia at the top of the screen, like a slice under a microscope: the camera's up turns to the column's normal
+  const up = new THREE.Vector3(0, 0, 1).lerp(zoom.N, 1 - zoomBrain).normalize();
+  if (up.lengthSq() > 0.5) camera.up.copy(up);
+  zoom.col.update(now, d, renderer.domElement.height / (2 * Math.tan(camera.fov * Math.PI / 360)));
+  const near = Math.max(0.0005, Math.min(1, d * 0.02));
+  if (Math.abs(near - camera.near) / camera.near > 0.2) { camera.near = near; camera.updateProjectionMatrix(); }
+  if (!zoom.handed && !n3close && d < ZOOM.handoff && now - zoom.backAt > 1500) zoomHandoff();
+  if (zoom.handed && !n3close) {                     // back from the tissue view: resume at the same spot
+    zoom.handed = false; zoom.backAt = now; zoom.anim = null;
+    controls.target.copy(zoom.deep); camera.position.copy(zoom.deep).add(zoom.side.clone().multiplyScalar(ZOOM.handoff * 1.6));
+  }
+  if (!zoom.anim && d > ZOOM.exit) zoomEnd();
+}
+// the scale bar (true, in the scene's mm at the distance looked at) and the column's layer labels
+function zoomOverlay(){
+  const bar = $("n3scale"); if (!bar) return;
+  const show = n3want && !MINI && !n3close;
+  bar.hidden = !show; if (!show) { $("n3labels").innerHTML = ""; return; }
+  const d = camera.position.distanceTo(controls.target), mmPx = 2 * d * Math.tan(camera.fov * Math.PI / 360) / host.clientHeight;
+  const want = 90 * mmPx, p = Math.pow(10, Math.floor(Math.log10(want))), step = [1, 2, 5, 10].find(k => k * p >= want * 0.7) * p;
+  const label = step >= 1 ? `${+step.toPrecision(3)} mm` : `${Math.round(step * 1000)} µm`;
+  bar.querySelector("i").style.width = Math.round(step / mmPx) + "px";
+  const note = zoomBrain > 0.5 ? (n3d ? ` · cells drawn ~${Neurons3D.ENLARGE}×` : "") : " · true scale";
+  const t = label + note; const sp = bar.querySelector("span"); if (sp.textContent !== t) sp.textContent = t;
+  const lab = $("n3labels");
+  if (!zoom || zoomBrain > 0.6) { if (lab.innerHTML) lab.innerHTML = ""; return; }
+  const w = host.clientWidth, h = host.clientHeight, v = new THREE.Vector3();
+  lab.innerHTML = zoom.col.anchors().map(a => { v.set(...a.pos).project(camera);
+    if (v.z > 1 || Math.abs(v.x) > 1.1 || Math.abs(v.y) > 1.1) return "";
+    return `<span style="left:${Math.round((v.x + 1) / 2 * w)}px;top:${Math.round((1 - v.y) / 2 * h)}px">${a.name}</span>`; }).join("");
+}
+function zoomLine(){
+  const i = zoom.col.info(), n = x => (x || 0).toLocaleString("en-US"), live = performance.now() - n3wall < 10000;
+  const t = i.types.map(x => `${x.n} ${N3_TYPE[x.type] || x.type} (${x.id})`).join(", ");
+  return `<b>cortical column · ${esc(regionLabel(nodes[i.region]))}</b> · ${(i.widthUm / 1000).toFixed(1)} mm wide, ${(i.thicknessUm / 1000).toFixed(2)} mm deep; layers L1–L6 as measured in H01`
+    + ` · sparse label: ${n(i.drawn)} of ~${n(i.neurons)} neurons drawn (${Math.round(i.label * 100)} %, like a Golgi stain)`
+    + (live ? ` · each drawn cell stands for a sampled model neuron of this region; a spike runs soma → axon` : ` · no live network: static cells, no activity`)
+    + `<span class="s">${esc(t)} · true size · ${n(i.segments)} segments, ${i.drawCalls} draw calls · zoom in further for the tissue block</span>`
+    + `<span class="s">${esc(N3_COLUMN_HONEST)}</span>`;
+}
+function neuronsText(){
+  const live = performance.now() - n3wall < 10000, b = document.querySelector('#layers button[data-l="neurons"]');
+  if (b) { b.textContent = live || !n3want ? "neurons" : "neurons offline"; b.classList.toggle("off", !live); }
+  const st = n3d ? n3d.state() : null;
+  let html = "";
+  if (n3want && zoom && !n3close && zoomBrain < 0.5) html = zoomLine() + (live ? "" : `<span class="s">${esc(N3_OFFLINE)}</span>`);
+  else if (n3want && n3close) html = closeupLine() + (live ? "" : `<span class="s">${esc(N3_OFFLINE)}</span>`)
+    + `<span class="s">${esc(N3_CAPTION)}</span><span class="s">${esc(N3_SHAPES)}</span>`;   // N3_SHAPES: NeuronRender.CAPTION
+  else if (n3want && !live) html = `${esc(N3_OFFLINE)} · ${esc(N3_STATIC)}` + forestLine(st);
+  else if (n3want) html = `<b>live · ${esc(N3_NET[n3net] || "spiking network")}</b>`
+    + (Neurons3D.spikeLine(st) ? ` · ${esc(Neurons3D.spikeLine(st))}` : "")
+    + (st && st.race ? ` · <b>a choice is racing in the striatum</b>` : "")
+    + (st && st.tint === "groups" ? `<span class="s">colour: each region's network group rate (its frames carry no per-region rates)</span>` : "")
+    + forestLine(st) + `<span class="s">${esc(N3_CAPTION)}</span>`;
+  const cap = $("n3cap"); if (cap) { cap.hidden = !n3want; if (cap.dataset.h !== html) { cap.dataset.h = html; cap.innerHTML = html; } }
+  const mini = $("n3mini"); if (mini && MINI) { const t = n3want ? (live ? "simulated spiking neurons, live · each cell a sampled model neuron, enlarged · a model, not a mind" : N3_OFFLINE + " · static cells") : "";
+    if (mini.textContent !== t) mini.textContent = t; }
+}
+setInterval(neuronsText, 1000);
+const STAGES = {AWAKE:[1,0,0], NREM:[0,1,0], REM:[0,0,1]};
+const CHIP = {AWAKE:"#ff9a3c", NREM:"#4d7cff", REM:"#c26bff"};
+const CHIPTXT = {AWAKE:"AWAKE", NREM:"DEEP SLEEP", REM:"REM"};
+const GROUPS = ["attention","control","default","fear","limbic","memory","other","relay","reward","salience","somatomotor","visual"];
+let stage = null, target = [1,0,0], mix = null, burst = 0, boost = 0, sci = 0, sciT = 0;
+let fibreMat, cortexMat, nodes = [], showRegions = false, n3dim = 0;
+let pulse = {t:-1, start:0};
+const OPACITY = MINI ? 0.021 : 0.0105;     // the mini keeps 1 fibre in 6: each drawn twice as bright
+let actNew = false, onScreen = true, drawnAt = 0;
+const tgOn = new Array(12).fill(0);
+const actData = new Uint8Array(256 * 4);
+const actTex = new THREE.DataTexture(actData, 256, 1, THREE.RGBAFormat);
+
+Promise.all([fetch("brain.json").then(r=>r.json()), fetch("fibres.json").then(r=>r.json()),
+             fetch("fibres.bin").then(r=>r.arrayBuffer()), fetch("fibres_ends.bin").then(r=>r.arrayBuffer())])
+.then(([d, meta, fbuf, ebuf]) => {
+  nodes = d.nodes;
+  const lab2node = new Int16Array(512).fill(-1); nodes.forEach((n, i) => lab2node[n.lab] = i);
+  const isLang = n => n && n.name.startsWith("LH_") && (n.name.includes("Temp") || n.name.includes("FrOper"));
+  const keep = MINI ? 6 : 1;
+  const P = new Float32Array(fbuf), E = new Int16Array(ebuf), k = meta.pts, n = Math.floor(meta.n / keep), segs = n * (k - 1);
+  const pos = new Float32Array(segs*6), dcol = new Float32Array(segs*6), info = new Float32Array(segs*8), nod = new Float32Array(segs*4);
+  let o = 0;
+  for (let s0 = 0; s0 < n; s0++) {
+    const s = s0 * keep, ia = lab2node[E[2*s]], ib = lab2node[E[2*s+1]];
+    const a0 = nodes[ia], b0 = nodes[ib];
+    let tgt = -1, flip = 0;                                          // fibres leaving the language parcels
+    if (isLang(a0) && b0 && !isLang(b0)) tgt = GROUPS.indexOf(b0.group);
+    else if (isLang(b0) && a0 && !isLang(a0)) { tgt = GROUPS.indexOf(a0.group); flip = 1; }
+    const fid = (s * 0.61803) % 1;
+    for (let i = 0; i < k - 1; i++, o++) {
+      const a = (s*k + i) * 3, b = a + 3;
+      const dx = P[b]-P[a], dy = P[b+1]-P[a+1], dz = P[b+2]-P[a+2], L = Math.hypot(dx, dy, dz) || 1;
+      for (let j = 0; j < 3; j++) { pos[o*6+j] = P[a+j]; pos[o*6+3+j] = P[b+j]; }
+      const c = [Math.abs(dx)/L, Math.abs(dy)/L, Math.abs(dz)/L];
+      for (let j = 0; j < 3; j++) { dcol[o*6+j] = c[j]; dcol[o*6+3+j] = c[j]; }
+      for (let v = 0; v < 2; v++) { const tp = (i + v) / (k - 1); info.set([flip ? 1 - tp : tp, tgt, fid, tp], o*8 + v*4); }
+      nod[o*4] = nod[o*4+2] = ia; nod[o*4+1] = nod[o*4+3] = ib;
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.setAttribute("dcol", new THREE.BufferAttribute(dcol, 3));
+  g.setAttribute("info", new THREE.BufferAttribute(info, 4));
+  g.setAttribute("nodes", new THREE.BufferAttribute(nod, 2));
+  fibreMat = new THREE.ShaderMaterial({
+    uniforms: { time:{value:0}, mixw:{value:new THREE.Vector3(1,0,0)}, pulseT:{value:-1}, opacity:{value:OPACITY},
+                act:{value:actTex}, tgOn:{value:tgOn}, burst:{value:0}, boost:{value:0}, sci:{value:0} },
+    vertexShader: `
+      attribute vec3 dcol; attribute vec4 info; attribute vec2 nodes;
+      uniform float time; uniform vec3 mixw; uniform float pulseT; uniform sampler2D act; uniform float tgOn[12];
+      uniform float burst; uniform float boost; uniform float sci;
+      varying vec3 vCol;
+      float hash(float x){ return fract(sin(x * 91.17) * 43758.5453); }
+      float actAt(float i){ return i < 0.0 ? 1.0 : texture2D(act, vec2((i + 0.5) / 256.0, 0.5)).r * 3.0; }
+      void main(){
+        float tp = info.x, tgt = info.y, fid = info.z, raw = info.w;
+        float drive = clamp((max(actAt(nodes.x), actAt(nodes.y)) - 1.1) / 0.9, 0.0, 1.0);   // above its own baseline
+        vec3 warm = mix(vec3(1.0, 0.46, 0.12), vec3(1.0, 0.82, 0.55), dcol.z) * 0.8 + dcol * 0.25;
+        float shimmer = 0.68 + 0.12 * pow(0.5 + 0.5 * sin(raw * 6.0 - time * 1.5 + fid * 40.0), 2.0) + 0.45 * drive;   // a slow, broad wave (same mean as before)
+        vec3 cool = mix(vec3(0.12, 0.25, 0.95), vec3(0.35, 0.6, 1.0), dcol.x);
+        float sweep = 0.25 + 1.4 * pow(0.5 + 0.5 * sin(position.y * 0.045 - time * 1.1), 10.0);
+        vec3 violet = mix(vec3(0.62, 0.22, 1.0), vec3(1.0, 0.3, 0.62), dcol.y);
+        float flick = 0.35 + (1.4 + burst) * step(0.86 - 0.08 * burst, hash(fid * 977.0 + floor(time * 6.0))) + 0.3 * drive;
+        vec3 col = mixw.x * warm * shimmer + mixw.y * cool * sweep + mixw.z * violet * flick;
+        col = mix(col, dcol * (0.75 + 1.3 * drive), sci);                                 // standard tractography colours
+        col *= 1.0 + 0.5 * boost;
+        float route = 0.0;
+        for (int i = 0; i < 12; i++) { if (abs(tgt - float(i)) < 0.5) route = tgOn[i]; }
+        float pk = route * exp(-pow((tp - pulseT) * 3.5, 2.0)) * step(-0.5, pulseT);       // a broad front, not a bead
+        float trail = route * step(0.0, pulseT) * step(tp, pulseT) * exp(-(pulseT - tp) * 1.5);
+        float busy = step(0.0, pulseT) * (1.0 - smoothstep(1.2, 1.6, pulseT));
+        col *= 1.0 - 0.55 * busy * (1.0 - route);
+        col *= 1.0 + 2.5 * pk + 1.5 * trail;          // the fibre itself brightens where the stimulus travels
+        vCol = col;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }`,
+    fragmentShader: `uniform float opacity; varying vec3 vCol; void main(){ gl_FragColor = vec4(vCol * opacity, 1.0); }`,
+    transparent:true, blending:THREE.AdditiveBlending, depthWrite:false,
+  });
+  const fibres = new THREE.LineSegments(g, fibreMat); fibres.name = "fibres"; scene.add(fibres);
+
+  Promise.all([fetch("cortex.bin").then(r=>r.arrayBuffer()), fetch("cortex_idx.bin").then(r=>r.arrayBuffer())]).then(([vb, ib]) => {
+    const cg = new THREE.BufferGeometry();
+    cortexPos = new Float32Array(vb); cortexIdx = new Uint32Array(ib);
+    cg.setAttribute("position", new THREE.BufferAttribute(cortexPos, 3));
+    cg.setIndex(new THREE.BufferAttribute(cortexIdx, 1));
+    cg.computeVertexNormals();
+    // each vertex's parcel (the nearest cortical region centroid, as the forest places its cells): an active region
+    // lights its own patch of the real cortex surface (#88 follow-up: no glowing balls at the region centres)
+    const nv = cortexPos.length / 3, vReg = new Float32Array(nv).fill(-1), vGrp = new Float32Array(nv).fill(-1);
+    const cort = []; nodes.forEach((n, i) => { if (/^(LH|RH)_/.test(n.name)) cort.push(i); });
+    for (let v = 0; v < nv; v++) {
+      const x = cortexPos[3 * v], y = cortexPos[3 * v + 1], z = cortexPos[3 * v + 2]; let best = -1, bd = 30 * 30;
+      for (const i of cort) { const q = nodes[i].q, d = (x - q[0]) ** 2 + (y - q[1]) ** 2 + (z - q[2]) ** 2; if (d < bd) { bd = d; best = i; } }
+      if (best >= 0) { vReg[v] = best; vGrp[v] = GROUPS.indexOf(nodes[best].group); }
+    }
+    cg.setAttribute("aReg", new THREE.BufferAttribute(vReg, 1)); cg.setAttribute("aGrp", new THREE.BufferAttribute(vGrp, 1));
+    cortexMat = new THREE.ShaderMaterial({
+      uniforms: { tint:{value:new THREE.Color(CHIP[stage || "AWAKE"])}, strength:{value:0.5}, act:{value:actTex}, tgOn:{value:tgOn},
+                  uRegOn:{value:0}, uArrive:{value:0} },
+      vertexShader: `attribute float aReg; attribute float aGrp; uniform sampler2D act; uniform float tgOn[12]; uniform float uRegOn; uniform float uArrive;
+        varying vec3 vN; varying vec3 vV; varying float vPatch;
+        void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz);
+          float rel = aReg < 0.0 ? 0.0 : texture2D(act, vec2((aReg + 0.5) / 256.0, 0.5)).r * 3.0;      // activity vs its own baseline
+          float route = 0.0; for (int i = 0; i < 12; i++) { if (abs(aGrp - float(i)) < 0.5) route = tgOn[i]; }
+          vPatch = step(0.0, aReg) * max(uRegOn * 0.12 + clamp((rel - 1.3) * 0.3, 0.0, 0.3) * mix(0.4, 1.0, uRegOn), 0.5 * uArrive * route);
+          gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `uniform vec3 tint; uniform float strength; varying vec3 vN; varying vec3 vV; varying float vPatch;
+        void main(){ float rim = pow(1.0 - abs(dot(vN, vV)), 3.0);
+          gl_FragColor = vec4(tint * rim * strength + vec3(1.0, 0.78, 0.56) * vPatch * 0.6 * rim, 1.0); }`,   // rim-lit like the surface itself: the folds don't stack into a blob
+      transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide,
+    });
+    const m = new THREE.Mesh(cg, cortexMat); m.name = "cortex"; scene.add(m);
+    if (n3want) neuronsOn(true);
+  });
+  connect();
+});
+
+// ---------- story ----------
+const tickerEl = $("ticker");
+function tick(html){ if (MINI) return; tickerEl.insertAdjacentHTML("afterbegin", `<div>${html}</div>`); while (tickerEl.children.length > 4) tickerEl.lastChild.remove(); }
+let lastReplay = null, heard = null, doing = "", where = "", sleepInfo = null, sync = 0, baseline = null, slow = null;
+function story(){
+  const now = performance.now();
+  if (heard && now - heard.at < 9000) return `heard <em>“${esc(heard.text)}”</em>. the signal is travelling along its real fibres.`;
+  if (stage === "REM") return lastReplay && now - lastReplay.at < 300000
+    ? `is replaying <em>“${esc(lastReplay.text)}”</em>, heard at ${esc(lastReplay.received)}.`
+    : `is <em>dreaming</em>. the diary is recording.`;
+  if (stage === "NREM") return `deep sleep. <em>slow waves</em> sweep front to back; almost nothing gets through.`;
+  return doing ? `is <em>${esc(doing)}</em>.` : `is <em>awake</em>.`;
+}
+function subline(){
+  if (!sleepInfo) return "";
+  if (stage === "AWAKE") return (baseline ? `replaying a real recorded session underneath (${esc(baseline.run)})`
+      : slow ? `background: ${esc(slow.label)}` : "simulated background activity")
+    + ` · global synchrony ${(sync * 100).toFixed(0)}%`;
+  return `stimulus gain ${Math.round(sleepInfo.gain * 100)}% · sleep debt ${sleepInfo.debt.toFixed(1)} h · woken ${sleepInfo.woken_tonight}× tonight`;
+}
+function setStage(s){
+  if (s === stage) return;
+  stage = s; target = STAGES[s] || STAGES.AWAKE;
+  if (!mix) mix = [...target];
+  document.documentElement.style.setProperty("--st", CHIP[s] || CHIP.AWAKE);
+  $("chip").textContent = CHIPTXT[s] || s;
+  if (cortexMat) cortexMat.uniforms.tint.value.set(CHIP[s] || CHIP.AWAKE);
+  controls.autoRotateSpeed = s === "AWAKE" ? 0.35 : s === "REM" ? 0.22 : 0.1;
+}
+function fire(text, networks){
+  tgOn.fill(0);
+  const nets = (networks || []).filter(x => GROUPS.includes(x));
+  for (const x of (nets.length ? nets : ["default", "attention"])) tgOn[GROUPS.indexOf(x)] = 1;
+  pulse = {t:0, start:performance.now()};
+  heard = {text: String(text).slice(0, 80), at: performance.now()};
+}
+
+// ---------- cards ----------
+async function loadDiary(){
+  try {
+    const d = await (await fetch("/api/diary")).json();
+    const n = d.nights.find(x => x.closed && x.frames) || d.nights.find(x => x.closed) || d.nights[0];
+    if (!n) return;
+    const full = await (await fetch(`/api/diary/${encodeURIComponent(n.date)}`)).json();
+    if (n.cover) { $("d-img").src = n.cover; $("d-img").hidden = false; }
+    $("d-title").textContent = full.closed ? full.title : `Night of ${full.date} · in progress`;
+    const x = full.facts || {};
+    $("d-meta").textContent = full.closed
+      ? `slept ${x.sleep_onset}–${x.woke_up} · replayed ${x.replays} message${x.replays === 1 ? "" : "s"} · ${x.dream_frames} dream frames`
+      : `${full.frames.length} dream frames so far`;
+  } catch (e) {}
+}
+function showEye(f){
+  if (!f || !f.img) return;
+  $("c-eye").hidden = false; $("e-img").src = f.img;
+  $("e-t").textContent = `${f.stage} ${f.t}${f.resting ? " · " + f.resting : ""}`; $("e-thought").textContent = f.thought ? `“${f.thought}”` : "";
+}
+function renderNights(m){
+  const n = m.tonight || m.last;
+  if (!n) return;
+  const tm = s => s ? s.slice(11) : "…";
+  $("n-k").textContent = m.tonight ? "Tonight so far" : "Last night"; $("n-date").textContent = n.date;
+  $("n-t").textContent = n.sleep_onset ? `asleep ${tm(n.sleep_onset)} → ${tm(n.woke_up)}` : "not asleep yet";
+  const reps = n.replays || [];
+  $("n-m").innerHTML = (n.wakeups.length ? `woken ${n.wakeups.length}× (${esc(n.wakeups.map(w => w.cause).slice(-2).join(", "))})` : "never woken")
+    + (n.n_replays ? ` · ${n.n_replays.chat} message replay${n.n_replays.chat === 1 ? "" : "s"}`
+        + (n.n_replays.reading ? ` · ${n.n_replays.reading} of what it read or watched` : "")
+        + (n.n_replays.taught ? ` · ${n.n_replays.taught} of what viewers taught` : "")
+      : ` · ${reps.length} replay${reps.length === 1 ? "" : "s"}`)
+    + (reps.length ? `<br>last: ${{reading: "read ", taught: "taught "}[reps[reps.length - 1].source] || ""}“${esc(reps[reps.length - 1].text.slice(0, 60))}”` : "");
+}
+
+// ---------- teach him something ----------
+function taughtRow(it, withResult){
+  const who = it.nick ? ` <span style="color:var(--dim)">— ${esc(it.nick)}</span>` : "";
+  let right = `replayed in his sleep: ${it.replayed} time${it.replayed === 1 ? "" : "s"}`;
+  if (withResult && it.result) right = it.result.recalled
+    ? `<span class="ok">recalled</span> · ${it.result.score} vs lure ${it.result.best_lure} Hz`
+    : `<span class="no">not recalled</span> · ${it.result.score} vs lure ${it.result.best_lure} Hz`;
+  else if (withResult && it.testable === false) right += " · too short to test from half a cue";
+  return `<li>“${esc(it.text)}”${who}<span class="r">${right}</span></li>`;
+}
+async function loadTaught(){
+  try {
+    const d = await (await fetch("/api/taught")).json();
+    $("t-left").textContent = `${d.left} of ${d.per_day} left today`;
+    $("t-today").innerHTML = d.today.length ? d.today.slice().reverse().map(it => taughtRow(it, false)).join("")
+      : `<li><span class="m">nothing yet today</span></li>`;
+    $("t-yday").hidden = !d.yesterday.length;
+    $("t-yk").textContent = d.gpu ? "Remembered from yesterday" : "Taught yesterday";
+    $("t-ylist").innerHTML = d.yesterday.map(it => taughtRow(it, d.gpu)).join("");
+    $("t-honest").textContent = d.note;
+  } catch (e) {}
+}
+$("t-form").addEventListener("submit", ev => {
+  ev.preventDefault(); const text = $("t-text").value.trim(), nick = $("t-nick").value.trim();
+  if (!text) return;
+  if (!sock || sock.readyState !== 1) { $("t-note").textContent = "still connecting, try again in a moment"; $("t-note").className = "m err"; return; }
+  sock.send(JSON.stringify({type:"teach", text, nick}));
+});
+
+// ---------- at his desk: chess and muted videos (#17) ----------
+const PIECES = {K:"♚", Q:"♛", R:"♜", B:"♝", N:"♞", P:"♟"};
+let deskChess = null, deskVideo = null, deskShot = 0;
+function drawBoard(g){
+  const rows = g.fen.split(" ")[0].split("/"), sq = [];
+  for (const r of rows) for (const ch of r) { if (/\d/.test(ch)) for (let i = 0; i < +ch; i++) sq.push(""); else sq.push(ch); }
+  const lit = g.last ? [g.last.slice(0, 2), g.last.slice(2, 4)] : [];
+  const flip = g.color === "black", cells = [];
+  for (let i = 0; i < 64; i++) {
+    const k = flip ? 63 - i : i, file = k % 8, rank = 8 - Math.floor(k / 8), name = "abcdefgh"[file] + rank, p = sq[k];
+    const cls = [(file + rank) % 2 ? "" : "d", lit.includes(name) ? "l" : "", p && p === p.toUpperCase() ? "w" : ""].join(" ");
+    cells.push(`<div class="${cls}">${p ? PIECES[p.toUpperCase()] : ""}</div>`);
+  }
+  $("desk-board").innerHTML = cells.join("");
+}
+function optRows(opts, label){
+  return (opts || []).map(o => `<li class="${o.chosen ? "c" : ""}"><span>${esc(label(o))}</span><span>${Math.round((o.p || 0) * 100)}%</span></li>`).join("");
+}
+function renderDesk(){
+  const g = deskChess, v = deskVideo;
+  $("desk").hidden = !g && !v;
+  $("desk-board").hidden = !g; $("desk-img").hidden = !!g || !v;
+  if (g) {
+    drawBoard(g);
+    $("desk-k").textContent = g.result ? `game over · ${g.result}` : `chess · he plays ${g.color}`;
+    $("desk-t").textContent = g.result ? `${g.result === "unfinished" ? "left unfinished" : g.result} (${g.reason}) after ${g.plies} moves`
+      : (g.vote ? `last move ${g.vote.move}: ${g.vote.reason}` : "a new game");
+    $("desk-opts").innerHTML = g.vote ? optRows(g.vote.options, o => o.label) : "";
+    $("desk-m").textContent = g.card;
+  } else if (v) {
+    if (v.id !== deskShot) { deskShot = v.id; $("desk-img").src = `/api/screen/desk.jpg?id=${v.id}`; }
+    const w = v.video || {};
+    $("desk-k").textContent = w.watching ? "video · muted" : "videos";
+    $("desk-t").textContent = v.title + (v.channel ? ` — ${v.channel}` : "");
+    const d = v.decision;
+    $("desk-opts").innerHTML = d ? optRows(d.options, o => o.label) : "";
+    $("desk-m").textContent = (w.watching ? `watching for ${Math.round((d && d.watch_min) || w.seconds / 60)} min, then his brain model picks again`
+      + ` · picture change ${Math.round((w.scene || 0) * 100)}% drives the visual areas` : (v.why || ""))
+      + " · muted, read-only, Restricted Mode";
+  }
+}
+// ---------- music (#68): his brain model picks; Spotify's official embed, played on the visitor's own device ----------
+let musicNow = null, musicEmbed = "";
+const SPOTIFY_EMBED = /^https:\/\/open\.spotify\.com\/embed\/track\/[A-Za-z0-9]{22}(\?[\w=&]*)?$/;
+function renderMusic(){
+  const m = musicNow;
+  $("music").hidden = !m;
+  if (!m) return;
+  $("mu-k").textContent = m.mode === "background" ? "in the background" : "headphones on";
+  $("mu-t").textContent = m.title; $("mu-a").textContent = [m.artist, m.genre_label].filter(Boolean).join(" · ");
+  const art = $("mu-art"); art.hidden = !m.art; if (m.art && art.src !== m.art) art.src = m.art;
+  if (SPOTIFY_EMBED.test(m.embed || "") && m.embed !== musicEmbed) { musicEmbed = m.embed; $("mu-embed").src = m.embed; }
+  $("mu-card").textContent = m.card || "his brain model picked this track; press play to listen on your own device";
+  $("mu-opts").innerHTML = optRows(m.options, o => o.label);
+  $("mu-why").textContent = [m.reason, m.why].filter(Boolean).join(" · ");
+}
+async function loadMusic(){
+  try { const d = await (await fetch("/api/music")).json(); musicNow = d.now ? {...d.now, card: d.card} : null; renderMusic(); } catch (e) {}
+}
+async function loadChess(){
+  try { const d = await (await fetch("/api/chess")).json(); if (d.playing) { deskChess = d.game; renderDesk(); } } catch (e) {}
+}
+
+// ---------- live ----------
+// q=1: the server's brain feed (act as one log-scaled byte a region, only the fields drawn here); 10 ticks/s,
+// 5 for the room's mini. Frames interpolate between ticks, so the drawing stays smooth.
+const RATE = MINI ? 5 : 10, ACT_LO = 0.01, ACT_HI = 10;
+const ACT_LUT = Float32Array.from({length:256}, (_, b) => ACT_LO * Math.pow(ACT_HI / ACT_LO, b / 255));
+const unq = s => { const bin = atob(s), a = new Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = ACT_LUT[bin.charCodeAt(i)]; return a; };
+let sock = null, act = null, base = null, actFrom = null, actTo = null, actAt = 0, actDt = 1000 / RATE;
+let full = false, retry = 0;                       // the server sends {"type":"full"} when it has no room for us
+const FULL_TXT = "the room is full, try again in a minute";
+// ---------- #89: his screens (what the browser really shows) and the dopamine-like trace ----------
+const DA_N = 240, daTrace = [], daSpikes = [];
+let daLast = 0, daCount = 0;                       // daCount: samples pushed so far (spikes keep their sample number)
+function daLevel(v){
+  const now = performance.now(); if (now - daLast < 500) return; daLast = now;
+  daTrace.push(v); daCount++; if (daTrace.length > DA_N) daTrace.shift(); drawDA();
+}
+function daSpike(m){
+  daSpikes.push({at: daCount, size: m.size, kind: m.kind}); if (daSpikes.length > 60) daSpikes.shift();
+  $("da-l").textContent = `${m.label}: ${m.why} · burst ${(+m.size).toFixed(2)}`
+    + (m.n > 1 ? ` · clip ${m.n} of this scroll session (habituating)` : "");
+  tick(`dopamine-like burst <b>${(+m.size).toFixed(2)}</b> · ${esc(m.why)} (novelty ${m.novelty}, predicted interest ${m.interest}, expectation ${m.expect}) → reward regions`);
+  drawDA();
+}
+function drawDA(){
+  const c = $("da"); if (!c || MINI) return; const g = c.getContext("2d"), W = c.width, H = c.height;
+  g.clearRect(0, 0, W, H); g.fillStyle = "rgba(255,255,255,.04)"; g.fillRect(0, 0, W, H);
+  const lo = 0.6, hi = 2.2, y = v => H - 4 - (Math.min(hi, Math.max(lo, v)) - lo) / (hi - lo) * (H - 8);
+  g.strokeStyle = "rgba(255,255,255,.18)"; g.beginPath(); g.moveTo(0, y(1)); g.lineTo(W, y(1)); g.stroke();
+  const off = DA_N - daTrace.length, x = i => (i + off) / (DA_N - 1) * W;
+  g.strokeStyle = "#ff6a00"; g.lineWidth = 1.5; g.beginPath();
+  daTrace.forEach((v, i) => i ? g.lineTo(x(i), y(v)) : g.moveTo(x(i), y(v))); g.stroke();
+  g.fillStyle = "#ffd27a";
+  for (const s of daSpikes) { const i = s.at - (daCount - daTrace.length) - 1; if (i < 0) continue;
+    g.fillRect(x(i) - 1, H - 4 - Math.min(1, s.size) * (H - 8), 2, Math.min(1, s.size) * (H - 8)); }
+  g.fillStyle = "rgba(236,236,242,.6)"; g.font = "10px sans-serif"; g.fillText("DA", 4, 11);
+}
+// an official embed player (Spotify, TikTok) in the screens card: replaced only when its source changes, never autoplayed
+function screenEmbed(el, src, h, label){
+  if ((el.dataset.src || "") === (src || "")) return;
+  el.dataset.src = src || "";
+  el.innerHTML = src ? `<div class="m">${esc(label)}</div><iframe src="${esc(src)}" title="${esc(label)}" style="width:100%;height:${+h || 80}px;border:0;border-radius:8px" allow="encrypted-media; fullscreen; picture-in-picture"></iframe>` : "";
+  const fr = el.querySelector("iframe"); if (!fr) return;
+  fr.onload = () => { fr.dataset.loaded = "1"; };
+  setTimeout(() => { if (el.dataset.src === src && !fr.dataset.loaded) el.innerHTML = `<div class="m">${esc(label)} — the player did not load</div>`; }, 8000);
+}
+function renderScreens(d){
+  if (!d || MINI) return;
+  const b = d.browser || {};
+  $("sc-k").textContent = b.state === "up" ? "browser up" : b.state === "off" ? "browser off" : `browser ${b.state || "?"}`;
+  $("sc-b").textContent = (b.why ? `${b.why} (since ${b.since})` : `since ${b.since}`) + ((d.notes || []).length ? ` · ${d.notes[d.notes.length - 1].text}` : "");
+  const share = Object.entries((d.today || {}).share || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  $("sc-share").textContent = share.length ? "today: " + share.map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(" · ") : "today: nothing on his screens yet";
+  const bl = (d.sources || {}).blocked || [];
+  const yt = d.youtube, fd = Object.entries(d.feeds || {}).map(([k, v]) => `${k} logged in, no video: ${v.reason}${v.captcha ? " (captcha)" : ""}`);
+  $("sc-src").textContent = [bl.length ? "sources set aside: " + bl.map(x => `${x.label} (${x.why}, until ${x.until})`).join(" · ") : "",
+    yt ? (yt.key_set ? `YouTube API: ${yt.units_used}/${yt.units_cap} units today` : "YouTube API key not set") : "", ...fd].filter(Boolean).join(" · ");
+  const mu = d.music || {}, now = mu.now;
+  $("sc-music").textContent = now ? `now playing: ${now.title} — ${now.artist} · ${mu.source}` : (mu.source ? `no music playing · ${mu.source}` : "");
+  screenEmbed($("sc-music-p"), now && now.embed, (now && now.embed_height) || 80, mu.label || "Spotify (official embed)");
+  const tt = (d.last || []).find(x => x.embed);
+  screenEmbed($("sc-tt"), tt && tt.embed.src, 340, tt ? `${tt.embed.label}: ${tt.title}` : "");
+  $("sc-last").innerHTML = (d.last || []).slice(0, 10).map(x => `<li><span class="m">${esc(x.t)}</span> <b>${esc(x.kind)}</b> · ${esc(x.host)} · ${esc(x.title)}</li>`).join("");
+}
+function pollScreens(){ if (MINI) return; fetch("/api/screens").then(r => r.ok ? r.json() : null).then(renderScreens).catch(() => {}); }
+if (!MINI) { pollScreens(); setInterval(pollScreens, 5000); } else { const sc = document.getElementById("screens"); if (sc) sc.hidden = true; }
+
+function connect(){
+  const ws = sock = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws?rate=${RATE}&q=1`);
+  ws.onopen = () => $("live").classList.add("on");
+  ws.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.type === "full") { full = true; if (!MINI) { $("story").textContent = FULL_TXT; $("sub").textContent = "reconnecting by itself"; } return; }
+    if (m.type === "spiking") {
+      if (!MINI && window.Neurons) Neurons.onMessage(m);
+      if (m.live === false) n3wall = -1e9;
+      else if (m.n3 && !(m.net === "cpu" && n3net === "gpu" && performance.now() - n3wall < 10000)) { n3wall = performance.now(); n3net = m.net || "gpu"; }
+      if (n3d) n3d.onFrame(m);
+      if (n3close) n3close.onFrame(m);
+      if (zoom) zoom.col.onFrame(m);
+      return;
+    }
+    if (m.type === "hello") {
+      tickerEl.replaceChildren();
+      for (const c of m.chat.slice(-3)) tick(`${esc(c.t)} · message <b>“${esc(c.text.slice(0, 60))}”</b> → ${esc(c.networks.join(", "))}`);
+      return;
+    }
+    if (m.type === "chat") {
+      tick(`${esc(m.t)} · message <b>“${esc(m.text.slice(0, 60))}”</b> → language → ${esc(m.networks.join(", "))}${m.asleep ? ` (heard asleep, ${Math.round(m.gain * 100)}%)` : ""}`);
+      fire(m.text, m.networks); return;
+    }
+    if (m.type === "eye") { showEye(m); return; }
+    if (m.type === "music") { if (m.playing) { musicNow = m; renderMusic(); } else if (musicNow && musicNow.id === m.id) { musicNow = null; renderMusic(); } return; }
+    if (m.type === "chess") { deskChess = m; renderDesk(); if (m.finished) setTimeout(() => { if (deskChess === m) { deskChess = null; renderDesk(); } }, 60000); return; }
+    if (m.type === "screen") { if (m.device === "desk") { deskVideo = m.video ? m : null; renderDesk(); } return; }
+    if (m.type === "dopamine") { daSpike(m); return; }
+    if (m.type === "nights") { renderNights(m); return; }
+    if (m.type === "teach_ack") {
+      $("t-note").textContent = m.ok ? "taught · he may replay it in his sleep tonight" : `not taught: ${m.reason}`;
+      $("t-note").className = m.ok ? "m" : "m err";
+      if (m.ok) { $("t-text").value = ""; loadTaught(); }
+      return;
+    }
+    if (m.type === "taught") {
+      tick(`${esc(m.t)} · taught <b>“${esc(m.text.slice(0, 60))}”</b>${m.nick ? ` by ${esc(m.nick)}` : ""} → ${esc(m.networks.join(", "))}`);
+      fire(m.text, m.networks); if (!MINI) loadTaught(); return;
+    }
+    if (m.type === "chat_ack") {
+      $("note").textContent = m.ok ? "sent · watch it travel" : `not sent: ${m.reason}`; $("note").className = m.ok ? "" : "err"; return;
+    }
+    if (m.type !== "tick") return;
+    const sl = m.sleep;
+    if (sl) {
+      sleepInfo = sl; setStage(sl.stage); burst = Math.max(burst, sl.burst || 0);
+      if (!MINI) $("clock").textContent = `${sl.clock} ${sl.tz || "Tokyo"}`;
+    }
+    if (m.neuro && typeof m.neuro.DA === "number") daLevel(m.neuro.DA);
+    if (m.life) {
+      doing = m.life.walking ? `walking (${m.life.doing})` : m.life.doing;
+      if (deskVideo && (m.life.walking || !/computer/.test(m.life.doing))) { deskVideo = null; renderDesk(); }
+      if (!MINI) $("where").textContent = stage === "AWAKE" ? `· Kichijōji` : stage === "REM" ? "· dreaming" : "· asleep at home";
+    }
+    sync = m.sync || 0; baseline = m.baseline; slow = m.slow;
+    for (const ev of m.events || []) {
+      if (ev.type === "replay") { lastReplay = {text: ev.text, received: ev.received, at: performance.now()};
+        tick(`${esc(ev.t)} · replay ${{reading: "of what it read or watched ", taught: "of what it was taught "}[ev.source] || ""}<b>“${esc(ev.text.slice(0, 60))}”</b> (from ${esc(ev.received)}) → ${esc((ev.networks || []).join(", "))}`);
+        fire(ev.text, ev.networks); heard = null; }
+      else tick(`${esc(ev.t)} · ${esc(ev.text)}`);
+    }
+    for (const t of m.trades || []) {
+      tick(`<span class="${t.kind}">${t.kind} $${t.usd.toFixed(t.usd < 10 ? 2 : 0)}</span> → ${t.kind === "buy" ? "reward, visual" : "salience, fear"}`);
+      if (t.kind === "buy") boost = Math.min(0.3, boost + 0.05);
+    }
+    const a = m.aq ? unq(m.aq) : m.act;           // m.act: a server without the q feed
+    if (!a) return;
+    full = false; retry = 0;
+    const now = performance.now();
+    if (actTo) actDt = Math.min(1000, Math.max(30, 0.8 * actDt + 0.2 * (now - actAt)));   // measured tick spacing
+    actFrom = act ? act.slice() : a; actTo = a; actAt = now; actNew = true;
+    const k = 0.002 * 20 / RATE;                   // same ~25 s baseline as at 20 ticks/s
+    if (!base) base = a.slice(); else base = base.map((b, i) => b * (1 - k) + a[i] * k);
+  };
+  ws.onclose = () => {
+    $("live").classList.remove("on");
+    // full: about a minute, then longer (to 4 min), with jitter so viewers do not all come back at once;
+    // otherwise 1.5 s doubling to 30 s
+    const wait = full ? 60000 * Math.min(4, 2 ** retry) * (0.75 + 0.5 * Math.random())
+                      : Math.min(30000, 1500 * 2 ** retry) * (0.75 + 0.5 * Math.random());
+    retry = Math.min(retry + 1, 5);
+    setTimeout(connect, wait);
+  };
+}
+$("chat").addEventListener("submit", ev => {
+  ev.preventDefault(); const inp = $("msg"), text = inp.value.trim();
+  if (!text) return;
+  if (!sock || sock.readyState !== 1) { $("note").textContent = "still connecting, try again in a moment"; $("note").className = "err"; return; }
+  sock.send(JSON.stringify({type:"chat", text})); inp.value = "";
+});
+document.querySelectorAll("#layers button").forEach(b => b.onclick = () => {
+  b.classList.toggle("on"); const on = b.classList.contains("on"), l = b.dataset.l;
+  if (l === "fibres" || l === "cortex") { const o = scene.getObjectByName(l); if (o) o.visible = on; }
+  if (l === "regions") { showRegions = on; actNew = true; }
+  if (l === "sci") sciT = on ? 1 : 0;
+  if (l === "neurons") { neuronsOn(on); if (!on) closeupExit(); }
+});
+document.querySelectorAll("#n3close button[data-k]").forEach(b => b.onclick = () => closeupOpen(b.dataset.k));
+$("n3dive").onclick = () => { if (!n3want) neuronsOn(true); closeupExit(); if (zoom) zoomEnd();
+  const go = () => { if (n3d && n3morph) { zoomStart(true); } else setTimeout(go, 300); }; setTimeout(go, 50); };
+{ const sb = document.createElement("div"); sb.id = "n3scale"; sb.hidden = true; sb.innerHTML = "<i></i><span></span>"; host.appendChild(sb);
+  const lb = document.createElement("div"); lb.id = "n3labels"; host.appendChild(lb); }
+// ---------- brain_anatomy hook (G9, #99): the brain as a real specimen; the module loads on the first click ----------
+let anat = null, anatP = null;
+const ANAT_AXES = ["coronal", "sagittal", "axial"];
+function anatLoad(){
+  if (anatP) return anatP;
+  const ready = () => new Promise(res => { const t = () => scene.getObjectByName("cortex") && scene.getObjectByName("fibres") ? res() : setTimeout(t, 100); t(); });   // the page's meshes load first
+  return anatP = new Promise((res, rej) => { const s = document.createElement("script"); s.src = "/brain_anatomy.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s); })
+    .then(ready).then(() => { anat = BrainAnatomy.create({THREE, scene, renderer, camera, controls, cortex: scene.getObjectByName("cortex"), fibres: scene.getObjectByName("fibres"),
+                    base: "/anatomy/", caption: html => { const c = $("anatcap"); c.hidden = !html || anat.state().view === "glow" && !anat.state().layers.vessels && !anat.state().layers.nerves;
+                    if (c.dataset.h !== html) { c.dataset.h = html; c.innerHTML = html; } }}); return anat; });
+}
+function anatView(v){
+  document.querySelectorAll("#anat button[data-v]").forEach(x => x.classList.toggle("on", x.dataset.v === v));
+  $("anat-cut").hidden = $("anat-axis").hidden = v !== "fixed";
+  if (v === "glow" && !anat) return;
+  anatLoad().then(a => { a.setView(v); if (v === "fixed") a.setCut($("anat-axis").textContent, +$("anat-cut").value); }).catch(() => { $("anatcap").hidden = false; $("anatcap").textContent = "the anatomy module did not load"; });
+}
+document.querySelectorAll("#anat button[data-v]").forEach(b => b.onclick = () => anatView(b.dataset.v));
+document.querySelectorAll("#anat button[data-a]").forEach(b => b.onclick = () => { b.classList.toggle("on"); const on = b.classList.contains("on");
+  anatLoad().then(a => a.setLayer(b.dataset.a, on)).catch(() => {}); });
+$("anat-axis").onclick = () => { const b = $("anat-axis"); b.textContent = ANAT_AXES[(ANAT_AXES.indexOf(b.textContent) + 1) % 3]; if (anat) anat.setCut(b.textContent, +$("anat-cut").value); };
+$("anat-cut").oninput = () => { if (anat) anat.setCut(null, +$("anat-cut").value); };
+{ const qs = new URLSearchParams(location.search), q = qs.get("view");                   // the default view: fresh brain (?view=glow: the page's own look)
+  const v0 = ["glow", "fresh", "fixed", "bundles"].includes(q) ? q : (MINI ? "glow" : "fresh");
+  if (v0 !== "glow") anatView(v0);
+  for (const a of (qs.get("layers") || "").split(",")) { const b = document.querySelector(`#anat button[data-a="${a}"]`); if (b) b.click(); } }
+// ---------- end of the brain_anatomy hook ----------
+if ("IntersectionObserver" in window)            // draw only while the brain is on screen (the room's PiP, a phone's scroll)
+  new IntersectionObserver(es => { onScreen = es[es.length - 1].isIntersecting; }).observe(host);
+if (!MINI) { loadDiary(); setInterval(loadDiary, 10 * 60 * 1000); loadTaught(); setInterval(loadTaught, 60 * 1000); loadChess(); loadMusic();
+  fetch("/api/frames?n=1").then(r => r.json()).then(d => showEye(d.frames[d.frames.length - 1])).catch(() => {}); }
+if (!MINI) setInterval(() => { if (full) $("story").textContent = FULL_TXT;
+  else if (stage) { $("story").innerHTML = story(); $("sub").innerHTML = subline(); } }, 500);
+
+// ---------- loop ----------
+let last = performance.now(), t = 0;
+function frame(now){
+  requestAnimationFrame(frame);
+  if (!onScreen || document.hidden) return;                                       // off screen: nothing drawn
+  if (MINI && now - drawnAt < 1000 / 30 - 3) return;                              // mini: <= 30 fps
+  drawnAt = now;
+  const dt = Math.min(0.1, (now - last) / 1000); last = now; t += dt;
+  if (!mix) mix = [1, 0, 0];
+  const k = 1 - Math.exp(-dt / 2.5);
+  for (let i = 0; i < 3; i++) mix[i] += (target[i] - mix[i]) * k;
+  sci += (sciT - sci) * (1 - Math.exp(-dt / 0.4));
+  const n3live = n3want;                                                          // neurons on (live or static): the fibres step back
+  n3dim += ((n3live ? 1 : 0) - n3dim) * (1 - Math.exp(-Math.min(2, (now - (frame.n3at || now)) / 1000) / 0.6));
+  frame.n3at = now;                                                               // wall clock: a slow device fades too
+  burst *= Math.exp(-dt / 0.5); boost *= Math.exp(-dt / 0.6);
+  const tween = actTo && now - actAt < actDt;            // between two ticks: blend them
+  if (actTo && (actNew || tween)) {
+    const w = Math.min(1, (now - actAt) / actDt);
+    act = w >= 1 ? actTo : actTo.map((b, i) => actFrom[i] + (b - actFrom[i]) * w);
+  }
+  if (act && base && (actNew || tween || pulse.t >= 0)) {   // only while something changes, not every frame
+    actNew = false;
+    const raw = act.map((a, i) => a / Math.max(base[i], 0.02));
+    const gm = Math.max(1e-3, raw.reduce((x, y) => x + y, 0) / raw.length);
+    raw.forEach((r, i) => { actData[i*4] = Math.min(255, Math.round(r / gm / 3 * 255)); });
+    actTex.needsUpdate = true;
+  }
+  if (fibreMat) {
+    const u = fibreMat.uniforms;
+    u.time.value = t; u.mixw.value.set(...mix); u.burst.value = burst; u.boost.value = boost; u.sci.value = sci;
+    u.opacity.value = OPACITY * (mix[0] + 0.75 * mix[1] + 0.9 * mix[2]) * (1 + 0.4 * sci) * (1 - 0.85 * n3dim) * zoomBrain;   // neurons on: the fibres step well back (#88 B); gone inside the column (#99)
+    if (pulse.t >= 0) { pulse.t = (now - pulse.start) / 2600; if (pulse.t > 1.6) pulse.t = -1; }
+    u.pulseT.value = pulse.t;
+  }
+  if (cortexMat) cortexMat.uniforms.strength.value = 0.5 * (mix[0] + 0.5 * mix[1] + 0.8 * mix[2]) * (1 - 0.6 * sci) * (1 - 0.7 * n3dim) * zoomBrain;   // a faint outline behind the cells
+  if (cortexMat) {                                   // regions: the cortex's own patches (the "regions" toggle, a stimulus arriving)
+    cortexMat.uniforms.uRegOn.value = showRegions ? 1 : 0;
+    cortexMat.uniforms.uArrive.value = pulse.t > 0.85 && pulse.t < 1.6 ? Math.max(0, 1 - (pulse.t - 0.85) / 0.75) : 0;
+  }
+  if (n3d) n3d.update(now);
+  if (anat) anat.update(now);                                                     // brain_anatomy hook (G9, #99)
+  if (zoomBack) { const u = ease((now - zoomBack.t0) / 1000); controls.target.lerpVectors(zoomBack.from, zoomBack.to, u); if (u >= 1) zoomBack = null; }
+  if (n3want && !MINI && n3d && !n3close) {          // the zoom (#99): wheel in past ZOOM.start, or the dive button
+    if (zoom) zoomFrame(now);
+    else if (camera.position.distanceTo(controls.target) < ZOOM.start && now - n3lodAt > 800) zoomStart(false);
+  } else if (zoom && !n3want) zoomEnd();
+  else if (zoom && n3close) zoomFrame(now);
+  zoomOverlay();
+  if (n3close) return;                                                            // the close-up overlay draws itself (NeuronRender)
+  controls.update(); renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

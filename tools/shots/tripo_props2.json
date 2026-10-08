@@ -1,0 +1,66 @@
+{
+ "_": "G10d's Tripo props 2 (PR #138): main (old) vs feature/tripo-props-2 (new) at 14:00 while he works at the desk; the cameras are G10d's still cameras (room_build/tripo_stills.py SHOTS2), world metres (position -> target), 'to' is a dolly end; screen_stub: the desk monitor shows a neutral picture drawn by the tool (a plain dark code editor, no text or brands), since the preview page has no live screens feed",
+ "hour": 14,
+ "scene": {
+  "life": {
+   "activity": "research",
+   "place": "room"
+  }
+ },
+ "shots": [
+  {
+   "label": "overview",
+   "seconds": 15,
+   "cam": {
+    "pos": [
+     5.2,
+     5.0,
+     6.0
+    ],
+    "target": [
+     0,
+     0.6,
+     0
+    ],
+    "to": [
+     4.5,
+     4.3,
+     5.2
+    ]
+   }
+  },
+  {
+   "label": "desk, monitor",
+   "seconds": 10,
+   "cam": {
+    "pos": [
+     -0.15,
+     1.68,
+     -0.12
+    ],
+    "target": [
+     -1.05,
+     1.15,
+     -1.25
+    ]
+   }
+  },
+  {
+   "label": "door corner: fan, skateboard, shoe boxes",
+   "seconds": 10,
+   "cam": {
+    "pos": [
+     0.7,
+     1.4,
+     0.7
+    ],
+    "target": [
+     1.6,
+     0.3,
+     -0.2
+    ]
+   }
+  }
+ ],
+ "screen_stub": true
+}

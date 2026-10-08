@@ -1,0 +1,40 @@
+{
+ "method": "Casali 2013 PCI on the model's regional signal; 60 trials, 300 ms, 2 ms bins, alpha 0.01",
+ "clinical_reference": "people: conscious > ~0.31 > unconscious (Casarotto 2016)",
+ "stages": {
+  "awake": {
+   "7Networks_LH_DorsAttn_Post_1": {
+    "pci": 0.181,
+    "active_fraction": 0.0023
+   },
+   "7Networks_RH_SomMot_1": {
+    "pci": 0.188,
+    "active_fraction": 0.0027
+   },
+   "mean": 0.184
+  },
+  "deep sleep (NREM)": {
+   "7Networks_LH_DorsAttn_Post_1": {
+    "pci": 0.09,
+    "active_fraction": 0.0032
+   },
+   "7Networks_RH_SomMot_1": {
+    "pci": 0.054,
+    "active_fraction": 0.0036
+   },
+   "mean": 0.072
+  },
+  "dreaming (REM)": {
+   "7Networks_LH_DorsAttn_Post_1": {
+    "pci": 0.186,
+    "active_fraction": 0.0014
+   },
+   "7Networks_RH_SomMot_1": {
+    "pci": 0.147,
+    "active_fraction": 0.0021
+   },
+   "mean": 0.166
+  }
+ },
+ "seconds": 20
+}

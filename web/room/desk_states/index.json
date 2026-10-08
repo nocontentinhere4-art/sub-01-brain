@@ -1,0 +1,30 @@
+{
+ "clips": {
+  "attend": "neutral_1.glb",
+  "idle_a": "neutral_3.glb",
+  "idle_b": "neutral_5.glb",
+  "idle_c": "look_left_idle.glb",
+  "idle_d": "look_right_idle.glb",
+  "gesture_a": "look_down_to_right.glb",
+  "gesture_b": "look_front_to_left.glb",
+  "gesture_c": "desk_look_behind.glb",
+  "gesture_d": "seat_looking_around_v2.glb",
+  "gesture_e": "seat_neck_stretching_idle.glb",
+  "gesture_f": "seat_thinking_touching_chin.glb",
+  "react_win": "seat_happy.glb",
+  "react_up": "seat_smiling.glb",
+  "react_lose": "seat_feeling_frustrated_v1.glb"
+ },
+ "once": [
+  "gesture_a",
+  "gesture_b",
+  "gesture_c",
+  "gesture_d",
+  "gesture_e",
+  "gesture_f",
+  "react_win",
+  "react_up",
+  "react_lose"
+ ],
+ "seat": {}
+}

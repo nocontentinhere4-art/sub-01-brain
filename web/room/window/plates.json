@@ -1,0 +1,190 @@
+{
+ "layers": {
+  "near": {
+   "d": 14.0,
+   "xm": 16.0,
+   "y0": -9.0,
+   "y1": 7.0,
+   "cx": 0.0
+  },
+  "mid": {
+   "d": 40.0,
+   "xm": 56.0,
+   "y0": -18.0,
+   "y1": 13.0,
+   "cx": 4.0
+  },
+  "far": {
+   "d": 200.0,
+   "xm": 48.0,
+   "y0": -1.0,
+   "y1": 11.8,
+   "cx": 8.0
+  }
+ },
+ "sky": {
+  "rows": [
+   "kloofendal_43d_clear_puresky",
+   "kloofendal_48d_partly_cloudy_puresky",
+   "kloofendal_overcast_puresky",
+   "belfast_sunset_puresky",
+   "qwantani_dusk_2_puresky",
+   "kloppenheim_02_puresky"
+  ],
+  "az": 70.0,
+  "el0": -2.0,
+  "el1": 50.0,
+  "size": [
+   1024,
+   384
+  ]
+ },
+ "sizes": {
+  "mid.webp": [
+   2048,
+   1134
+  ],
+  "mid_n.webp": [
+   2048,
+   1134
+  ],
+  "mid_l.webp": [
+   2048,
+   1134
+  ],
+  "far.webp": [
+   2048,
+   546
+  ],
+  "sky.webp": [
+   1024,
+   2304
+  ],
+  "near.webp": [
+   1024,
+   1024
+  ],
+  "noise.webp": [
+   256,
+   256
+  ]
+ },
+ "bytes": {
+  "mid.webp": 290750,
+  "mid_n.webp": 229274,
+  "mid_l.webp": 29100,
+  "far.webp": 127682,
+  "sky.webp": 55858,
+  "near.webp": 27454,
+  "noise.webp": 15322
+ },
+ "sources": {
+  "qwantani_dusk_2_puresky": {
+   "title": "Qwantani Dusk 2 (Pure Sky)",
+   "page": "https://polyhaven.com/a/qwantani_dusk_2_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "Photography",
+    "Jarod Guest": "Processing"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/qwantani_dusk_2_puresky.jpg"
+  },
+  "kloofendal_43d_clear_puresky": {
+   "title": "Kloofendal 43d Clear (Pure Sky)",
+   "page": "https://polyhaven.com/a/kloofendal_43d_clear_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "All"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/kloofendal_43d_clear_puresky.jpg"
+  },
+  "kloofendal_48d_partly_cloudy_puresky": {
+   "title": "Kloofendal 48d Partly Cloudy (Pure Sky)",
+   "page": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "Original",
+    "Jarod Guest": "Sky edits"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/kloofendal_48d_partly_cloudy_puresky.jpg"
+  },
+  "belfast_sunset_puresky": {
+   "title": "Belfast Sunset (Pure Sky)",
+   "page": "https://polyhaven.com/a/belfast_sunset_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "Processing",
+    "Dimitrios Savva": "Photography",
+    "Jarod Guest": "Sky edits"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/belfast_sunset_puresky.jpg"
+  },
+  "kloppenheim_02_puresky": {
+   "title": "Kloppenheim 02 (Pure Sky)",
+   "page": "https://polyhaven.com/a/kloppenheim_02_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "Original",
+    "Jarod Guest": "Sky edits"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/kloppenheim_02_puresky.jpg"
+  },
+  "kloofendal_overcast_puresky": {
+   "title": "Kloofendal Overcast (Pure Sky)",
+   "page": "https://polyhaven.com/a/kloofendal_overcast_puresky",
+   "license": "CC0",
+   "license_url": "https://polyhaven.com/license",
+   "authors": {
+    "Greg Zaal": "All"
+   },
+   "fetched": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/kloofendal_overcast_puresky.jpg"
+  },
+  "far": {
+   "title": "File:Illuminated buildings at twilight in Minato-ku, Tokyo, view from Rainbow Bridge (2016-12-10 by xegxef @Pixabay 2086645).jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Illuminated_buildings_at_twilight_in_Minato-ku,_Tokyo,_view_from_Rainbow_Bridge_(2016-12-10_by_xegxef_@Pixabay_2086645).jpg",
+   "license": "CC0",
+   "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "license_long": null,
+   "artist": "xegxef",
+   "credit": "Rainbow Bridge, Tokyo, Bridge, Landmark, Travel (2086645) archive copy at the Wayback Machine",
+   "width": 10000,
+   "height": 2500,
+   "sha1": "cc43644808fd7ce3285a2cdb7670a349b88eb418",
+   "fetched": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Illuminated_buildings_at_twilight_in_Minato-ku%2C_Tokyo%2C_view_from_Rainbow_Bridge_%282016-12-10_by_xegxef_%40Pixabay_2086645%29.jpg/3840px-Illuminated_buildings_at_twilight_in_Minato-ku%2C_Tokyo%2C_view_from_Rainbow_Bridge_%282016-12-10_by_xegxef_%40Pixabay_2086645%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "permission": ""
+  },
+  "mid_night": {
+   "title": "File:Blue illuminated buildings in Tokyo.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Blue_illuminated_buildings_in_Tokyo.jpg",
+   "license": "CC0",
+   "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "license_long": null,
+   "artist": "Syced",
+   "credit": "Own work",
+   "width": 4032,
+   "height": 3024,
+   "sha1": "c9a3d1b6457ea6f2e02c58ea014a6d4c3b8ef3b5",
+   "fetched": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Blue_illuminated_buildings_in_Tokyo.jpg/3840px-Blue_illuminated_buildings_in_Tokyo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "permission": ""
+  },
+  "mid_day": {
+   "title": "File:Suginami City 2024-05-06.jpg",
+   "page": "https://commons.wikimedia.org/wiki/File:Suginami_City_2024-05-06.jpg",
+   "license": "Public domain",
+   "license_url": "",
+   "license_long": "pd",
+   "artist": "ウィキ太郎",
+   "credit": "Own work",
+   "width": 2412,
+   "height": 1302,
+   "sha1": "16fb3991f101bd6462264790a0daebcb380b1aa5",
+   "fetched": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Suginami_City_2024-05-06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "permission": ""
+  }
+ }
+}

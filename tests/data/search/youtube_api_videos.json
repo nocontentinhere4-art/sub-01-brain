@@ -1,0 +1,69 @@
+{
+ "kind": "youtube#videoListResponse",
+ "items": [
+  {
+   "kind": "youtube#video",
+   "id": "aB3dE5fG7hI",
+   "snippet": {
+    "title": "t",
+    "channelTitle": "c"
+   },
+   "contentDetails": {
+    "duration": "PT45S",
+    "contentRating": {}
+   },
+   "status": {
+    "embeddable": true,
+    "privacyStatus": "public"
+   }
+  },
+  {
+   "kind": "youtube#video",
+   "id": "Zx9_Yw8-Vu7",
+   "snippet": {
+    "title": "t",
+    "channelTitle": "c"
+   },
+   "contentDetails": {
+    "duration": "PT45S",
+    "contentRating": {}
+   },
+   "status": {
+    "embeddable": true,
+    "privacyStatus": "public"
+   }
+  },
+  {
+   "kind": "youtube#video",
+   "id": "Qr4sT6uV8wX",
+   "snippet": {
+    "title": "t",
+    "channelTitle": "c"
+   },
+   "contentDetails": {
+    "duration": "PT45S",
+    "contentRating": {}
+   },
+   "status": {
+    "embeddable": true,
+    "privacyStatus": "public"
+   }
+  },
+  {
+   "kind": "youtube#video",
+   "id": "Lm2nO4pQ6rS",
+   "snippet": {
+    "title": "t",
+    "channelTitle": "c"
+   },
+   "contentDetails": {
+    "duration": "PT45S",
+    "contentRating": {}
+   },
+   "status": {
+    "embeddable": true,
+    "privacyStatus": "public"
+   }
+  }
+ ]
+}

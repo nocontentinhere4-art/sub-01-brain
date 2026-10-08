@@ -1,0 +1,663 @@
+{
+ "before_awake_1920": {
+  "caption": "",
+  "state": null
+ },
+ "before_asleep_1920": {
+  "caption": "",
+  "state": null
+ },
+ "bundles_awake_1920": {
+  "caption": "white-matter bundles: his real diffusion fibres, muted colours by direction (red left-right, green front-back, blue up-down), no glow; a stimulus still travels along its route and sleep cools the tint; the cortex a ghost \u00b7 from HIS MRI: cortex (gyri and sulci); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "bundles",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": true,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "bundles_asleep_1920": {
+  "caption": "white-matter bundles: his real diffusion fibres, muted colours by direction (red left-right, green front-back, blue up-down), no glow; a stimulus still travels along its route and sleep cools the tint; the cortex a ghost \u00b7 from HIS MRI: cortex (gyri and sulci); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "bundles",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": true,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "fresh_1920": {
+  "caption": "fresh specimen: pinkish-grey cortex under a glistening pia; colours are approximate, from open photographs; the reddish runs in the sulci are a shading cue for pial vessels, not drawn vessels \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem; the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fresh",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "dissected_1920": {
+  "caption": "fixed and dissected: formalin-grey; the coronal cut shows HIS T1 scan as grey and white matter (ventricles dark) \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem, the cut (his T1, 2 mm); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fixed",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": true,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": true,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "cut_cap"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "nerves_1920": {
+  "caption": "fresh specimen: pinkish-grey cortex under a glistening pia; colours are approximate, from open photographs; the reddish runs in the sulci are a shading cue for pial vessels, not drawn vessels \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem; the fibres are his real tractography. \u00b7 from an ATLAS (BodyParts3D, another adult; \u00a9 DBCLS, CC BY 4.0 (fitted to his brain, surface error ~2.63 mm)): internal carotid artery, anterior cerebral artery, anterior communicating artery, middle cerebral artery, posterior cerebral artery, posterior communicating artery, basilar artery, vertebral artery, superior cerebellar artery, anterior inferior cerebellar artery, posterior inferior cerebellar artery, optic nerve (II), optic chiasm, optic tract, oculomotor nerve (III, its orbital branches), trochlear nerve (IV), ophthalmic nerve (V1), pituitary gland, spinal cord (stub). \u00b7 from an ATLAS (VENAT, 20 adults' veins at 7 T, Huck 2019, CC BY 4.0; affinely fitted): dural sinuses and large veins; the small bridging veins are below its threshold. \u00b7 not drawn (no licensed source; nothing is invented): olfactory (I), oculomotor trunk (III), trigeminal trunk (V), abducens (VI), facial (VII), vestibulocochlear (VIII), glossopharyngeal (IX), vagus (X), accessory (XI), hypoglossal (XII), dural venous sinuses, cerebral and bridging veins. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fresh",
+   "layers": {
+    "vessels": true,
+    "nerves": true
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": true,
+   "atlas": true,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_gland",
+    "atlas_cord",
+    "atlas_vein"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "dissected_sagittal_1920": {
+  "caption": "fixed and dissected: formalin-grey; the sagittal cut shows HIS T1 scan as grey and white matter (ventricles dark) \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem, the cut (his T1, 2 mm); the fibres are his real tractography. \u00b7 from an ATLAS (BodyParts3D, another adult; \u00a9 DBCLS, CC BY 4.0 (fitted to his brain, surface error ~2.63 mm)): spinal cord (stub). \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fixed",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": true,
+    "axis": "sagittal",
+    "t": 0.35,
+    "n": [
+     -1,
+     0,
+     0
+    ],
+    "d": 20.558161163330084,
+    "value_mm": -20.558161163330084
+   },
+   "meshes": true,
+   "parts": true,
+   "atlas": true,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "cut_cap",
+    "atlas_cord"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "dissected_axial_1920": {
+  "caption": "fixed and dissected: formalin-grey; the axial cut shows HIS T1 scan as grey and white matter (ventricles dark) \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem, the cut (his T1, 2 mm); the fibres are his real tractography. \u00b7 from an ATLAS (BodyParts3D, another adult; \u00a9 DBCLS, CC BY 4.0 (fitted to his brain, surface error ~2.63 mm)): spinal cord (stub). \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fixed",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": true,
+    "axis": "axial",
+    "t": 0.55,
+    "n": [
+     0,
+     0,
+     1
+    ],
+    "d": 4.81795005798341,
+    "value_mm": 4.81795005798341
+   },
+   "meshes": true,
+   "parts": true,
+   "atlas": true,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "cut_cap",
+    "atlas_cord"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "errors_1920": [],
+ "before_awake_390": {
+  "caption": "",
+  "state": null
+ },
+ "before_asleep_390": {
+  "caption": "",
+  "state": null
+ },
+ "bundles_awake_390": {
+  "caption": "white-matter bundles: his real diffusion fibres, muted colours by direction (red left-right, green front-back, blue up-down), no glow; a stimulus still travels along its route and sleep cools the tint; the cortex a ghost \u00b7 from HIS MRI: cortex (gyri and sulci); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "bundles",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": true,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "bundles_asleep_390": {
+  "caption": "white-matter bundles: his real diffusion fibres, muted colours by direction (red left-right, green front-back, blue up-down), no glow; a stimulus still travels along its route and sleep cools the tint; the cortex a ghost \u00b7 from HIS MRI: cortex (gyri and sulci); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "bundles",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": true,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "fresh_390": {
+  "caption": "fresh specimen: pinkish-grey cortex under a glistening pia; colours are approximate, from open photographs; the reddish runs in the sulci are a shading cue for pial vessels, not drawn vessels \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem; the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fresh",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": false,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "dissected_390": {
+  "caption": "fixed and dissected: formalin-grey; the coronal cut shows HIS T1 scan as grey and white matter (ventricles dark) \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem, the cut (his T1, 2 mm); the fibres are his real tractography. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fixed",
+   "layers": {
+    "vessels": false,
+    "nerves": false
+   },
+   "cut": {
+    "on": true,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": false,
+   "atlas": true,
+   "tier": "high",
+   "fps": 0,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "cut_cap"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "nerves_390": {
+  "caption": "fresh specimen: pinkish-grey cortex under a glistening pia; colours are approximate, from open photographs; the reddish runs in the sulci are a shading cue for pial vessels, not drawn vessels \u00b7 from HIS MRI: cortex (gyri and sulci), cerebellum (folia), brainstem; the fibres are his real tractography. \u00b7 from an ATLAS (BodyParts3D, another adult; \u00a9 DBCLS, CC BY 4.0 (fitted to his brain, surface error ~2.63 mm)): internal carotid artery, anterior cerebral artery, anterior communicating artery, middle cerebral artery, posterior cerebral artery, posterior communicating artery, basilar artery, vertebral artery, superior cerebellar artery, anterior inferior cerebellar artery, posterior inferior cerebellar artery, optic nerve (II), optic chiasm, optic tract, oculomotor nerve (III, its orbital branches), trochlear nerve (IV), ophthalmic nerve (V1), pituitary gland, spinal cord (stub). \u00b7 from an ATLAS (VENAT, 20 adults' veins at 7 T, Huck 2019, CC BY 4.0; affinely fitted): dural sinuses and large veins; the small bridging veins are below its threshold. \u00b7 not drawn (no licensed source; nothing is invented): olfactory (I), oculomotor trunk (III), trigeminal trunk (V), abducens (VI), facial (VII), vestibulocochlear (VIII), glossopharyngeal (IX), vagus (X), accessory (XI), hypoglossal (XII), dural venous sinuses, cerebral and bridging veins. \u00b7 A model, not a mind.",
+  "state": {
+   "view": "fresh",
+   "layers": {
+    "vessels": true,
+    "nerves": true
+   },
+   "cut": {
+    "on": false,
+    "axis": "coronal",
+    "t": 0.5,
+    "n": [
+     0,
+     1,
+     0
+    ],
+    "d": 2.628143310546875,
+    "value_mm": 2.628143310546875
+   },
+   "meshes": true,
+   "parts": true,
+   "atlas": true,
+   "tier": "high",
+   "fps": 15,
+   "loading": 0,
+   "drawn": [
+    "his_cerebellum",
+    "his_brainstem",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_artery",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_nerve",
+    "atlas_gland",
+    "atlas_cord",
+    "atlas_vein"
+   ],
+   "bbox": {
+    "min": [
+     -66.48519897460938,
+     -89.88745880126953,
+     -70.06490325927734
+    ],
+    "max": [
+     64.73490905761719,
+     95.14374542236328,
+     66.08573913574219
+    ]
+   },
+   "winding": -1,
+   "alpha": 1,
+   "fibresDrawn": false,
+   "bundleSharesPageUniforms": true,
+   "cortexSwapped": true,
+   "fibresSwapped": true
+  }
+ },
+ "errors_390": [],
+ "fps_390_cpu_x4_software_gl": {
+  "before_awake": 0.3,
+  "before_asleep": 0.2,
+  "bundles_awake": 0.2,
+  "bundles_asleep": 0.2,
+  "fresh": 0.2,
+  "dissected": 0.2,
+  "nerves": 0.8
+ }
+}

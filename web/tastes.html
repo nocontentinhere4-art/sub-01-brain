@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUB-01 · tastes</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  :root { --bg:#040406; --fg:#ececf2; --dim:#7a7a8c; --line:#1c1c26; --or:#ff6a00; --cy:#6fb7ff; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; background:var(--bg); color:var(--fg); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  a { color:inherit; }
+  header { display:flex; align-items:center; flex-wrap:wrap; gap:14px; padding:14px 18px; }
+  header h1 { margin:0; font-size:20px; letter-spacing:.12em; background:var(--or); color:#0a0a0a; padding:2px 10px; }
+  header .sub { color:var(--dim); font-size:12px; }
+  header .sub a { text-decoration:none; padding:4px 6px; border-radius:4px; transition:color .2s, background .2s; }
+  header .sub a:hover { color:var(--fg); background:rgba(255,255,255,.06); }
+  main { padding:0 18px 18px; max-width:980px; }
+  .lead { font-size:16px; line-height:1.6; margin:6px 0 24px; max-width:70ch; }
+  section { margin:0 0 30px; }
+  h2 { color:var(--dim); font-size:11px; font-weight:normal; letter-spacing:.1em; text-transform:uppercase;
+    margin:0 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h2 b { color:var(--or); font-weight:normal; margin-right:8px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .chip { display:inline-flex; align-items:baseline; gap:7px; padding:5px 10px; border:1px solid var(--line);
+    border-radius:999px; background:#0c0c12; line-height:1.2; max-width:100%; }
+  .chip .t { overflow-wrap:anywhere; }
+  .chip .k { font-size:10px; color:var(--dim); letter-spacing:.06em; text-transform:uppercase; }
+  .chip .v { font-size:11px; color:var(--dim); }
+  .chip.net { border-style:dashed; }
+  .fav .chip { border-color:rgba(255,106,0,.45); } .fav .chip .t { color:#ffd2b0; }
+  .avo .chip { border-color:rgba(111,183,255,.4); } .avo .chip .t { color:#cfe5ff; }
+  .none { color:var(--dim); font-size:13px; line-height:1.6; }
+  #charts { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
+  .card { border:1px solid var(--line); border-radius:4px; padding:10px 12px 8px; background:#0a0a10; }
+  .card .h { display:flex; justify-content:space-between; gap:8px; font-size:13px; margin-bottom:6px; }
+  .card .h span:first-child { overflow-wrap:anywhere; }
+  .card .h span:last-child { color:var(--dim); font-size:11px; flex:none; }
+  .card svg { display:block; width:100%; height:64px; }
+  .card .d { display:flex; justify-content:space-between; color:#55556a; font-size:10px; margin-top:3px; }
+  #since { color:var(--dim); font-size:13px; margin:0 0 12px; }
+  ol { margin:0; padding-left:20px; } li { font-size:14px; line-height:1.65; color:#d6d6e0; max-width:72ch; margin-bottom:6px; }
+  .box { border:1px solid var(--or); border-radius:4px; padding:12px 14px; font-size:14px; line-height:1.6; max-width:72ch; }
+  .meta { color:#55556a; font-size:11px; margin-top:10px; line-height:1.5; }
+  @media (max-width: 700px) {
+    .cols { grid-template-columns:1fr; gap:4px; }
+    .lead { font-size:15px; }
+    li, .box { font-size:13.5px; }
+  }
+</style>
+</head>
+<body>
+<header><h1>SUB-01</h1><div class="sub">tastes · <a href="/">life</a> · <a href="/brain">brain</a> · <a href="/diary">diary</a> · <a href="/about.html">about</a></div></header>
+<main>
+
+<p class="lead">Which kinds of pages the brain model has learned to lean towards or away from while browsing. Each
+topic is a brain network or a word from the pages he opened.</p>
+
+<div class="cols">
+  <section class="fav"><h2><b>+</b>What he leans towards</h2><div class="chips" id="fav"></div></section>
+  <section class="avo"><h2><b>−</b>What he avoids</h2><div class="chips" id="avo"></div></section>
+</div>
+
+<section><h2><b>~</b>How it changes over days</h2>
+  <p id="since"></p>
+  <div id="charts"></div>
+</section>
+
+<section><h2><b>?</b>How this works</h2>
+  <ol>
+    <li>While he stays on a page, the brain model's reward and attention response is measured.</li>
+    <li>It is compared with what his preferences for that page's topics predicted; the difference nudges those topics
+      up or down.</li>
+    <li>Old preferences fade over about a week, so topics he stops visiting slowly drop out.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="box">These numbers come from the simulated responses of his brain model to the pages he opened.</div>
+  <div class="meta" id="meta"></div>
+</section>
+
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const key = x => (x.kind === "network" ? "net:" : "kw:") + x.topic;
+const sign = v => (v > 0 ? "+" : "") + v.toFixed(2);
+
+function chips(box, items, emptyText) {
+  box.textContent = "";
+  if (!items.length) { box.appendChild(el("div", "none", emptyText)); return; }
+  const max = Math.max(...items.map(x => Math.abs(x.pref)), 0.05);
+  for (const x of items) {
+    const c = el("span", "chip" + (x.kind === "network" ? " net" : ""));
+    c.style.fontSize = (12 + 10 * Math.abs(x.pref) / max).toFixed(1) + "px";
+    c.title = `${x.kind === "network" ? "brain network" : "word"} · ${sign(x.pref)} on a −1…+1 scale`;
+    c.append(el("span", "t", x.topic), el("span", "k", x.kind === "network" ? "network" : "word"), el("span", "v", sign(x.pref)));
+    box.appendChild(c);
+  }
+}
+
+function spark(points, color) {
+  // points: [{v or null}], y from −1 to +1, zero line in the middle
+  const W = 220, H = 64, pad = 4, n = points.length;
+  const X = i => n === 1 ? W / 2 : pad + i * (W - 2 * pad) / (n - 1);
+  const Y = v => H / 2 - v * (H / 2 - pad);
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio", "none");
+  const zero = document.createElementNS(ns, "line");
+  Object.entries({ x1: 0, x2: W, y1: H / 2, y2: H / 2, stroke: "#2a2a36", "stroke-dasharray": "3 3", "vector-effect": "non-scaling-stroke" })
+    .forEach(([k, v]) => zero.setAttribute(k, v));
+  svg.appendChild(zero);
+  let d = "", pen = false;
+  points.forEach((p, i) => {
+    if (p == null) { pen = false; return; }
+    d += (pen ? "L" : "M") + X(i).toFixed(1) + " " + Y(p).toFixed(1) + " "; pen = true;
+  });
+  const path = document.createElementNS(ns, "path");
+  Object.entries({ d, fill: "none", stroke: color, "stroke-width": 2, "vector-effect": "non-scaling-stroke", "stroke-linejoin": "round" })
+    .forEach(([k, v]) => path.setAttribute(k, v));
+  svg.appendChild(path);
+  const last = points.length - 1;
+  if (points[last] != null) {
+    const dot = document.createElementNS(ns, "circle");
+    Object.entries({ cx: X(last), cy: Y(points[last]), r: 3, fill: color }).forEach(([k, v]) => dot.setAttribute(k, v));
+    svg.appendChild(dot);
+  }
+  return svg;
+}
+
+function charts(t) {
+  const box = $("charts"); box.textContent = "";
+  const hist = Array.isArray(t.history) ? t.history : [];
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo" }).format(new Date());
+  // the days: the stored snapshots, then today's live values (unless today's snapshot is already the last one)
+  const days = hist.map(h => ({ day: h.day, vals: Object.fromEntries((h.top || []).map(x => [key(x), x.pref])) }));
+  const now = Object.fromEntries([...t.favoured, ...t.avoided].map(x => [key(x), x.pref]));
+  if (days.length && days[days.length - 1].day === today) days[days.length - 1].vals = { ...days[days.length - 1].vals, ...now };
+  else days.push({ day: today, vals: now });
+
+  const top = [...t.favoured.slice(0, 4), ...t.avoided.slice(0, 2)];
+  if (!hist.length || days.length < 2) $("since").textContent = "History starts today: one point per Tokyo day is kept from now on.";
+  else $("since").textContent = `${days.length} days, ${days[0].day} to ${days[days.length - 1].day} (Tokyo). Scale −1 to +1; the dashed line is 0.`;
+  if (!top.length) { box.appendChild(el("div", "none", "Nothing to chart yet.")); return; }
+  for (const x of top) {
+    const k = key(x), pts = days.map(d => k in d.vals ? d.vals[k] : null);
+    const c = el("div", "card");
+    const h = el("div", "h"); h.append(el("span", null, x.topic), el("span", null, (x.kind === "network" ? "network" : "word") + " · " + sign(x.pref)));
+    const dd = el("div", "d"); dd.append(el("span", null, days[0].day.slice(5)), el("span", null, "today"));
+    c.append(h, spark(pts, x.pref >= 0 ? "#ff6a00" : "#6fb7ff"), dd);
+    box.appendChild(c);
+  }
+}
+
+function render(t) {
+  t = t && typeof t === "object" ? t : {};
+  t.favoured = Array.isArray(t.favoured) ? t.favoured : [];
+  t.avoided = Array.isArray(t.avoided) ? t.avoided : [];
+  chips($("fav"), t.favoured, "Nothing yet. A topic appears here after pages with it drew a stronger response than expected.");
+  chips($("avo"), t.avoided, "Nothing yet. A topic appears here after pages with it drew a weaker response than expected.");
+  charts(t);
+  const bits = [];
+  if (typeof t.topics === "number") bits.push(`${t.topics} topics tracked`);
+  if (t.rule) bits.push(`rule: ${t.rule}`);
+  if (t.note) bits.push(t.note);
+  $("meta").textContent = bits.join(" · ");
+}
+
+fetch("/api/tastes", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})).then(render);
+</script>
+</body>
+</html>

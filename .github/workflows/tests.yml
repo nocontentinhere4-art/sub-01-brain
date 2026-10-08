@@ -1,0 +1,134 @@
+name: tests
+
+on:
+  # docs-only changes skip CI: the Actions minutes are a monthly budget
+  pull_request:
+    paths-ignore: ["docs/**", "**/*.md"]
+  push:
+    branches: [main, "ci/**"]          # ci/*: a branch proving a CI change before it goes to main
+    paths-ignore: ["docs/**", "**/*.md"]
+  # the visual jobs run only on demand (Actions tab -> tests -> Run workflow): 32 of the 39 billed minutes of a
+  # push, and the full suite with the visual set already runs locally before every push to main (90% of the
+  # month's 3,000 minutes used on 2026-10-08)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # as in the Dockerfile: small matrices, BLAS threads only spin
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-server.txt
+      # no torch and no Chromium: the spiking tests skip without torch, the browser tests skip when no browser starts
+      - run: pip install -r requirements-server.txt pytest
+      - run: python -m pytest -q tests/
+
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-server.txt
+      - run: pip install -r requirements-server.txt
+      # live_server.py --demo with BROWSE=0: pages + read APIs answer 200, /ws ticks, and the CPU cost per tick
+      - run: python tests/smoke_demo.py --port 8765 --data-dir "$RUNNER_TEMP/data"
+        env:
+          BROWSE: "0"
+      # issue #21: a kill mid-write must not crash-loop the server; start once with truncated state files
+      - run: python tests/smoke_demo.py --port 8766 --data-dir "$RUNNER_TEMP/torn" --torn-state --measure 3
+        env:
+          BROWSE: "0"
+      # issue #33: the day plan (brain clone vote) and chat replies run while the tick cost is measured (60x clock)
+      - run: python tests/smoke_demo.py --port 8767 --data-dir "$RUNNER_TEMP/mind" --mind --measure 40
+        env:
+          BROWSE: "0"
+      # issue #17: a chess game at the desk is played to its end, the moves voted by a brain clone (60x clock)
+      - run: python tests/smoke_demo.py --port 8768 --data-dir "$RUNNER_TEMP/chess" --youtube-chess --measure 300
+        env:
+          BROWSE: "0"
+      # issue #68: his brain model picks tracks (keyless curated list; no Spotify keys in CI, the Web API is mocked in
+      # tests/test_music.py); every pick carries the official embed URL and 3-5 options (60x clock from 20:00)
+      - run: python tests/smoke_demo.py --port 8769 --data-dir "$RUNNER_TEMP/music" --music --measure 150
+        env:
+          BROWSE: "0"
+
+  # issue #98 (G8): the room's visual QA core set (tests/visual): headless Chromium with software WebGL puts the
+  # character in each activity and shoots fixed cameras; only hard errors fail (page load, JS errors, missing poses,
+  # bed/chair penetration); the rest is in the report, kept as an artifact. The heavy set is opt-in (SUB01_VISUAL_FULL=1).
+  # two jobs side by side, each well under its 30 min: the core set's scenes (test_visual.py, ~20 min) and the other
+  # pages (arrival, camera, hands). In one job nine tests took 28.5 of its 30 min (main 448a0b8).
+  visual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        part:
+          - {name: scenes, tests: tests/visual/test_visual.py}
+          - {name: pages, tests: tests/visual --ignore=tests/visual/test_visual.py}
+    name: visual (${{ matrix.part.name }})
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-server.txt
+      - run: pip install -r requirements-server.txt pytest
+      # the browser cached by Playwright's version; the system packages (apt) apart, with their own timeout and one retry
+      # (main 7f2bf6e: one install took 14.5 min, the other ran out the job's 30 with no test run)
+      - run: echo "PW_VERSION=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PW_VERSION }}
+      - name: browser system packages
+        timeout-minutes: 12
+        # each attempt bounded (a mirror that hangs fails in minutes, not the job's 30), apt's own retries and timeouts on;
+        # one more attempt after 30 s (main 39cf160: install-deps hung 2 x 10 min)
+        run: |
+          for i in 1 2; do
+            timeout 180 sudo apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=20 update \
+              && timeout 300 python -m playwright install-deps chromium && exit 0
+            echo "browser system packages: attempt $i failed"; sleep 30
+            sudo pkill -x apt-get || true; sudo pkill -x dpkg || true; sudo dpkg --configure -a || true   # (timeout stops playwright, not its apt-get: free the lock)
+          done
+          exit 1
+      - name: browser
+        timeout-minutes: 10
+        run: python -m playwright install chromium
+      - run: python -m pytest -q -rA --durations=0 ${{ matrix.part.tests }}
+        env:
+          SUB01_VISUAL: "1"            # a skip (no browser) is an error here
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-qa-${{ matrix.part.name }}
+          path: |
+            tests/visual/out/*.png
+            tests/visual/out/report.md
+            tests/visual/out/results.json
+          retention-days: 14

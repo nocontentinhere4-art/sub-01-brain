@@ -1,0 +1,791 @@
+{
+ "objects": {
+  "chair": {
+   "cells": 6426112,
+   "odd_rays": 0
+  },
+  "keyboard": {
+   "cells": 2220,
+   "odd_rays": 900
+  },
+  "mouse": {
+   "cells": 350,
+   "odd_rays": 1
+  },
+  "controller": {
+   "cells": 704,
+   "odd_rays": 61
+  }
+ },
+ "scenarios": [
+  {
+   "label": "desk typing",
+   "frames": 150,
+   "samples": 34680600,
+   "hits": {
+    "chair@seat:R_ThighTwist01": {
+     "samples": 93288,
+     "vertices": 673,
+     "frames": 150,
+     "max_mm": 23
+    },
+    "chair@seat:R_ThighTwist02": {
+     "samples": 150,
+     "vertices": 1,
+     "frames": 150,
+     "max_mm": 6
+    },
+    "chair@front:R_ThighTwist02": {
+     "samples": 1967,
+     "vertices": 17,
+     "frames": 150,
+     "max_mm": 9
+    },
+    "chair@front:R_CalfTwist01": {
+     "samples": 543,
+     "vertices": 20,
+     "frames": 64,
+     "max_mm": 7
+    },
+    "chair@seat:L_ThighTwist01": {
+     "samples": 571,
+     "vertices": 19,
+     "frames": 47,
+     "max_mm": 6
+    },
+    "chair@front:L_CalfTwist01": {
+     "samples": 26525,
+     "vertices": 201,
+     "frames": 150,
+     "max_mm": 18
+    },
+    "chair@front:L_CalfTwist02": {
+     "samples": 277,
+     "vertices": 5,
+     "frames": 114,
+     "max_mm": 4
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 182,
+     "vertices": 5,
+     "frames": 71,
+     "max_mm": 11
+    }
+   },
+   "at": "desk",
+   "clip": "desk_mouse_ik",
+   "seconds": 10,
+   "wall_s": 29.3
+  },
+  {
+   "label": "desk mouse",
+   "frames": 120,
+   "samples": 27744480,
+   "hits": {
+    "chair@seat:R_ThighTwist01": {
+     "samples": 74041,
+     "vertices": 673,
+     "frames": 120,
+     "max_mm": 23
+    },
+    "chair@seat:R_ThighTwist02": {
+     "samples": 120,
+     "vertices": 1,
+     "frames": 120,
+     "max_mm": 6
+    },
+    "chair@front:R_ThighTwist02": {
+     "samples": 1560,
+     "vertices": 17,
+     "frames": 120,
+     "max_mm": 9
+    },
+    "chair@front:R_CalfTwist01": {
+     "samples": 523,
+     "vertices": 20,
+     "frames": 57,
+     "max_mm": 7
+    },
+    "chair@seat:L_ThighTwist01": {
+     "samples": 571,
+     "vertices": 19,
+     "frames": 47,
+     "max_mm": 6
+    },
+    "chair@front:L_CalfTwist01": {
+     "samples": 20931,
+     "vertices": 201,
+     "frames": 120,
+     "max_mm": 18
+    },
+    "chair@front:L_CalfTwist02": {
+     "samples": 244,
+     "vertices": 5,
+     "frames": 94,
+     "max_mm": 4
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 102,
+     "vertices": 5,
+     "frames": 43,
+     "max_mm": 11
+    }
+   },
+   "at": "desk",
+   "clip": "desk_mouse_ik",
+   "seconds": 8,
+   "wall_s": 18.2
+  },
+  {
+   "label": "desk watch",
+   "frames": 90,
+   "samples": 20808360,
+   "hits": {},
+   "at": "middle",
+   "clip": "mh_stand",
+   "seconds": 6,
+   "wall_s": 13.6
+  },
+  {
+   "label": "room_read",
+   "frames": 262,
+   "samples": 60575448,
+   "hits": {
+    "chair@front:R_ThighTwist01": {
+     "samples": 3679,
+     "vertices": 17,
+     "frames": 262,
+     "max_mm": 7
+    },
+    "chair@seat:R_ThighTwist01": {
+     "samples": 89224,
+     "vertices": 353,
+     "frames": 262,
+     "max_mm": 18
+    }
+   },
+   "at": "desk",
+   "clip": "desk_watch",
+   "seconds": 17.47,
+   "wall_s": 40.6
+  },
+  {
+   "label": "room_phone",
+   "frames": 326,
+   "samples": 75372504,
+   "hits": {
+    "chair@seat:R_ThighTwist01": {
+     "samples": 19424,
+     "vertices": 104,
+     "frames": 326,
+     "max_mm": 8
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 3,
+     "vertices": 1,
+     "frames": 3,
+     "max_mm": 3
+    }
+   },
+   "at": "desk",
+   "clip": "desk_watch",
+   "seconds": 21.7,
+   "wall_s": 50.1
+  },
+  {
+   "label": "room_phone_scroll",
+   "frames": 326,
+   "samples": 75372504,
+   "hits": {
+    "chair@seat:R_ThighTwist01": {
+     "samples": 19424,
+     "vertices": 104,
+     "frames": 326,
+     "max_mm": 8
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 3,
+     "vertices": 1,
+     "frames": 3,
+     "max_mm": 3
+    }
+   },
+   "at": "desk",
+   "clip": "desk_watch",
+   "seconds": 21.7,
+   "wall_s": 49.6
+  },
+  {
+   "label": "eating at the desk",
+   "frames": 120,
+   "samples": 27744480,
+   "hits": {
+    "keyboard:RightHand": {
+     "samples": 19,
+     "vertices": 14,
+     "frames": 3,
+     "max_mm": 6.1
+    },
+    "keyboard:finger5-2R": {
+     "samples": 158,
+     "vertices": 31,
+     "frames": 23,
+     "max_mm": 5.1
+    },
+    "keyboard:finger5-1R": {
+     "samples": 74,
+     "vertices": 21,
+     "frames": 21,
+     "max_mm": 4.6
+    },
+    "chair@seat:R_ThighTwist01": {
+     "samples": 236,
+     "vertices": 9,
+     "frames": 51,
+     "max_mm": 3
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 38,
+     "vertices": 1,
+     "frames": 38,
+     "max_mm": 3
+    }
+   },
+   "at": "desk",
+   "clip": "room_eat",
+   "seconds": 8,
+   "wall_s": 17.9
+  },
+  {
+   "label": "bedtime: stretch, get up, to bed",
+   "frames": 330,
+   "samples": 76297320,
+   "hits": {},
+   "at": null,
+   "clip": "room_walk",
+   "seconds": 22,
+   "wall_s": 49.9
+  },
+  {
+   "label": "getting up to the window",
+   "frames": 180,
+   "samples": 41616720,
+   "hits": {
+    "chair@arm:L_ThighTwist01": {
+     "samples": 119,
+     "vertices": 119,
+     "frames": 1,
+     "max_mm": 17
+    },
+    "chair@base:RightToeBase": {
+     "samples": 1089,
+     "vertices": 874,
+     "frames": 9,
+     "max_mm": 15
+    },
+    "chair@base:RightFoot": {
+     "samples": 1272,
+     "vertices": 745,
+     "frames": 7,
+     "max_mm": 19
+    },
+    "chair@base:R_CalfTwist02": {
+     "samples": 12,
+     "vertices": 10,
+     "frames": 3,
+     "max_mm": 7
+    },
+    "chair@arm:R_ThighTwist02": {
+     "samples": 2289,
+     "vertices": 1566,
+     "frames": 7,
+     "max_mm": 28
+    },
+    "chair@arm:R_CalfTwist01": {
+     "samples": 830,
+     "vertices": 771,
+     "frames": 6,
+     "max_mm": 16
+    },
+    "chair@seat:R_ThighTwist02": {
+     "samples": 617,
+     "vertices": 466,
+     "frames": 6,
+     "max_mm": 19
+    },
+    "chair@seat:R_CalfTwist01": {
+     "samples": 2847,
+     "vertices": 1696,
+     "frames": 7,
+     "max_mm": 37
+    },
+    "chair@back:L_ThighTwist02": {
+     "samples": 417,
+     "vertices": 386,
+     "frames": 2,
+     "max_mm": 14
+    },
+    "chair@back:L_ThighTwist01": {
+     "samples": 391,
+     "vertices": 314,
+     "frames": 3,
+     "max_mm": 13
+    },
+    "chair@seat:L_CalfTwist01": {
+     "samples": 378,
+     "vertices": 333,
+     "frames": 2,
+     "max_mm": 16
+    },
+    "chair@back:L_CalfTwist01": {
+     "samples": 5,
+     "vertices": 5,
+     "frames": 1,
+     "max_mm": 10
+    },
+    "chair@base:LeftToeBase": {
+     "samples": 69,
+     "vertices": 69,
+     "frames": 1,
+     "max_mm": 13
+    },
+    "chair@back:Spine01": {
+     "samples": 874,
+     "vertices": 874,
+     "frames": 6,
+     "max_mm": 13
+    },
+    "chair@back:Spine02": {
+     "samples": 363,
+     "vertices": 363,
+     "frames": 3,
+     "max_mm": 13
+    },
+    "chair@seat:L_ThighTwist02": {
+     "samples": 24,
+     "vertices": 24,
+     "frames": 1,
+     "max_mm": 10
+    },
+    "chair@base:L_CalfTwist02": {
+     "samples": 176,
+     "vertices": 176,
+     "frames": 1,
+     "max_mm": 13
+    },
+    "chair@back:R_ThighTwist01": {
+     "samples": 1321,
+     "vertices": 1275,
+     "frames": 5,
+     "max_mm": 16
+    },
+    "chair@back:R_ThighTwist02": {
+     "samples": 826,
+     "vertices": 767,
+     "frames": 4,
+     "max_mm": 15
+    },
+    "chair@back:finger2-3R": {
+     "samples": 54,
+     "vertices": 51,
+     "frames": 2,
+     "max_mm": 6
+    },
+    "chair@back:Spine": {
+     "samples": 42,
+     "vertices": 42,
+     "frames": 1,
+     "max_mm": 8
+    },
+    "chair@back:finger4-1R": {
+     "samples": 6,
+     "vertices": 6,
+     "frames": 1,
+     "max_mm": 5
+    },
+    "chair@back:RightHand": {
+     "samples": 117,
+     "vertices": 117,
+     "frames": 3,
+     "max_mm": 6
+    },
+    "chair@back:finger5-1R": {
+     "samples": 4,
+     "vertices": 4,
+     "frames": 1,
+     "max_mm": 3
+    },
+    "chair@back:R_ForearmTwist02": {
+     "samples": 1331,
+     "vertices": 1195,
+     "frames": 6,
+     "max_mm": 13
+    },
+    "chair@back:R_ForearmTwist01": {
+     "samples": 650,
+     "vertices": 636,
+     "frames": 5,
+     "max_mm": 12
+    },
+    "chair@back:finger1-3R": {
+     "samples": 49,
+     "vertices": 49,
+     "frames": 1,
+     "max_mm": 6
+    },
+    "chair@back:R_UpperarmTwist02": {
+     "samples": 143,
+     "vertices": 143,
+     "frames": 3,
+     "max_mm": 9
+    },
+    "chair@seat:R_CalfTwist02": {
+     "samples": 116,
+     "vertices": 109,
+     "frames": 2,
+     "max_mm": 14
+    },
+    "chair@back:finger3-1R": {
+     "samples": 31,
+     "vertices": 31,
+     "frames": 1,
+     "max_mm": 6
+    },
+    "chair@back:finger2-1R": {
+     "samples": 13,
+     "vertices": 13,
+     "frames": 1,
+     "max_mm": 6
+    },
+    "chair@back:finger1-1R": {
+     "samples": 1,
+     "vertices": 1,
+     "frames": 1,
+     "max_mm": 4
+    }
+   },
+   "at": "sill",
+   "clip": "mh_stand",
+   "seconds": 12,
+   "wall_s": 27.8
+  },
+  {
+   "label": "sitting down at the desk",
+   "frames": 240,
+   "samples": 55488960,
+   "hits": {
+    "chair@back:L_UpperarmTwist02": {
+     "samples": 28,
+     "vertices": 28,
+     "frames": 1,
+     "max_mm": 8
+    },
+    "chair@back:L_ForearmTwist01": {
+     "samples": 100,
+     "vertices": 100,
+     "frames": 2,
+     "max_mm": 10
+    },
+    "chair@seat:finger3-3R": {
+     "samples": 115,
+     "vertices": 74,
+     "frames": 3,
+     "max_mm": 13
+    },
+    "chair@seat:finger4-3R": {
+     "samples": 327,
+     "vertices": 140,
+     "frames": 4,
+     "max_mm": 16
+    },
+    "chair@seat:finger2-3R": {
+     "samples": 249,
+     "vertices": 118,
+     "frames": 4,
+     "max_mm": 15
+    },
+    "chair@arm:R_ForearmTwist02": {
+     "samples": 505,
+     "vertices": 111,
+     "frames": 11,
+     "max_mm": 16
+    },
+    "chair@front:R_ThighTwist02": {
+     "samples": 22821,
+     "vertices": 1665,
+     "frames": 106,
+     "max_mm": 36
+    },
+    "chair@seat:R_ThighTwist02": {
+     "samples": 17630,
+     "vertices": 953,
+     "frames": 101,
+     "max_mm": 40
+    },
+    "chair@seat:R_ThighTwist01": {
+     "samples": 69629,
+     "vertices": 1184,
+     "frames": 111,
+     "max_mm": 39
+    },
+    "chair@front:L_ThighTwist02": {
+     "samples": 9879,
+     "vertices": 767,
+     "frames": 34,
+     "max_mm": 32
+    },
+    "chair@seat:L_ThighTwist01": {
+     "samples": 16014,
+     "vertices": 715,
+     "frames": 71,
+     "max_mm": 36
+    },
+    "chair@seat:L_ThighTwist02": {
+     "samples": 10600,
+     "vertices": 594,
+     "frames": 31,
+     "max_mm": 39
+    },
+    "chair@arm:finger3-2R": {
+     "samples": 4,
+     "vertices": 4,
+     "frames": 1,
+     "max_mm": 5
+    },
+    "chair@seat:finger3-2R": {
+     "samples": 124,
+     "vertices": 70,
+     "frames": 4,
+     "max_mm": 14
+    },
+    "chair@seat:finger4-2R": {
+     "samples": 100,
+     "vertices": 47,
+     "frames": 4,
+     "max_mm": 13
+    },
+    "chair@seat:finger2-2R": {
+     "samples": 101,
+     "vertices": 49,
+     "frames": 3,
+     "max_mm": 14
+    },
+    "chair@arm:L_ForearmTwist02": {
+     "samples": 88,
+     "vertices": 47,
+     "frames": 6,
+     "max_mm": 13
+    },
+    "chair@seat:finger4-3L": {
+     "samples": 159,
+     "vertices": 79,
+     "frames": 3,
+     "max_mm": 12
+    },
+    "chair@seat:finger4-2L": {
+     "samples": 63,
+     "vertices": 28,
+     "frames": 3,
+     "max_mm": 8
+    },
+    "chair@seat:finger3-3L": {
+     "samples": 58,
+     "vertices": 57,
+     "frames": 2,
+     "max_mm": 11
+    },
+    "chair@seat:finger3-2L": {
+     "samples": 67,
+     "vertices": 44,
+     "frames": 3,
+     "max_mm": 13
+    },
+    "chair@arm:finger3-1R": {
+     "samples": 6,
+     "vertices": 6,
+     "frames": 1,
+     "max_mm": 4
+    },
+    "chair@seat:finger3-1R": {
+     "samples": 20,
+     "vertices": 18,
+     "frames": 3,
+     "max_mm": 6
+    },
+    "chair@front:R_ThighTwist01": {
+     "samples": 1183,
+     "vertices": 378,
+     "frames": 47,
+     "max_mm": 25
+    },
+    "chair@seat:finger3-1L": {
+     "samples": 3,
+     "vertices": 3,
+     "frames": 1,
+     "max_mm": 5
+    },
+    "chair@front:finger2-3R": {
+     "samples": 3,
+     "vertices": 3,
+     "frames": 1,
+     "max_mm": 6
+    },
+    "chair@front:L_ThighTwist01": {
+     "samples": 648,
+     "vertices": 224,
+     "frames": 10,
+     "max_mm": 23
+    },
+    "chair@arm:R_ThighTwist01": {
+     "samples": 933,
+     "vertices": 351,
+     "frames": 5,
+     "max_mm": 20
+    },
+    "chair@front:L_CalfTwist01": {
+     "samples": 20861,
+     "vertices": 1024,
+     "frames": 96,
+     "max_mm": 26
+    },
+    "chair@arm:RightHand": {
+     "samples": 835,
+     "vertices": 384,
+     "frames": 7,
+     "max_mm": 16
+    },
+    "chair@seat:LeftHand": {
+     "samples": 20,
+     "vertices": 20,
+     "frames": 3,
+     "max_mm": 5
+    },
+    "chair@arm:LeftHand": {
+     "samples": 751,
+     "vertices": 354,
+     "frames": 6,
+     "max_mm": 13
+    },
+    "chair@front:R_CalfTwist01": {
+     "samples": 7182,
+     "vertices": 704,
+     "frames": 62,
+     "max_mm": 21
+    },
+    "chair@back:Spine01": {
+     "samples": 6674,
+     "vertices": 1745,
+     "frames": 23,
+     "max_mm": 16
+    },
+    "chair@back:L_ThighTwist01": {
+     "samples": 1139,
+     "vertices": 296,
+     "frames": 22,
+     "max_mm": 5
+    },
+    "chair@seat:L_ForearmTwist02": {
+     "samples": 8,
+     "vertices": 8,
+     "frames": 3,
+     "max_mm": 6
+    },
+    "chair@back:R_ThighTwist01": {
+     "samples": 724,
+     "vertices": 207,
+     "frames": 22,
+     "max_mm": 5
+    },
+    "chair@arm:finger1-1R": {
+     "samples": 1,
+     "vertices": 1,
+     "frames": 1,
+     "max_mm": 5
+    },
+    "chair@arm:finger5-3L": {
+     "samples": 23,
+     "vertices": 23,
+     "frames": 1,
+     "max_mm": 7
+    },
+    "chair@arm:finger5-2L": {
+     "samples": 21,
+     "vertices": 21,
+     "frames": 1,
+     "max_mm": 7
+    },
+    "chair@arm:finger5-1L": {
+     "samples": 6,
+     "vertices": 6,
+     "frames": 1,
+     "max_mm": 6
+    },
+    "chair@front:L_CalfTwist02": {
+     "samples": 151,
+     "vertices": 5,
+     "frames": 52,
+     "max_mm": 4
+    },
+    "keyboard:finger5-3L": {
+     "samples": 136,
+     "vertices": 56,
+     "frames": 3,
+     "max_mm": 8.5
+    },
+    "keyboard:finger4-2L": {
+     "samples": 106,
+     "vertices": 52,
+     "frames": 3,
+     "max_mm": 12.8
+    },
+    "keyboard:finger4-3L": {
+     "samples": 388,
+     "vertices": 136,
+     "frames": 3,
+     "max_mm": 13.9
+    },
+    "keyboard:finger2-3L": {
+     "samples": 216,
+     "vertices": 112,
+     "frames": 4,
+     "max_mm": 13.8
+    },
+    "keyboard:finger3-3L": {
+     "samples": 301,
+     "vertices": 131,
+     "frames": 4,
+     "max_mm": 13.9
+    },
+    "keyboard:finger3-2L": {
+     "samples": 170,
+     "vertices": 76,
+     "frames": 3,
+     "max_mm": 13.9
+    },
+    "keyboard:finger2-2L": {
+     "samples": 134,
+     "vertices": 73,
+     "frames": 3,
+     "max_mm": 13.6
+    },
+    "keyboard:finger5-2L": {
+     "samples": 1,
+     "vertices": 1,
+     "frames": 1,
+     "max_mm": 0
+    },
+    "keyboard:finger1-3L": {
+     "samples": 24,
+     "vertices": 24,
+     "frames": 1,
+     "max_mm": 3.2
+    }
+   },
+   "at": "desk",
+   "clip": "desk_mouse_ik",
+   "seconds": 16,
+   "wall_s": 37.2
+  }
+ ],
+ "errors": []
+}

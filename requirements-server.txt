@@ -1,0 +1,9 @@
+# runtime only (the live server); the MRI pipeline uses requirements.txt
+numpy
+scipy
+aiohttp
+pillow
+tzdata
+playwright==1.63.0   # the screens: headless Chromium on the open web (browse.py, BROWSE=1)
+anthropic>=1.11,<2   # optional eyes provider for brain-decides browsing (used only when ANTHROPIC_API_KEY is set)
+chess==1.11.2        # python-chess (its PyPI name since 1.0): rules + board for the desk game (chess_game.py, #17); pure Python, no engine

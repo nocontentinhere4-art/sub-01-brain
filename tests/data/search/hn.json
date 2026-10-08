@@ -1,0 +1,212 @@
+{
+"hits": [
+{
+"_tags": [
+"story",
+"author_hendricius",
+"story_16946178"
+],
+"author": "hendricius",
+"created_at": "2018-04-28T05:19:33Z",
+"created_at_i": 1524892773,
+"num_comments": 204,
+"objectID": "16946178",
+"points": 619,
+"story_id": 16946178,
+"title": "Make your own sourdough",
+"updated_at": "2024-09-20T02:25:31Z",
+"url": "https://github.com/hendricius/the-bread-code/blob/master/basics/sourdough.md"
+},
+{
+"_tags": [
+"story",
+"author_hendricius",
+"story_35961590"
+],
+"author": "hendricius",
+"created_at": "2023-05-16T13:27:56Z",
+"created_at_i": 1684243676,
+"num_comments": 103,
+"objectID": "35961590",
+"points": 532,
+"story_id": 35961590,
+"title": "The Sourdough Framework",
+"updated_at": "2026-05-26T20:31:55Z",
+"url": "https://github.com/hendricius/the-sourdough-framework"
+},
+{
+"_tags": [
+"story",
+"author_peteretep",
+"story_24914460"
+],
+"author": "peteretep",
+"created_at": "2020-10-28T02:40:17Z",
+"created_at_i": 1603852817,
+"num_comments": 132,
+"objectID": "24914460",
+"points": 223,
+"story_id": 24914460,
+"title": "Xbox creator Seamus Blackley baked a 4,500-year-old Egyptian sourdough",
+"updated_at": "2026-09-09T23:21:40Z",
+"url": "https://www.atlasobscura.com/articles/what-bread-did-ancient-egyptians-eat"
+},
+{
+"_tags": [
+"story",
+"author_Tomte",
+"story_43829935"
+],
+"author": "Tomte",
+"created_at": "2025-04-29T08:20:04Z",
+"created_at_i": 1745914804,
+"num_comments": 83,
+"objectID": "43829935",
+"points": 219,
+"story_id": 43829935,
+"title": "My sourdough starter has twins",
+"updated_at": "2025-07-31T14:43:01Z",
+"url": "https://brainbaking.com/post/2025/04/my-sourdough-starter-has-twins/"
+},
+{
+"_tags": [
+"story",
+"author_getbreadbox",
+"story_7454242",
+"show_hn"
+],
+"author": "getbreadbox",
+"created_at": "2014-03-23T17:51:27Z",
+"created_at_i": 1395597087,
+"num_comments": 145,
+"objectID": "7454242",
+"points": 199,
+"story_id": 7454242,
+"title": "Show HN: Fresh-baked rustic sourdough bread, delivered within 20 minutes",
+"updated_at": "2024-09-19T20:35:32Z",
+"url": "http://getbreadbox.com/yc"
+},
+{
+"_tags": [
+"story",
+"author_lnguyen",
+"story_18439599"
+],
+"author": "lnguyen",
+"created_at": "2018-11-13T08:47:35Z",
+"created_at_i": 1542098855,
+"num_comments": 49,
+"objectID": "18439599",
+"points": 149,
+"story_id": 18439599,
+"title": "Sourdough Hands: How Bakers and Bread Are a Microbial Match",
+"updated_at": "2024-09-20T03:18:36Z",
+"url": "https://www.npr.org/sections/thesalt/2018/11/12/665655220/sourdough-hands-how-bakers-and-bread-are-a-microbial-match"
+},
+{
+"_tags": [
+"story",
+"author_thehaikuza",
+"story_17390066"
+],
+"author": "thehaikuza",
+"created_at": "2018-06-25T05:24:35Z",
+"created_at_i": 1529904275,
+"num_comments": 27,
+"objectID": "17390066",
+"points": 99,
+"story_id": 17390066,
+"title": "Monitoring the Fermentation of Sourdough Starter with Computer Vision",
+"updated_at": "2024-09-20T02:40:20Z",
+"url": "http://justinmklam.com/posts/2018/06/sourdough-starter-monitor/"
+},
+{
+"_tags": [
+"story",
+"author_axiomdata316",
+"story_39322859"
+],
+"author": "axiomdata316",
+"created_at": "2024-02-10T02:09:45Z",
+"created_at_i": 1707530985,
+"num_comments": 65,
+"objectID": "39322859",
+"points": 93,
+"story_id": 39322859,
+"title": "Carl Griffith's 1847 Oregon Trail Sourdough Starter",
+"updated_at": "2025-09-01T00:31:20Z",
+"url": "https://carlsfriends.net/source.html"
+},
+{
+"_tags": [
+"story",
+"author_hendricius",
+"story_17005764"
+],
+"author": "hendricius",
+"created_at": "2018-05-06T08:53:55Z",
+"created_at_i": 1525596835,
+"num_comments": 19,
+"objectID": "17005764",
+"points": 69,
+"story_id": 17005764,
+"title": "The Basic Sourdough",
+"updated_at": "2024-09-20T02:21:17Z",
+"url": "https://github.com/hendricius/the-bread-code/blob/master/basics/basic-sour-dough.md"
+},
+{
+"_tags": [
+"story",
+"author_gricardo99",
+"story_16950735"
+],
+"author": "gricardo99",
+"created_at": "2018-04-29T04:45:27Z",
+"created_at_i": 1524977127,
+"num_comments": 16,
+"objectID": "16950735",
+"points": 68,
+"story_id": 16950735,
+"title": "Sourdough Starters, Recipes, and Baker's Handbook",
+"updated_at": "2024-09-20T02:25:54Z",
+"url": "http://www.sourdo.com"
+},
+{
+"_tags": [
+"story",
+"author_wglb",
+"story_37908243"
+],
+"author": "wglb",
+"created_at": "2023-10-16T23:47:53Z",
+"created_at_i": 1697500073,
+"num_comments": 28,
+"objectID": "37908243",
+"points": 63,
+"story_id": 37908243,
+"title": "Using different flours for sourdough fosters different bacteria\u2013and flavors",
+"updated_at": "2024-09-20T15:20:38Z",
+"url": "https://phys.org/news/2023-10-flours-sourdough-fosters-bacteriaand-flavors.html"
+},
+{
+"_tags": [
+"story",
+"author_samclemens",
+"story_32935227"
+],
+"author": "samclemens",
+"created_at": "2022-09-22T06:02:24Z",
+"created_at_i": 1663826544,
+"num_comments": 73,
+"objectID": "32935227",
+"points": 35,
+"story_id": 32935227,
+"title": "San Francisco\u2019s famous sourdough was once gross",
+"updated_at": "2024-09-20T12:04:22Z",
+"url": "https://www.atlasobscura.com/articles/sourdough-history"
+}
+],
+"nbHits": 127,
+"page": 0,
+"query": "sourdough"
+}

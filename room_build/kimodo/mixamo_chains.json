@@ -1,0 +1,88 @@
+{
+ "_": "Behaviour chains as data: each a list of clips (web/room/mh_v5/<clip>.glb) played in order, blend = the cross-fade into that clip (s), loop = it repeats until the behaviour ends. rare = a punctuation event: fires occasionally, never twice within minGap seconds. kimodo_g12/chain_joins.py measures every join (the worst bone-angle jump, the hips' jump) and every loop's wrap. links: the joins between chains (from, to, blend).",
+ "chains": {
+  "arriving": [
+   {
+    "clip": "room_mx_stand_to_sit"
+   },
+   {
+    "clip": "room_seated_idle",
+    "blend": 0.8,
+    "loop": true
+   }
+  ],
+  "working": [
+   {
+    "clip": "room_mx_sit_to_type",
+    "blend": 0.3
+   },
+   {
+    "clip": "room_mx_typing",
+    "blend": 0.2,
+    "loop": true
+   },
+   {
+    "clip": "room_mx_type_to_sit",
+    "blend": 0.2
+   }
+  ],
+  "celebrating": [
+   {
+    "clip": "room_mx_standing_clap",
+    "rare": true,
+    "note": "the capture rises, claps and sits by itself: played whole with the chair rolled back (boy_mh.js rare())"
+   }
+  ]
+ },
+ "rare": {
+  "minGap": 600,
+  "events": {
+   "room_mx_scared": "mh.rare('scared'): rides back 27-33 cm, the whole capture, rides in",
+   "room_mx_angry_gesture": "mh.rare('angry'): rides back 16-22 cm",
+   "room_mx_standing_clap": "mh.rare('clap'): rides back 23-37 cm (celebrating: the whole capture)",
+   "room_sleeping_idle": "a night turn-over (README's criteria); not wired"
+  }
+ },
+ "links": [
+  [
+   "room_seated_idle",
+   "room_mx_sit_to_type",
+   0.8
+  ],
+  [
+   "room_mx_type_to_sit",
+   "room_seated_idle",
+   0.8
+  ],
+  [
+   "room_seated_idle",
+   "room_mx_scared",
+   0.8
+  ],
+  [
+   "room_mx_scared",
+   "room_seated_idle",
+   0.8
+  ],
+  [
+   "room_seated_idle",
+   "room_mx_angry_gesture",
+   0.8
+  ],
+  [
+   "room_mx_angry_gesture",
+   "room_seated_idle",
+   0.8
+  ],
+  [
+   "room_seated_idle",
+   "room_mx_standing_clap",
+   0.8
+  ],
+  [
+   "room_mx_standing_clap",
+   "room_seated_idle",
+   0.8
+  ]
+ ]
+}

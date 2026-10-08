@@ -1,0 +1,7 @@
+tex/
+tex_final/
+assets/
+fonts/
+out/
+node_modules/
+package-lock.json

@@ -1,0 +1,496 @@
+{
+ "mode": "learn",
+ "gpu": "NVIDIA RTX A5000",
+ "gpus_tried": [
+  [
+   "NVIDIA RTX A4000",
+   "SECURE"
+  ],
+  [
+   "NVIDIA RTX A4500",
+   "SECURE"
+  ],
+  [
+   "NVIDIA RTX A5000",
+   "SECURE"
+  ],
+  [
+   "NVIDIA RTX 4000 Ada Generation",
+   "SECURE"
+  ]
+ ],
+ "cloud": "SECURE",
+ "pod_id": "knudfgxexrjmom",
+ "usd_per_hour": 0.27,
+ "boot_s": 18.3,
+ "results": {
+  "session_id": "learn-1m",
+  "day": null,
+  "validate": false,
+  "phases": {
+   "live_learn": [
+    {
+     "gpu": "NVIDIA RTX A5000",
+     "n_neurons": 1000000,
+     "labels": [
+      "Tea ceremony history",
+      "Moon landing archive",
+      "Inokashira park map",
+      "Sourdough bread starter",
+      "Stock market news",
+      "Football transfer rumours",
+      "Lighthouse keepers",
+      "Origami crane tutorial"
+     ],
+     "probs": [
+      0.85,
+      0.75,
+      0.65,
+      0.55,
+      0.45,
+      0.35,
+      0.25,
+      0.15
+     ],
+     "trials": 240,
+     "reversal_at": 120,
+     "offers": "2-6 of the labels per trial",
+     "value": "+1 paid off / -1 not",
+     "criterion": "14 of the last 20 trials correct (correct: the best offered option)",
+     "random": {
+      "trials": 240,
+      "frac_correct": 0.2958,
+      "reward_rate": 0.4375,
+      "trials_to_criterion": null,
+      "frac_correct_last20_before_reversal": 0.25,
+      "curve": [
+       0.25,
+       0.3,
+       0.25,
+       0.2,
+       0.45,
+       0.25,
+       0.25,
+       0.45,
+       0.2,
+       0.25,
+       0.3,
+       0.4
+      ],
+      "reversal_at": 120,
+      "trials_to_criterion_after_reversal": null,
+      "frac_correct_after_reversal": 0.3083,
+      "frac_correct_last20": 0.4,
+      "chance": 0.2897
+     },
+     "readouts": {
+      "race": {
+       "calibration": {
+        "readout": "race",
+        "pool_rate_mean_hz": 2.4,
+        "pool_rate_sd_hz": 0.133,
+        "threshold_hz": 2.67,
+        "thr_z": 2.0,
+        "pool_size_calib": 3889.5
+       },
+       "learned": {
+        "trials": 240,
+        "frac_correct": 0.5,
+        "reward_rate": 0.6042,
+        "trials_to_criterion": 66,
+        "frac_correct_last20_before_reversal": 0.65,
+        "curve": [
+         0.15,
+         0.6,
+         0.55,
+         0.45,
+         0.7,
+         0.65,
+         0.15,
+         0.6,
+         0.8,
+         0.7,
+         0.5,
+         0.15
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": 47,
+        "frac_correct_after_reversal": 0.4833,
+        "frac_correct_last20": 0.15,
+        "timeout_frac": 0.0,
+        "mean_rt_ms": 50.0,
+        "decided_at_first_check_frac": 1.0
+       },
+       "frozen": {
+        "trials": 240,
+        "frac_correct": 0.2375,
+        "reward_rate": 0.4792,
+        "trials_to_criterion": null,
+        "frac_correct_last20_before_reversal": 0.4,
+        "curve": [
+         0.15,
+         0.35,
+         0.15,
+         0.35,
+         0.15,
+         0.4,
+         0.25,
+         0.25,
+         0.15,
+         0.25,
+         0.3,
+         0.1
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": null,
+        "frac_correct_after_reversal": 0.2167,
+        "frac_correct_last20": 0.1,
+        "timeout_frac": 0.013,
+        "mean_rt_ms": 54.6,
+        "decided_at_first_check_frac": 0.933
+       },
+       "labels_valued": 8
+      },
+      "scaled": {
+       "calibration": {
+        "readout": "scaled",
+        "pool_rate_mean_hz": 5.32,
+        "pool_rate_sd_hz": 0.248,
+        "threshold_hz": 8.4,
+        "thr_z": 2.0,
+        "pool_size_calib": 3889.5,
+        "ref_pool": 100.0
+       },
+       "learned": {
+        "trials": 240,
+        "frac_correct": 0.6875,
+        "reward_rate": 0.6375,
+        "trials_to_criterion": 29,
+        "frac_correct_last20_before_reversal": 0.5,
+        "curve": [
+         0.5,
+         0.85,
+         0.65,
+         0.7,
+         0.5,
+         0.5,
+         0.35,
+         0.65,
+         0.85,
+         0.95,
+         0.9,
+         0.85
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": 43,
+        "frac_correct_after_reversal": 0.7583,
+        "frac_correct_last20": 0.85,
+        "timeout_frac": 0.871,
+        "mean_rt_ms": 234.0,
+        "decided_at_first_check_frac": 0.0
+       },
+       "frozen": {
+        "trials": 240,
+        "frac_correct": 0.2833,
+        "reward_rate": 0.4458,
+        "trials_to_criterion": null,
+        "frac_correct_last20_before_reversal": 0.35,
+        "curve": [
+         0.15,
+         0.5,
+         0.35,
+         0.45,
+         0.25,
+         0.35,
+         0.35,
+         0.2,
+         0.35,
+         0.15,
+         0.2,
+         0.1
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": null,
+        "frac_correct_after_reversal": 0.225,
+        "frac_correct_last20": 0.1,
+        "timeout_frac": 1.0,
+        "mean_rt_ms": 250.0,
+        "decided_at_first_check_frac": 0.0
+       },
+       "labels_valued": 8
+      },
+      "diff": {
+       "calibration": {
+        "readout": "diff",
+        "pool_rate_mean_hz": 4.51,
+        "pool_rate_sd_hz": 0.319,
+        "threshold_hz": 5.15,
+        "thr_z": 2.0,
+        "pool_size_calib": 3889.5,
+        "diff_k": 3.0,
+        "diff_sd_hz": 0.126
+       },
+       "learned": {
+        "trials": 240,
+        "frac_correct": 0.5083,
+        "reward_rate": 0.5625,
+        "trials_to_criterion": 87,
+        "frac_correct_last20_before_reversal": 0.65,
+        "curve": [
+         0.15,
+         0.15,
+         0.2,
+         0.6,
+         0.75,
+         0.65,
+         0.25,
+         0.5,
+         0.8,
+         0.55,
+         0.85,
+         0.65
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": 47,
+        "frac_correct_after_reversal": 0.6,
+        "frac_correct_last20": 0.65,
+        "timeout_frac": 0.242,
+        "mean_rt_ms": 127.3,
+        "decided_at_first_check_frac": 0.308
+       },
+       "frozen": {
+        "trials": 240,
+        "frac_correct": 0.3208,
+        "reward_rate": 0.4833,
+        "trials_to_criterion": null,
+        "frac_correct_last20_before_reversal": 0.25,
+        "curve": [
+         0.2,
+         0.3,
+         0.3,
+         0.3,
+         0.25,
+         0.25,
+         0.4,
+         0.4,
+         0.55,
+         0.25,
+         0.4,
+         0.25
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": null,
+        "frac_correct_after_reversal": 0.375,
+        "frac_correct_last20": 0.25,
+        "timeout_frac": 1.0,
+        "mean_rt_ms": 250.0,
+        "decided_at_first_check_frac": 0.0
+       },
+       "labels_valued": 8
+      },
+      "window": {
+       "calibration": {
+        "readout": "window",
+        "pool_rate_mean_hz": 4.08,
+        "pool_rate_sd_hz": 0.118,
+        "threshold_hz": 4.31,
+        "thr_z": 2.0,
+        "pool_size_calib": 3889.5,
+        "window_ms": 200
+       },
+       "learned": {
+        "trials": 240,
+        "frac_correct": 0.4875,
+        "reward_rate": 0.5958,
+        "trials_to_criterion": null,
+        "frac_correct_last20_before_reversal": 0.4,
+        "curve": [
+         0.1,
+         0.35,
+         0.4,
+         0.45,
+         0.35,
+         0.4,
+         0.4,
+         0.4,
+         0.85,
+         0.7,
+         0.9,
+         0.55
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": 47,
+        "frac_correct_after_reversal": 0.6333,
+        "frac_correct_last20": 0.55,
+        "timeout_frac": 0.0,
+        "mean_rt_ms": 200.0,
+        "decided_at_first_check_frac": 0.0
+       },
+       "frozen": {
+        "trials": 240,
+        "frac_correct": 0.3458,
+        "reward_rate": 0.4833,
+        "trials_to_criterion": null,
+        "frac_correct_last20_before_reversal": 0.45,
+        "curve": [
+         0.3,
+         0.35,
+         0.25,
+         0.45,
+         0.15,
+         0.45,
+         0.3,
+         0.4,
+         0.3,
+         0.35,
+         0.45,
+         0.4
+        ],
+        "reversal_at": 120,
+        "trials_to_criterion_after_reversal": null,
+        "frac_correct_after_reversal": 0.3667,
+        "frac_correct_last20": 0.4,
+        "timeout_frac": 0.0,
+        "mean_rt_ms": 200.0,
+        "decided_at_first_check_frac": 0.0
+       },
+       "labels_valued": 8
+      }
+     },
+     "wall_s": 490.7
+    }
+   ]
+  },
+  "files": [
+   "results.json",
+   "session.log"
+  ],
+  "build": {
+   "device": "cuda",
+   "gpu": "NVIDIA RTX A5000",
+   "n_neurons": 1000000,
+   "synapses": 100972600,
+   "max_delay_ms": 60,
+   "plastic_synapses": 60778400,
+   "build_s": 3.8,
+   "config_hash": "46439342c79e7f9c",
+   "config": {
+    "n_neurons": 1000000,
+    "seed": 1,
+    "frac_exc": 0.8,
+    "min_region": 10,
+    "hc_scale": 1.0,
+    "k_e_local": 45,
+    "k_i_local": 25,
+    "k_long": 30,
+    "k_hc_rec": 100,
+    "k_hc_rec_i": 100,
+    "k_vis_sm": 0,
+    "j_vis_sm": 0.1,
+    "dt": 1.0,
+    "tau_m": 20.0,
+    "v_th": 20.0,
+    "v_reset": 10.0,
+    "t_ref": 2.0,
+    "j_e": 0.5,
+    "g_i": 5.0,
+    "j_hc_rec": 0.05,
+    "j_hc_ei": 0.3,
+    "delay_local": [
+     1,
+     2
+    ],
+    "velocity_mm_ms": 6.0,
+    "mu_ext": 15.0,
+    "sigma_ext": 4.0,
+    "baseline_gain": 0.05,
+    "baseline_dt_ms": 50,
+    "plastic": true,
+    "tau_plus": 20.0,
+    "tau_minus": 20.0,
+    "a_plus": 1.0,
+    "a_minus": 0.5,
+    "x_theta": 0.1,
+    "h_pre": 0.1,
+    "tau_elig": 1000.0,
+    "elig_every": 10,
+    "tau_da": 200.0,
+    "w_max_ctx": 2.0,
+    "w_max_hc": 2.0,
+    "eta": {
+     "ctx": {
+      "da": 0.5,
+      "enc": 0.0005,
+      "cons": 0.002
+     },
+     "hc": {
+      "da": 0.0,
+      "enc": 0.025,
+      "cons": 0.0
+     }
+    },
+    "da_groups": [
+     "somatomotor"
+    ],
+    "hebb_theta": 10.0,
+    "hebb_ltd": 0.25,
+    "homeo_every": 1000,
+    "rate_target": 5.0,
+    "tau_rate": 10000.0,
+    "eta_theta": 0.0001,
+    "theta_max": 3.0,
+    "eta_scale": 0.0001,
+    "tau_forget_hc_days": 3.0,
+    "tau_forget_ctx_days": 60.0
+   },
+   "torch": "2.8.0+cu128",
+   "baseline_runs": 3,
+   "weights_loaded": false
+  },
+  "timing": {
+   "0:live_learn": {
+    "wall_s": 493.6
+   }
+  },
+  "weights": {
+   "nonzero": 0,
+   "P": 60778400,
+   "dense": false,
+   "stats": {
+    "plastic_synapses": 60778400,
+    "updates": 0,
+    "ctx": {
+     "w_mean": 0.4999999701976776,
+     "dw_mean": 0.0,
+     "dw_absmax": 0.0,
+     "frac_changed": 0.0
+    },
+    "hc": {
+     "w_mean": 0.24285714328289032,
+     "dw_mean": 0.0,
+     "dw_absmax": 0.0,
+     "frac_changed": 0.0
+    }
+   },
+   "bytes": 2002326
+  },
+  "wall_s": 498.3,
+  "sim_s": 631.3,
+  "error": null
+ },
+ "deleted": true,
+ "still_listed": false,
+ "cost": {
+  "pod_id": "knudfgxexrjmom",
+  "name": "sub01-spiking-live-learn-20261002-150547",
+  "gpu": "NVIDIA RTX A5000",
+  "cost_per_hr": 0.27,
+  "start": "2026-10-02T15:05:51.535692+00:00",
+  "stop": "2026-10-02T15:14:54.356669+00:00",
+  "hours": 0.1508,
+  "cost_usd": 0.0407,
+  "reason": "done",
+  "purpose": "live-learn"
+ },
+ "brain_pod_still_there": true
+}

@@ -1,0 +1,11 @@
+# mid phone profile: 390x844, DPR 2, CPU x4 (CDP). node tools/perf_s.mjs <port>. anim: ms of script per 1/60 s step
+# (after 5 s asleep, 200 steps); render: ms per render (SwiftShader: WebGL on the CPU, so render and fps are not
+# the device's); the third row is lying on his side
+## main
+research  {"anim":1.34,"render":12.5,"fps":0.3,"p95ms":3722.9,"dpr":1.5}
+sleep     {"anim":0.3,"render":12.8,"fps":0,"p95ms":51570.3,"dpr":1.5}
+sleep     {"anim":0.45,"render":12.7,"fps":0.1,"p95ms":52181.2,"dpr":1.5}
+## this PR
+research  {"anim":1.41,"render":11.4,"fps":0.3,"p95ms":4383.7,"dpr":1.5}
+sleep     {"anim":2.67,"render":5.9,"fps":0.1,"p95ms":60214.3,"dpr":1.5}
+sleep     {"anim":2.26,"render":8.8,"fps":0.1,"p95ms":59197.7,"dpr":1.5}

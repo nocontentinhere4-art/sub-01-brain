@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUB-01 · brain (preview)</title>
+<style>
+  :root { --bg:#030305; --fg:#ececf2; --dim:#8a8a9c; --faint:#55556a; --line:rgba(255,255,255,.08); --or:#ff6a00;
+          --card:rgba(10,10,16,.72); --st:#ff9a3c; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg); overflow:hidden;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  #scene { position:fixed; inset:0; }
+  #vignette { position:fixed; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse at 50% 48%, transparent 40%, rgba(0,0,0,.75) 100%); }
+
+  /* top-left: identity + state + one-line story */
+  #top { position:fixed; left:28px; top:24px; max-width:min(640px, 60vw); }
+  #brand { display:flex; align-items:center; gap:12px; }
+  #brand h1 { margin:0; font-size:22px; letter-spacing:.14em; background:var(--or); color:#0a0a0a; padding:2px 10px; }
+  #brand nav { font-size:12px; color:var(--dim); }
+  #brand nav a { color:inherit; text-decoration:none; margin-right:10px; }
+  #brand nav a.on { color:var(--fg); }
+  #state { margin-top:22px; display:flex; align-items:center; gap:12px; font-size:13px; color:var(--dim); }
+  #chip { color:#0a0a0a; background:var(--st); padding:3px 9px; letter-spacing:.12em; font-size:12px; transition:background 1.5s; }
+  #story { margin-top:12px; font-size:28px; line-height:1.3; letter-spacing:-.01em; text-shadow:0 2px 24px #000; }
+  #story em { font-style:normal; color:var(--st); transition:color 1.5s; }
+  #sub { margin-top:8px; font-size:12px; color:var(--dim); }
+
+  /* bottom: event ticker */
+  #ticker { position:fixed; left:28px; bottom:22px; right:420px; font-size:12px; color:var(--dim); display:flex; flex-direction:column; gap:5px; }
+  #ticker div { opacity:.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #ticker div:first-child { color:var(--fg); }
+  #ticker b { color:var(--st); font-weight:normal; }
+  #honest { position:fixed; left:28px; bottom:128px; font-size:11px; color:var(--faint); max-width:520px; line-height:1.5; }
+
+  /* right: story cards */
+  #cards { position:fixed; right:24px; top:24px; width:340px; display:flex; flex-direction:column; gap:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px); }
+  .card .k { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); margin-bottom:8px; display:flex; justify-content:space-between; }
+  .card .t { font-size:15px; line-height:1.35; }
+  .card img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:6px; margin-bottom:10px; display:block; }
+  .card .m { font-size:11px; color:var(--dim); margin-top:6px; }
+  .spark { display:flex; align-items:flex-end; gap:3px; height:34px; margin-top:10px; }
+  .spark i { flex:1; background:linear-gradient(to top, #3a2a6a, var(--or)); border-radius:2px 2px 0 0; }
+  .spark i.c { background:#2a2a36; }
+  .dots { display:flex; gap:6px; margin-top:10px; }
+  .dots span { flex:1; font-size:11px; padding:6px 8px; border-radius:5px; background:rgba(255,255,255,.04); border:1px solid var(--line); }
+  .dots span.ok { border-color:rgba(255,154,60,.5); color:#ffd2a8; }
+
+  /* chat + layers */
+  #dock { position:fixed; right:24px; bottom:22px; width:340px; display:flex; flex-direction:column; gap:10px; }
+  #layers { display:flex; gap:6px; }
+  #layers button { flex:1; background:transparent; color:var(--dim); border:1px solid var(--line); padding:6px 0; font:inherit; font-size:11px;
+    border-radius:5px; cursor:pointer; }
+  #layers button.on { color:var(--fg); border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.05); }
+  #chat { display:flex; gap:6px; }
+  #chat input { flex:1; background:rgba(10,10,16,.85); color:var(--fg); border:1px solid rgba(255,255,255,.14); padding:11px 12px;
+    font:inherit; font-size:13px; border-radius:6px; }
+  #chat button { background:var(--fg); color:#0a0a0a; border:0; padding:0 16px; font:inherit; font-size:13px; border-radius:6px; cursor:pointer; }
+
+  /* preview-only state switcher */
+  #pv { position:fixed; left:50%; top:16px; transform:translateX(-50%); display:flex; gap:4px; font-size:11px; }
+  #pv button { background:rgba(255,255,255,.06); color:var(--dim); border:1px dashed rgba(255,255,255,.2); padding:4px 10px; font:inherit; cursor:pointer; border-radius:4px; }
+  #pv button.on { color:var(--fg); border-style:solid; }
+  #pvnote { position:fixed; left:50%; top:46px; transform:translateX(-50%); font-size:10px; color:var(--faint); letter-spacing:.1em; }
+  #neurons { position:fixed; left:28px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--dim); display:none; }
+  #neurons b { color:#7df9ff; font-weight:normal; font-size:20px; display:block; }
+
+  @media (max-width: 900px) {
+    #top { left:16px; top:16px; max-width:calc(100vw - 32px); } #story { font-size:20px; }
+    #cards { top:auto; bottom:150px; left:16px; right:16px; width:auto; flex-direction:row; overflow-x:auto; }
+    .card { min-width:250px; } #ticker { left:16px; right:16px; bottom:76px; } #honest { display:none; }
+    #dock { left:16px; right:16px; width:auto; bottom:14px; } #layers { display:none; } #pv { top:auto; bottom:200px; }
+  }
+</style>
+</head>
+<body>
+<div id="scene"></div><div id="vignette"></div>
+
+<div id="pv"><button data-s="AWAKE">awake</button><button data-s="NREM">deep sleep</button><button data-s="REM">REM</button><button id="fire">send “pane”</button></div>
+<div id="pvnote">PREVIEW · REAL FIBRES + CORTEX · SIMULATED STATE</div>
+
+<div id="top">
+  <div id="brand"><h1>SUB-01</h1><nav><a class="on">brain</a><a>life</a><a>diary</a><a>lab</a></nav></div>
+  <div id="state"><span id="chip">AWAKE</span><span id="clock">10:24 Tokyo</span><span id="where">· at the bakery, Kichijōji</span></div>
+  <div id="story"></div>
+  <div id="sub"></div>
+</div>
+
+<div id="neurons"><b id="ncount">1,000,000</b>simulated neurons · GPU session live<br><span id="nrate">spikes/s 6.2 M</span></div>
+
+<div id="cards">
+  <div class="card">
+    <div class="k"><span>Last night</span><span>diary →</span></div>
+    <img src="dream.jpg" alt="">
+    <div class="t">Shattered Screens and Flickering Code</div>
+    <div class="m">slept 00:12–08:00 · replayed 14 of your messages · 17 dream frames</div>
+  </div>
+  <div class="card">
+    <div class="k"><span>Today's exam · Pong</span><span>day 3</span></div>
+    <div class="t">7 / 20 rallies returned</div>
+    <div class="spark"><i style="height:20%"></i><i style="height:28%"></i><i style="height:35%"></i><i class="c" style="height:22%"></i><i class="c" style="height:24%"></i><i class="c" style="height:21%"></i></div>
+    <div class="m">orange: learning brain · grey: same brain, plasticity off</div>
+  </div>
+  <div class="card">
+    <div class="k"><span>Does it remember?</span><span>today 09:00</span></div>
+    <div class="t">2 of 3 messages recalled from a half cue</div>
+    <div class="dots"><span class="ok">“ciao sub” 0.81</span><span class="ok">“pane caldo” 0.64</span><span>“moon” 0.18</span></div>
+  </div>
+</div>
+
+<div id="honest">Simulated activity built from one real person's public MRI: real fibres, real cortex.
+  Messages are stimuli, not conversation. A model of brain activity, not a mind, and not the person.</div>
+<div id="ticker"></div>
+
+<div id="dock">
+  <div id="layers"><button class="on" data-l="fibres">fibres</button><button class="on" data-l="cortex">cortex</button><button data-l="regions">regions</button><button data-l="neurons">neurons</button></div>
+  <form id="chat" onsubmit="event.preventDefault(); fire(document.getElementById('msg').value || 'pane'); document.getElementById('msg').value='';">
+    <input id="msg" placeholder="send a stimulus…" autocomplete="off"><button>send</button></form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const host = $("scene");
+const renderer = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.setClearColor(0x030305);
+host.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 1, 3000);
+camera.up.set(0, 0, 1); camera.position.set(-300, 170, 108);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.35;
+function resize(){ const w = innerWidth, h = innerHeight; renderer.setSize(w, h); camera.aspect = w / h;
+  // keep the brain in the free middle band (cards on the right, story on the left)
+  camera.setViewOffset(w, h, w > 900 ? 70 : 0, w > 900 ? -55 : 60, w, h); camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+// stage mix: awake / nrem / rem weights, eased toward the target
+const STAGES = {AWAKE:[1,0,0], NREM:[0,1,0], REM:[0,0,1]};
+const CHIP = {AWAKE:"#ff9a3c", NREM:"#4d7cff", REM:"#c26bff"};
+let target = [1,0,0], mix = [1,0,0], stage = "AWAKE";
+let fibreMat, cortexMat, glows = [], nodes = [], neuronPts;
+let pulse = {t:-1, start:0};
+
+Promise.all([fetch("brain.json").then(r=>r.json()), fetch("fibres.json").then(r=>r.json()),
+             fetch("fibres.bin").then(r=>r.arrayBuffer()), fetch("fibres_ends.bin").then(r=>r.arrayBuffer())])
+.then(([d, meta, fbuf, ebuf]) => {
+  nodes = d.nodes;
+  const lab = {}; nodes.forEach((n, i) => lab[n.lab] = n);
+  const isLang = n => n && n.name.startsWith("LH_") && (n.name.includes("Temp") || n.name.includes("FrOper"));
+  const isTarget = n => n && ["reward", "default", "salience", "memory"].includes(n.group);
+  const P = new Float32Array(fbuf), E = new Int16Array(ebuf), k = meta.pts, n = meta.n, segs = n * (k - 1);
+  const pos = new Float32Array(segs * 6), dcol = new Float32Array(segs * 6), info = new Float32Array(segs * 8);
+  let o = 0, routes = 0;
+  for (let s = 0; s < n; s++) {
+    const a0 = lab[E[2*s]], b0 = lab[E[2*s+1]];
+    let route = 0, flip = 0;
+    if (isLang(a0) && isTarget(b0)) route = 1; else if (isLang(b0) && isTarget(a0)) { route = 1; flip = 1; }
+    routes += route;
+    const fid = (s * 0.61803) % 1;
+    for (let i = 0; i < k - 1; i++, o++) {
+      const a = (s*k + i) * 3, b = a + 3;
+      const dx = P[b]-P[a], dy = P[b+1]-P[a+1], dz = P[b+2]-P[a+2], L = Math.hypot(dx, dy, dz) || 1;
+      for (let j = 0; j < 3; j++) { pos[o*6+j] = P[a+j]; pos[o*6+3+j] = P[b+j]; }
+      const c = [Math.abs(dx)/L, Math.abs(dy)/L, Math.abs(dz)/L];
+      for (let j = 0; j < 3; j++) { dcol[o*6+j] = c[j]; dcol[o*6+3+j] = c[j]; }
+      for (let v = 0; v < 2; v++) {
+        const tp = (i + v) / (k - 1);
+        info.set([flip ? 1 - tp : tp, route, fid, 0], o*8 + v*4);
+      }
+    }
+  }
+  console.log("language → target fibres:", routes);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.setAttribute("dcol", new THREE.BufferAttribute(dcol, 3));
+  g.setAttribute("info", new THREE.BufferAttribute(info, 4));
+  fibreMat = new THREE.ShaderMaterial({
+    uniforms: { time:{value:0}, mixw:{value:new THREE.Vector3(1,0,0)}, pulseT:{value:-1}, opacity:{value:0.0105} },
+    vertexShader: `
+      attribute vec3 dcol; attribute vec4 info;
+      uniform float time; uniform vec3 mixw; uniform float pulseT;
+      varying vec3 vCol;
+      float hash(float x){ return fract(sin(x * 91.17) * 43758.5453); }
+      void main(){
+        float tp = info.x, route = info.y, fid = info.z;
+        // awake: warm, with a little of the fibre's own direction colour; gentle travelling shimmer
+        vec3 warm = mix(vec3(1.0, 0.46, 0.12), vec3(1.0, 0.82, 0.55), dcol.z) * 0.8 + dcol * 0.25;
+        float shimmer = 0.75 + 0.35 * pow(0.5 + 0.5 * sin(tp * 18.0 - time * 3.0 + fid * 40.0), 6.0);
+        // deep sleep: cool blue, one slow wave sweeping front -> back (~1 Hz feel, slowed for the eye)
+        vec3 cool = mix(vec3(0.12, 0.25, 0.95), vec3(0.35, 0.6, 1.0), dcol.x);
+        float sweep = 0.25 + 1.4 * pow(0.5 + 0.5 * sin(position.y * 0.045 - time * 1.1), 10.0);
+        // REM: violet / magenta, fibres flicker on and off in bursts
+        vec3 violet = mix(vec3(0.62, 0.22, 1.0), vec3(1.0, 0.3, 0.62), dcol.y);
+        float flick = 0.35 + 1.6 * step(0.86, hash(fid * 977.0 + floor(time * 6.0)));
+        vec3 col = mixw.x * warm * shimmer + mixw.y * cool * sweep + mixw.z * violet * flick;
+        // a message: a bright packet runs along the real language -> target fibres
+        float pk = route * exp(-pow((tp - pulseT) * 9.0, 2.0)) * step(-0.5, pulseT);
+        float trail = route * step(0.0, pulseT) * step(tp, pulseT) * 0.35 * exp(-(pulseT - tp) * 3.0);
+        float busy = step(0.0, pulseT) * (1.0 - smoothstep(1.2, 1.6, pulseT));
+        col *= 1.0 - 0.55 * busy * (1.0 - route);                       // the rest steps back while it travels
+        col += vec3(0.55, 0.92, 1.0) * (pk * 30.0 + trail * 5.0);
+        vCol = col;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }`,
+    fragmentShader: `uniform float opacity; varying vec3 vCol; void main(){ gl_FragColor = vec4(vCol * opacity, 1.0); }`,
+    transparent:true, blending:THREE.AdditiveBlending, depthWrite:false,
+  });
+  scene.add(new THREE.LineSegments(g, fibreMat));
+
+  Promise.all([fetch("cortex.bin").then(r=>r.arrayBuffer()), fetch("cortex_idx.bin").then(r=>r.arrayBuffer())]).then(([vb, ib]) => {
+    const cg = new THREE.BufferGeometry();
+    cg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vb), 3));
+    cg.setIndex(new THREE.BufferAttribute(new Uint32Array(ib), 1));
+    cg.computeVertexNormals();
+    cortexMat = new THREE.ShaderMaterial({
+      uniforms: { tint:{value:new THREE.Color(0xff9a3c)}, strength:{value:0.55} },
+      vertexShader: `varying vec3 vN; varying vec3 vV;
+        void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz);
+          gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `uniform vec3 tint; uniform float strength; varying vec3 vN; varying vec3 vV;
+        void main(){ float rim = pow(1.0 - abs(dot(vN, vV)), 3.0); gl_FragColor = vec4(tint * rim * strength, 1.0); }`,
+      transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide,
+    });
+    cortexMat.uniforms.tint.value.set(CHIP[stage]);
+    scene.add(new THREE.Mesh(cg, cortexMat));
+  });
+
+  const glowTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const x = c.getContext("2d");
+    const gr = x.createRadialGradient(32,32,0,32,32,32); gr.addColorStop(0,"rgba(255,255,255,1)"); gr.addColorStop(1,"rgba(255,255,255,0)");
+    x.fillStyle = gr; x.fillRect(0,0,64,64); return new THREE.CanvasTexture(c); })();
+  for (const nd of nodes) {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex, color:0xffb070, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false}));
+    sp.position.set(...nd.q); sp.scale.setScalar(9); sp.userData = nd; scene.add(sp); glows.push(sp);
+  }
+  // neurons layer: points scattered around region centres, flickering like a spike raster
+  const N = 40000, np = new Float32Array(N*3), seed = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const nd = nodes[i % nodes.length];
+    for (let j = 0; j < 3; j++) np[i*3+j] = nd.q[j] + (Math.random() - 0.5) * 14; seed[i] = Math.random(); }
+  const ng = new THREE.BufferGeometry(); ng.setAttribute("position", new THREE.BufferAttribute(np, 3)); ng.setAttribute("seed", new THREE.BufferAttribute(seed, 1));
+  neuronPts = new THREE.Points(ng, new THREE.ShaderMaterial({ uniforms:{time:{value:0}},
+    vertexShader:`attribute float seed; uniform float time; varying float a;
+      float h(float x){ return fract(sin(x*78.233)*43758.5453); }
+      void main(){ a = step(0.97, h(seed*1000.0 + floor(time*20.0 + seed*7.0))); vec4 mv = modelViewMatrix*vec4(position,1.0);
+        gl_PointSize = (1.0 + a*2.5) * 180.0 / -mv.z; gl_Position = projectionMatrix*mv; }`,
+    fragmentShader:`varying float a; void main(){ gl_FragColor = vec4(vec3(0.45,0.97,1.0)*(0.06 + a*0.9), 1.0); }`,
+    transparent:true, blending:THREE.AdditiveBlending, depthWrite:false }));
+  neuronPts.visible = false; scene.add(neuronPts);
+  setStage(new URLSearchParams(location.search).get("state") || "AWAKE");
+  mix = [...target];                                      // first view: no transition
+  if (new URLSearchParams(location.search).has("fire")) setTimeout(() => fire("pane"), 400);
+  const pin = new URLSearchParams(location.search).get("pulse");           // screenshot helper: freeze the packet
+  if (pin) { fire("pane"); pulse.pinned = +pin; }
+  document.body.dataset.ready = "1";
+});
+
+// ---------- preview story ----------
+const STORY = {
+  AWAKE: { chip:"AWAKE", clock:"10:24 Tokyo", where:"· at the bakery, Kichijōji",
+    story:`is choosing bread. <em>reward</em> and <em>visual</em> areas are up.`,
+    sub:"his real recorded resting activity runs underneath · global synchrony 11%",
+    ticker:["10:24 · message <b>“pane caldo”</b> → language → reward, memory", "10:23 · buy $127 → reward, visual",
+            "10:21 · walked 456 m home → bakery (real route)", "10:02 · exam: 7 / 20 rallies returned (day 3)"] },
+  NREM: { chip:"DEEP SLEEP", clock:"02:41 Tokyo", where:"· asleep at home",
+    story:`deep sleep. <em>slow waves</em> sweep front to back; almost nothing gets through.`,
+    sub:"stimulus gain 8% · sleep debt 0.4 h · woken 0 times tonight",
+    ticker:["02:41 · message <b>“wake up”</b> heard at 8% strength (asleep)", "02:30 · cycle 2 · deep NREM",
+            "01:12 · REM ended · replayed 3 messages", "00:12 · fell asleep"] },
+  REM: { chip:"REM", clock:"03:12 Tokyo", where:"· dreaming",
+    story:`is replaying <em>“ciao sub”</em>, heard at 21:40.`,
+    sub:"the diary is recording this dream · 9 frames so far tonight",
+    ticker:["03:12 · replay <b>“ciao sub”</b> (from 21:40) → language, default, memory", "03:08 · dream frame 9 saved to the diary",
+            "03:04 · replay <b>“pane caldo”</b> (from 10:24) → reward", "02:58 · REM began (cycle 2)"] },
+};
+function setStage(s){
+  stage = s; target = STAGES[s]; const st = STORY[s];
+  $("chip").textContent = st.chip; document.documentElement.style.setProperty("--st", CHIP[s]);
+  $("clock").textContent = st.clock; $("where").textContent = st.where;
+  $("story").innerHTML = st.story; $("sub").textContent = st.sub;
+  $("ticker").innerHTML = st.ticker.map(t => `<div>${t}</div>`).join("");
+  document.querySelectorAll("#pv button[data-s]").forEach(b => b.classList.toggle("on", b.dataset.s === s));
+  if (cortexMat) cortexMat.uniforms.tint.value.set(CHIP[s]);
+  controls.autoRotateSpeed = s === "AWAKE" ? 0.35 : s === "REM" ? 0.22 : 0.1;
+}
+function fire(text){
+  pulse = {t:0, start:performance.now()};
+  const esc = String(text).replace(/[<>&]/g, "");
+  $("ticker").insertAdjacentHTML("afterbegin", `<div>now · message <b>“${esc}”</b> → language → reward, default, memory</div>`);
+  $("story").innerHTML = `heard <em>“${esc}”</em>. the signal is travelling along its real fibres.`;
+}
+document.querySelectorAll("#pv button[data-s]").forEach(b => b.onclick = () => setStage(b.dataset.s));
+$("fire").onclick = () => fire("pane");
+document.querySelectorAll("#layers button").forEach(b => b.onclick = () => {
+  b.classList.toggle("on"); const on = b.classList.contains("on"), l = b.dataset.l;
+  if (l === "neurons") { neuronPts.visible = on; $("neurons").style.display = on ? "block" : "none"; }
+  if (l === "cortex") scene.children.filter(c => c.isMesh).forEach(c => c.visible = on);
+  if (l === "fibres") scene.children.filter(c => c.isLineSegments).forEach(c => c.visible = on);
+  if (l === "regions") glows.forEach(g => g.userData.show = on);
+});
+
+// ---------- loop ----------
+const clock0 = performance.now();
+function frame(now){
+  requestAnimationFrame(frame);
+  const t = (now - clock0) / 1000;
+  for (let i = 0; i < 3; i++) mix[i] += (target[i] - mix[i]) * 0.03;
+  if (fibreMat) {
+    fibreMat.uniforms.time.value = t;
+    fibreMat.uniforms.mixw.value.set(...mix);
+    fibreMat.uniforms.opacity.value = 0.0105 * (mix[0] + 0.75 * mix[1] + 0.9 * mix[2]);
+    if (pulse.pinned !== undefined) pulse.t = pulse.pinned;
+    else if (pulse.t >= 0) { pulse.t = (now - pulse.start) / 2600; if (pulse.t > 1.6) pulse.t = -1; }
+    fibreMat.uniforms.pulseT.value = pulse.t;
+  }
+  if (neuronPts) neuronPts.material.uniforms.time.value = t;
+  if (cortexMat) cortexMat.uniforms.strength.value = 0.5 * (mix[0] + 0.5 * mix[1] + 0.8 * mix[2]);
+  const arrive = pulse.t > 0.85 ? Math.max(0, 1 - (pulse.t - 0.85) / 0.75) : 0;
+  for (const g of glows) {
+    const nd = g.userData, hot = ["reward", "default", "memory"].includes(nd.group) && arrive > 0;
+    const base = g.userData.show ? 0.18 : 0;
+    g.material.opacity = base + (hot ? 0.55 * arrive : 0);
+  }
+  controls.update(); renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

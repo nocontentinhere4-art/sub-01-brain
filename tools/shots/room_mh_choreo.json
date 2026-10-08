@@ -1,0 +1,47 @@
+{
+ "_note": "preview/room-mh choreography (#98): clips 1 and 5 only, Prima (the MakeHuman room before: turn on the spot, chair put back, arms damped) | Dopo (one-take get-up, chair left where his legs push it, walk as recorded). 8 s locked-camera shots, the owner's format.",
+ "hour": 14,
+ "clean": true,
+ "screen_stub": true,
+ "shots": [
+  {
+   "label": "Si alza e va alla finestra",
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'p1', kind: 'page'}}); for (let i = 0; i < 60; i++) animate_(1/30); live('window', {activity: 'window', place: 'room'}); }",
+   "settle": 0.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     1.6,
+     2.3,
+     1.9
+    ],
+    "target": [
+     -0.7,
+     0.8,
+     -0.2
+    ],
+    "fov": 50
+   }
+  },
+  {
+   "label": "Di notte: si stira sulla sedia e si alza per andare a letto",
+   "hour": 23,
+   "scene": "() => { if (window.mh && mh.show) mh.show(null); act('research', {activity: 'research', place: 'room', screen: {device: 'desk', id: 'p1', kind: 'page'}}); for (let i = 0; i < 60; i++) animate_(1/30); live('sleep', {activity: 'sleep', place: 'room'}); }",
+   "settle": 2.5,
+   "seconds": 8,
+   "cam": {
+    "pos": [
+     0.5,
+     1.65,
+     0.9
+    ],
+    "target": [
+     -0.95,
+     0.9,
+     -0.55
+    ],
+    "fov": 52
+   }
+  }
+ ]
+}

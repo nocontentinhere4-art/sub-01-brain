@@ -1,0 +1,17 @@
+{
+ "source": "gs://h01-release/data/20210601/layers (mip 4: 8 x 8 x 8.448 um)",
+ "license": "CC BY 4.0",
+ "paper": "Shapson-Coe A, Januszewski M, Berger DR et al. (2024) Science 384:eadk4858. doi:10.1126/science.adk4858",
+ "method": "median boundary-to-boundary distance in sections z = 6, 10, 14 (2D distance transform)",
+ "thickness_um": {
+  "L1": 413,
+  "L2": 303,
+  "L3": 447,
+  "L4": 272,
+  "L5": 449,
+  "L6": 261
+ },
+ "total_um": 2145,
+ "neurons_per_mm3": 16000,
+ "neurons_note": "~16k neurons in the ~1 mm3 sample (Shapson-Coe et al., bioRxiv 2021.05.29.446289: 'The number of neurons in this human sample is ~16k/1 mm3'); per-layer neuron densities are not used"
+}

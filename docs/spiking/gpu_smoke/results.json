@@ -1,0 +1,220 @@
+{
+ "session_id": "validate-20261001-010035",
+ "day": "2026-10-01",
+ "validate": true,
+ "phases": {
+  "bench": [
+   {
+    "plasticity_off": {
+     "steps_per_s": 1403.6,
+     "realtime_x": 1.404,
+     "mean_rate_hz": 2.601
+    },
+    "plasticity_on": {
+     "steps_per_s": 654.5,
+     "realtime_x": 0.654,
+     "mean_rate_hz": 3.506
+    },
+    "n_neurons": 1000000,
+    "synapses": 100972600,
+    "gpu": "NVIDIA RTX A5000",
+    "gpu_mem_gb": 4.74,
+    "steps_per_s": 654.5,
+    "realtime_x": 0.654
+   }
+  ],
+  "rates": [
+   {
+    "seconds": 20,
+    "mean_e_hz": 3.22,
+    "mean_i_hz": 3.231,
+    "region_rate_pct": {
+     "1": 2.024,
+     "5": 2.09,
+     "50": 3.218,
+     "95": 4.738,
+     "99": 5.318
+    },
+    "region_rate_max": 6.036,
+    "groups": {
+     "visual": 2.791,
+     "somatomotor": 3.475,
+     "attention": 2.956,
+     "salience": 3.482,
+     "limbic": 3.387,
+     "control": 3.431,
+     "default": 3.303,
+     "reward": 3.096,
+     "fear": 3.337,
+     "memory": 2.285,
+     "relay": 2.861,
+     "language": 3.252
+    },
+    "per_second_e": [
+     3.358,
+     3.023,
+     2.775,
+     2.577,
+     2.489,
+     2.546,
+     2.657,
+     2.845,
+     3.134,
+     3.393,
+     3.572,
+     3.764,
+     3.749,
+     3.695,
+     3.619,
+     3.509,
+     3.415,
+     3.398,
+     3.418,
+     3.46
+    ],
+    "neuron_rate_pct": {
+     "5": 1.5,
+     "50": 3.5,
+     "95": 6.0,
+     "99": 7.0
+    },
+    "frac_silent_2s": 0.0007,
+    "runaway": false
+   }
+  ],
+  "delays": [
+   {
+    "n_long_synapses": 30000000,
+    "max_abs_error_ms": 0.0,
+    "delay_ms_pct": {
+     "5": 5.0,
+     "50": 12.0,
+     "95": 27.0
+    },
+    "fibre_mm_pct": {
+     "5": 30.7,
+     "50": 72.7,
+     "95": 163.5
+    },
+    "velocity_m_s": 6.0
+   }
+  ]
+ },
+ "files": [
+  "results.json",
+  "session.log"
+ ],
+ "build": {
+  "device": "cuda",
+  "gpu": "NVIDIA RTX A5000",
+  "n_neurons": 1000000,
+  "synapses": 100972600,
+  "max_delay_ms": 60,
+  "plastic_synapses": 60778400,
+  "build_s": 4.6,
+  "config_hash": "0be34a556bfab95d",
+  "config": {
+   "n_neurons": 1000000,
+   "seed": 1,
+   "frac_exc": 0.8,
+   "min_region": 10,
+   "hc_scale": 1.0,
+   "k_e_local": 45,
+   "k_i_local": 25,
+   "k_long": 30,
+   "k_hc_rec": 100,
+   "k_hc_rec_i": 100,
+   "dt": 1.0,
+   "tau_m": 20.0,
+   "v_th": 20.0,
+   "v_reset": 10.0,
+   "t_ref": 2.0,
+   "j_e": 0.5,
+   "g_i": 5.0,
+   "j_hc_rec": 0.05,
+   "j_hc_ei": 0.3,
+   "delay_local": [
+    1,
+    2
+   ],
+   "velocity_mm_ms": 6.0,
+   "mu_ext": 15.0,
+   "sigma_ext": 4.0,
+   "baseline_gain": 0.05,
+   "baseline_dt_ms": 50,
+   "plastic": true,
+   "tau_plus": 20.0,
+   "tau_minus": 20.0,
+   "a_plus": 1.0,
+   "a_minus": 0.5,
+   "x_theta": 0.1,
+   "h_pre": 0.1,
+   "tau_elig": 1000.0,
+   "elig_every": 10,
+   "tau_da": 200.0,
+   "w_max_ctx": 2.0,
+   "w_max_hc": 2.0,
+   "eta": {
+    "ctx": {
+     "da": 0.02,
+     "enc": 0.0005,
+     "cons": 0.001
+    },
+    "hc": {
+     "da": 0.02,
+     "enc": 0.025,
+     "cons": 0.0
+    }
+   },
+   "hebb_theta": 10.0,
+   "hebb_ltd": 0.25,
+   "homeo_every": 1000,
+   "rate_target": 5.0,
+   "tau_rate": 10000.0,
+   "eta_theta": 0.0001,
+   "theta_max": 3.0,
+   "eta_scale": 0.0001,
+   "tau_forget_hc_days": 3.0,
+   "tau_forget_ctx_days": 60.0
+  },
+  "torch": "2.8.0+cu128",
+  "baseline_runs": 3,
+  "weights_loaded": false
+ },
+ "timing": {
+  "0:bench": {
+   "wall_s": 11.6
+  },
+  "1:rates": {
+   "wall_s": 32.9
+  },
+  "2:delays": {
+   "wall_s": 0.8
+  }
+ },
+ "weights": {
+  "nonzero": 60419825,
+  "P": 60778400,
+  "dense": true,
+  "stats": {
+   "plastic_synapses": 60778400,
+   "updates": 0,
+   "ctx": {
+    "w_mean": 0.5003008842468262,
+    "dw_mean": 0.000300871703075245,
+    "dw_absmax": 0.0006611347198486328,
+    "frac_changed": 0.928321897983551
+   },
+   "hc": {
+    "w_mean": 0.24310962855815887,
+    "dw_mean": 0.00025247366284020245,
+    "dw_absmax": 0.0006879568099975586,
+    "frac_changed": 0.4285714328289032
+   }
+  },
+  "bytes": 123558786
+ },
+ "wall_s": 51.2,
+ "sim_s": 32.9,
+ "error": null
+}

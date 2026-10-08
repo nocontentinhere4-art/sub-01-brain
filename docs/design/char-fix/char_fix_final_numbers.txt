@@ -1,0 +1,16 @@
+Room, page camera, main 7f2bf6e vs final (same harness): pixels differing > 20/255; mean luma
+  1280 desk       1156 px (0.11%)  luma 157.1 -> 157.6
+  1280 eating     3722 px (0.36%)  luma 54.6 -> 54.5
+  1280 phone        46 px (0.00%)  luma 46.0 -> 46.0
+  1280 sleeping      8 px (0.00%)  luma 20.0 -> 20.0
+  1280 door        249 px (0.02%)  luma 70.8 -> 70.8
+  390  desk        360 px (0.11%)  luma 91.8 -> 92.2
+  390  eating     1553 px (0.47%)  luma 57.0 -> 56.9
+  390  phone        17 px (0.01%)  luma 47.2 -> 47.2
+  390  sleeping      4 px (0.00%)  luma 22.1 -> 22.1
+  390  door        115 px (0.03%)  luma 72.5 -> 72.5
+Same frame, seated at the desk: white px (neutral, > 150) in the region
+  hood fold / drawstring, 3/4 left: 7820 -> 0
+  hood base on his back, from behind the chair: 1681 -> 289
+  collar from above (nape): 7065 -> 6268
+Collar: red back faces within 15 cm of the neck, 32 close orbits: 32,733 (9052af0) -> 8,389; desk camera 219 -> 5

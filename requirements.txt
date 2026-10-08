@@ -1,0 +1,11 @@
+dipy==1.12.1
+nilearn==0.14.1
+nibabel
+numpy
+scipy
+matplotlib
+aiohttp
+scikit-image
+trimesh
+fast-simplification
+tzdata

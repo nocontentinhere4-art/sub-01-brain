@@ -1,0 +1,153 @@
+{
+ "scene": "sleeping",
+ "samples": 32,
+ "past_underside_max": 2699,
+ "tested": 157588,
+ "head_x": -1.712,
+ "rows": [
+  {
+   "from_head_cm": [
+    40,
+    50
+   ],
+   "line_median_cm": 2.8,
+   "line_max_cm": 3.1,
+   "width_median_cm": 3.0,
+   "width_max_cm": 10.1,
+   "n": 2144
+  },
+  {
+   "from_head_cm": [
+    50,
+    60
+   ],
+   "line_median_cm": 1.7,
+   "line_max_cm": 2.5,
+   "width_median_cm": 2.6,
+   "width_max_cm": 8.1,
+   "n": 5024
+  },
+  {
+   "from_head_cm": [
+    60,
+    70
+   ],
+   "line_median_cm": 0.0,
+   "line_max_cm": 1.0,
+   "width_median_cm": 2.3,
+   "width_max_cm": 10.5,
+   "n": 5792
+  },
+  {
+   "from_head_cm": [
+    70,
+    80
+   ],
+   "line_median_cm": 1.4,
+   "line_max_cm": 6.0,
+   "width_median_cm": 2.3,
+   "width_max_cm": 14.4,
+   "n": 4960
+  },
+  {
+   "from_head_cm": [
+    80,
+    90
+   ],
+   "line_median_cm": 4.3,
+   "line_max_cm": 8.8,
+   "width_median_cm": 4.0,
+   "width_max_cm": 11.1,
+   "n": 4256
+  },
+  {
+   "from_head_cm": [
+    90,
+    100
+   ],
+   "line_median_cm": 4.2,
+   "line_max_cm": 8.4,
+   "width_median_cm": 4.6,
+   "width_max_cm": 13.3,
+   "n": 3392
+  },
+  {
+   "from_head_cm": [
+    100,
+    110
+   ],
+   "line_median_cm": 5.7,
+   "line_max_cm": 14.8,
+   "width_median_cm": 6.3,
+   "width_max_cm": 14.8,
+   "n": 3168
+  },
+  {
+   "from_head_cm": [
+    110,
+    120
+   ],
+   "line_median_cm": 6.9,
+   "line_max_cm": 13.2,
+   "width_median_cm": 7.6,
+   "width_max_cm": 17.1,
+   "n": 2784
+  },
+  {
+   "from_head_cm": [
+    120,
+    130
+   ],
+   "line_median_cm": 8.5,
+   "line_max_cm": 12.8,
+   "width_median_cm": 8.9,
+   "width_max_cm": 16.8,
+   "n": 2976
+  },
+  {
+   "from_head_cm": [
+    130,
+    140
+   ],
+   "line_median_cm": 9.2,
+   "line_max_cm": 14.4,
+   "width_median_cm": 10.6,
+   "width_max_cm": 16.8,
+   "n": 2944
+  },
+  {
+   "from_head_cm": [
+    140,
+    150
+   ],
+   "line_median_cm": 11.3,
+   "line_max_cm": 14.6,
+   "width_median_cm": 11.7,
+   "width_max_cm": 19.4,
+   "n": 3008
+  },
+  {
+   "from_head_cm": [
+    150,
+    160
+   ],
+   "line_median_cm": 13.3,
+   "line_max_cm": 18.9,
+   "width_median_cm": 13.3,
+   "width_max_cm": 18.9,
+   "n": 1792
+  },
+  {
+   "from_head_cm": [
+    160,
+    170
+   ],
+   "line_median_cm": 1.8,
+   "line_max_cm": 22.1,
+   "width_median_cm": 2.4,
+   "width_max_cm": 22.1,
+   "n": 768
+  }
+ ],
+ "errors": []
+}

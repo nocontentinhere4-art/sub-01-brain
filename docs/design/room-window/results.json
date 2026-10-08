@@ -1,0 +1,111 @@
+{
+ "errors": {},
+ "clear_07": {
+  "cloud": 0,
+  "rain": 0,
+  "weather": {
+   "kind": "clear",
+   "cloud": 0,
+   "rain": 0
+  }
+ },
+ "rain_07": {
+  "cloud": 0.9999999999999732,
+  "rain": 0.9999999999999732,
+  "weather": {
+   "kind": "rain",
+   "cloud": 1,
+   "rain": 1
+  }
+ },
+ "clear_12": {
+  "cloud": 0,
+  "rain": 0,
+  "weather": {
+   "kind": "clear",
+   "cloud": 0,
+   "rain": 0
+  }
+ },
+ "rain_12": {
+  "cloud": 0.9999999999999726,
+  "rain": 0.9999999999999726,
+  "weather": {
+   "kind": "rain",
+   "cloud": 1,
+   "rain": 1
+  }
+ },
+ "clear_18": {
+  "cloud": 0,
+  "rain": 0,
+  "weather": {
+   "kind": "clear",
+   "cloud": 0,
+   "rain": 0
+  }
+ },
+ "rain_18": {
+  "cloud": 0.9999999999999761,
+  "rain": 0.9999999999999761,
+  "weather": {
+   "kind": "rain",
+   "cloud": 1,
+   "rain": 1
+  }
+ },
+ "clear_21": {
+  "cloud": 0,
+  "rain": 0,
+  "weather": {
+   "kind": "clear",
+   "cloud": 0,
+   "rain": 0
+  }
+ },
+ "rain_21": {
+  "cloud": 0.9999999999999755,
+  "rain": 0.9999999999999755,
+  "weather": {
+   "kind": "rain",
+   "cloud": 1,
+   "rain": 1
+  }
+ },
+ "clear_02": {
+  "cloud": 0,
+  "rain": 0,
+  "weather": {
+   "kind": "clear",
+   "cloud": 0,
+   "rain": 0
+  }
+ },
+ "rain_02": {
+  "cloud": 0.9999999999999736,
+  "rain": 0.9999999999999736,
+  "weather": {
+   "kind": "rain",
+   "cloud": 1,
+   "rain": 1
+  }
+ },
+ "cost_390px_window_view_swiftshader": {
+  "software_gl_ms_window_hidden": 0.6,
+  "software_gl_ms_window_shown": 0.7,
+  "window_update_js_ms": 0.005,
+  "fragment_px": 329160
+ },
+ "sheets": [
+  "h07_1280.jpg",
+  "h12_1280.jpg",
+  "h18_1280.jpg",
+  "h21_1280.jpg",
+  "h02_1280.jpg",
+  "h07_390.jpg",
+  "h12_390.jpg",
+  "h18_390.jpg",
+  "h21_390.jpg",
+  "h02_390.jpg"
+ ]
+}

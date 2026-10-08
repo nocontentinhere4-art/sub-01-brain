@@ -1,0 +1,4006 @@
+{
+ "software_webgl": true,
+ "full": false,
+ "shots": {
+  "door_8_1280": {
+   "scene": "door",
+   "hour": 8,
+   "size": "1280",
+   "pose": {
+    "at": "door",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "door",
+     "clip": "stand"
+    },
+    "clip": "mh_stand",
+    "root": [
+     1.22,
+     0.16,
+     -0.92
+    ],
+    "ry": 2.2
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0023,
+    "blown_frac": 0.0023,
+    "mean_lum": 71.7,
+    "p05_lum": 8.2,
+    "p95_lum": 216.3,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 1.02,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.78,
+      "color": "#f2e7db"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 3.35,
+      "color": "#fff0dc"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 7.3,
+      "color": "#e4ecff"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 81,
+    "triangles": 652788,
+    "textures": 134,
+    "geometries": 114,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     2.723,
+     1.819,
+     -0.965
+    ],
+    "target": [
+     1.224,
+     1.369,
+     -0.921
+    ],
+    "tried": 1
+   },
+   "body": {
+    "sampled": 130331,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.165,
+    "by": {},
+    "foot_min_y": {
+     "Left": 0.178,
+     "Right": 0.165
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 38.0
+  },
+  "walking_8_1280": {
+   "scene": "walking",
+   "hour": 8,
+   "size": "1280",
+   "pose": {
+    "at": null,
+    "step": {
+     "k": "walk",
+     "t": 0,
+     "to": [
+      -0.3299999952316284,
+      -0.33499997854232794
+     ]
+    },
+    "plan": [
+     "turn",
+     "chair:1",
+     "walk:-0.42999999523162846,-0.33499997854232794",
+     "turn",
+     "pose:desk",
+     "chair:0.375"
+    ],
+    "goal": {
+     "anchor": "desk",
+     "clip": "stand"
+    },
+    "clip": "room_walk",
+    "root": [
+     1.22,
+     0.16,
+     -0.92
+    ],
+    "ry": 0.22
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0028,
+    "blown_frac": 0.0023,
+    "mean_lum": 71.3,
+    "p05_lum": 8.2,
+    "p95_lum": 216.2,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 1.02,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.78,
+      "color": "#f2e7db"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 3.35,
+      "color": "#fff0dc"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 7.3,
+      "color": "#e4ecff"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 81,
+    "triangles": 652788,
+    "textures": 134,
+    "geometries": 114,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     0.727,
+     1.821,
+     0.579
+    ],
+    "target": [
+     1.284,
+     1.371,
+     -0.814
+    ],
+    "tried": 1
+   },
+   "body": {
+    "sampled": 130331,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.161,
+    "by": {},
+    "foot_min_y": {
+     "Left": 0.176,
+     "Right": 0.161
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 8.9
+  },
+  "desk_14_1280": {
+   "scene": "desk",
+   "hour": 14,
+   "size": "1280",
+   "pose": {
+    "at": "desk",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "desk",
+     "clip": "sit"
+    },
+    "clip": "desk_mouse_ik",
+    "root": [
+     -1.118,
+     0.16,
+     -0.579
+    ],
+    "ry": -3.14
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0016,
+    "blown_frac": 0.0437,
+    "mean_lum": 157.9,
+    "p05_lum": 28.0,
+    "p95_lum": 248.9,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 1.02,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.78,
+      "color": "#f2e7db"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 3.35,
+      "color": "#fff0dc"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 7.3,
+      "color": "#e4ecff"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "him",
+    "goal": [
+     -0.32,
+     1.78,
+     0.65
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 56,
+    "triangles": 579340,
+    "textures": 134,
+    "geometries": 114,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     0.39,
+     1.608,
+     -0.692
+    ],
+    "target": [
+     -1.11,
+     1.158,
+     -0.736
+    ],
+    "tried": 5
+   },
+   "body": {
+    "sampled": 130331,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.217,
+    "by": {
+     "chair:L_CalfTwist01": 6
+    },
+    "foot_min_y": {
+     "Left": 0.252,
+     "Right": 0.217
+    },
+    "bed": 0,
+    "chair": 6,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 11.1
+  },
+  "eating_19_1280": {
+   "scene": "eating",
+   "hour": 19,
+   "size": "1280",
+   "pose": {
+    "at": "desk",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "desk",
+     "clip": "dine"
+    },
+    "clip": "room_eat",
+    "root": [
+     -1.178,
+     0.16,
+     -0.578
+    ],
+    "ry": -3.14
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0126,
+    "blown_frac": 0.0023,
+    "mean_lum": 55.9,
+    "p05_lum": 8.2,
+    "p95_lum": 189.3,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 0.88,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.36,
+      "color": "#e3c9a8"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 0.15,
+      "color": "#7d93d8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 4.2,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 2.8,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 1.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 0.3,
+      "color": "#7d93d8"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 84,
+    "triangles": 652892,
+    "textures": 134,
+    "geometries": 117,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     0.255,
+     1.615,
+     -0.607
+    ],
+    "target": [
+     -1.245,
+     1.165,
+     -0.651
+    ],
+    "tried": 5
+   },
+   "body": {
+    "sampled": 130331,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.215,
+    "by": {},
+    "foot_min_y": {
+     "Left": 0.246,
+     "Right": 0.215
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 9.8
+  },
+  "window_19_1280": {
+   "scene": "window",
+   "hour": 19,
+   "size": "1280",
+   "pose": {
+    "at": "sill",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "sill",
+     "clip": "lean"
+    },
+    "clip": "mh_stand",
+    "root": [
+     -1.56,
+     0.16,
+     -0.02
+    ],
+    "ry": -1.57
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0136,
+    "blown_frac": 0.0023,
+    "mean_lum": 50.2,
+    "p05_lum": 8.2,
+    "p95_lum": 174.4,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 0.84,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.3,
+      "color": "#e3c9a8"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 0.15,
+      "color": "#7d93d8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 4.2,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 1.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 0.3,
+      "color": "#7d93d8"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 81,
+    "triangles": 652788,
+    "textures": 134,
+    "geometries": 117,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     -0.278,
+     1.819,
+     -0.794
+    ],
+    "target": [
+     -1.564,
+     1.369,
+     -0.021
+    ],
+    "tried": 9
+   },
+   "body": {
+    "sampled": 130331,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.165,
+    "by": {},
+    "foot_min_y": {
+     "Left": 0.178,
+     "Right": 0.165
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 9.7
+  },
+  "sleeping_23_1280": {
+   "scene": "sleeping",
+   "hour": 23,
+   "size": "1280",
+   "pose": {
+    "at": "bedlie",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "bedlie",
+     "clip": "sleep"
+    },
+    "clip": "mh_sleep",
+    "root": [
+     -0.178,
+     0.329,
+     -0.035
+    ],
+    "ry": -0.59
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0879,
+    "blown_frac": 0.0,
+    "mean_lum": 15.3,
+    "p05_lum": 1.1,
+    "p95_lum": 41.8,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 0.74,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.08,
+      "color": "#818ebc"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 0.15,
+      "color": "#7d93d8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 0.3,
+      "color": "#7d93d8"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": false,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 1,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 81,
+    "triangles": 644232,
+    "textures": 134,
+    "geometries": 119,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     -0.447,
+     2.142,
+     2.126
+    ],
+    "target": [
+     -1.297,
+     1.042,
+     0.89
+    ],
+    "tried": 1
+   },
+   "body": {
+    "sampled": 125019,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.805,
+    "by": {},
+    "foot_min_y": {
+     "Left": 0.976,
+     "Right": 0.963
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 13.5
+  },
+  "phone_23_1280": {
+   "scene": "phone",
+   "hour": 23,
+   "size": "1280",
+   "pose": {
+    "at": "bedlie",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "bedlie",
+     "clip": "phone_lie"
+    },
+    "clip": "mh_lie",
+    "root": [
+     -0.18,
+     0.375,
+     -0.037
+    ],
+    "ry": -0.59
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    1280,
+    800
+   ],
+   "exposure": {
+    "black_frac": 0.0176,
+    "blown_frac": 0.0,
+    "mean_lum": 47.1,
+    "p05_lum": 8.2,
+    "p95_lum": 163.4,
+    "pixels": 1024000
+   },
+   "lights": {
+    "exposure": 0.84,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.3,
+      "color": "#e3c9a8"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 0.15,
+      "color": "#7d93d8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 4.2,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 0.3,
+      "color": "#7d93d8"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": false,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     1280,
+     800
+    ],
+    "calls": 81,
+    "triangles": 652788,
+    "textures": 134,
+    "geometries": 119,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "character_cam": {
+    "pos": [
+     -0.456,
+     2.122,
+     2.126
+    ],
+    "target": [
+     -1.306,
+     1.022,
+     0.89
+    ],
+    "tried": 1
+   },
+   "body": {
+    "sampled": 125019,
+    "below_floor": 0,
+    "desk": 0,
+    "min_y": 0.805,
+    "by": {},
+    "foot_min_y": {
+     "Left": 1.013,
+     "Right": 0.976
+    },
+    "bed": 0,
+    "chair": 0,
+    "floor_y": 0.16,
+    "desk_columns_ms": 3953
+   },
+   "seconds": 13.1
+  },
+  "desk_14_390": {
+   "scene": "desk",
+   "hour": 14,
+   "size": "390",
+   "pose": {
+    "at": "desk",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "desk",
+     "clip": "sit"
+    },
+    "clip": "desk_mouse_ik",
+    "root": [
+     -1.118,
+     0.16,
+     -0.579
+    ],
+    "ry": -3.14
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    390,
+    523
+   ],
+   "exposure": {
+    "black_frac": 0.002,
+    "blown_frac": 0.0918,
+    "mean_lum": 143.2,
+    "p05_lum": 22.2,
+    "p95_lum": 255.0,
+    "pixels": 203970
+   },
+   "lights": {
+    "exposure": 1.02,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.78,
+      "color": "#f2e7db"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 3.35,
+      "color": "#fff0dc"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0.2,
+      "color": "#eaedf1"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 7.3,
+      "color": "#e4ecff"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": true,
+    "camera": "him",
+    "goal": [
+     -0.32,
+     1.78,
+     0.65
+    ],
+    "phone": false,
+    "duvet_w": 0,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     390,
+     523
+    ],
+    "calls": 51,
+    "triangles": 570485,
+    "textures": 134,
+    "geometries": 114,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "seconds": 7.7
+  },
+  "sleeping_23_390": {
+   "scene": "sleeping",
+   "hour": 23,
+   "size": "390",
+   "pose": {
+    "at": "bedlie",
+    "step": null,
+    "plan": [],
+    "goal": {
+     "anchor": "bedlie",
+     "clip": "sleep"
+    },
+    "clip": "mh_sleep",
+    "root": [
+     -0.178,
+     0.329,
+     -0.035
+    ],
+    "ry": -0.59
+   },
+   "ok_pose": true,
+   "canvas": [
+    0,
+    0,
+    390,
+    523
+   ],
+   "exposure": {
+    "black_frac": 0.1225,
+    "blown_frac": 0.0,
+    "mean_lum": 25.7,
+    "p05_lum": 0.1,
+    "p95_lum": 105.5,
+    "pixels": 203970
+   },
+   "lights": {
+    "exposure": 0.74,
+    "lights": [
+     {
+      "type": "HemisphereLight",
+      "intensity": 0.08,
+      "color": "#818ebc"
+     },
+     {
+      "type": "DirectionalLight",
+      "intensity": 0.15,
+      "color": "#7d93d8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffd9a8"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#ffb468"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "PointLight",
+      "intensity": 0,
+      "color": "#bcd4ff"
+     },
+     {
+      "type": "RectAreaLight",
+      "intensity": 0.3,
+      "color": "#7d93d8"
+     }
+    ]
+   },
+   "screen": {
+    "monitor_on": false,
+    "camera": "overview",
+    "goal": [
+     5.2,
+     5,
+     6
+    ],
+    "phone": false,
+    "duvet_w": 1,
+    "roll": 0
+   },
+   "render": {
+    "dpr": 1,
+    "size": [
+     390,
+     523
+    ],
+    "calls": 77,
+    "triangles": 640032,
+    "textures": 134,
+    "geometries": 116,
+    "webgl2": true,
+    "maxAniso": 16
+   },
+   "seconds": 4.7
+  }
+ },
+ "closeups": {
+  "face": {
+   "scene": "walking",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     1.135,
+     1.786,
+     -1.351
+    ],
+    "target": [
+     1.25,
+     1.736,
+     -0.865
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.028,
+    "blown_frac": 0.0,
+    "mean_lum": 16.9,
+    "p05_lum": 8.2,
+    "p95_lum": 35.1,
+    "pixels": 1024000
+   },
+   "seconds": 3.8
+  },
+  "hands": {
+   "scene": "desk",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     -1.494,
+     1.44,
+     -1.133
+    ],
+    "target": [
+     -0.944,
+     1.08,
+     -0.913
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0027,
+    "blown_frac": 0.0,
+    "mean_lum": 68.3,
+    "p05_lum": 8.2,
+    "p95_lum": 191.1,
+    "pixels": 1024000
+   },
+   "seconds": 6.0
+  },
+  "grip": {
+   "scene": "phone",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     -0.703,
+     1.275,
+     1.627
+    ],
+    "target": [
+     -1.053,
+     1.025,
+     1.177
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0037,
+    "blown_frac": 0.0,
+    "mean_lum": 80.7,
+    "p05_lum": 12.3,
+    "p95_lum": 180.7,
+    "pixels": 1024000
+   },
+   "seconds": 9.3
+  },
+  "feet": {
+   "scene": "door",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     1.649,
+     0.42,
+     -1.151
+    ],
+    "target": [
+     1.204,
+     0.2,
+     -0.827
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0025,
+    "blown_frac": 0.0,
+    "mean_lum": 140.8,
+    "p05_lum": 11.1,
+    "p95_lum": 216.3,
+    "pixels": 1024000
+   },
+   "seconds": 4.0
+  },
+  "socks": {
+   "scene": "window",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     -1.08,
+     1.92,
+     0.62
+    ],
+    "target": [
+     -1.745,
+     1.8,
+     0.45
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0002,
+    "blown_frac": 0.0001,
+    "mean_lum": 137.0,
+    "p05_lum": 49.4,
+    "p95_lum": 216.1,
+    "pixels": 1024000
+   },
+   "seconds": 3.9
+  },
+  "desk": {
+   "scene": "desk",
+   "hour": 19,
+   "camera": {
+    "pos": [
+     -0.45,
+     1.55,
+     0.25
+    ],
+    "target": [
+     -0.96,
+     1.02,
+     -0.838
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0114,
+    "blown_frac": 0.0399,
+    "mean_lum": 99.3,
+    "p05_lum": 15.6,
+    "p95_lum": 235.9,
+    "pixels": 1024000
+   },
+   "seconds": 6.4
+  },
+  "bed": {
+   "scene": "sleeping",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     0.25,
+     1.95,
+     1.35
+    ],
+    "target": [
+     -1.05,
+     0.86,
+     0.87
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0055,
+    "blown_frac": 0.0,
+    "mean_lum": 90.8,
+    "p05_lum": 37.9,
+    "p95_lum": 180.3,
+    "pixels": 1024000
+   },
+   "seconds": 7.4
+  },
+  "duvet": {
+   "scene": "window",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     -0.65,
+     1.45,
+     1.25
+    ],
+    "target": [
+     -1.45,
+     0.86,
+     0.75
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0071,
+    "blown_frac": 0.0,
+    "mean_lum": 147.7,
+    "p05_lum": 12.1,
+    "p95_lum": 236.9,
+    "pixels": 1024000
+   },
+   "seconds": 6.6
+  },
+  "night": {
+   "scene": "sleeping",
+   "hour": 23,
+   "camera": {
+    "pos": [
+     0.25,
+     1.95,
+     1.35
+    ],
+    "target": [
+     -1.05,
+     0.86,
+     0.87
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0454,
+    "blown_frac": 0.0,
+    "mean_lum": 34.6,
+    "p05_lum": 4.2,
+    "p95_lum": 73.3,
+    "pixels": 1024000
+   },
+   "seconds": 7.6
+  },
+  "side": {
+   "scene": "sleeping_side",
+   "hour": 14,
+   "camera": {
+    "pos": [
+     0.25,
+     1.95,
+     1.35
+    ],
+    "target": [
+     -1.05,
+     0.86,
+     0.87
+    ]
+   },
+   "exposure": {
+    "black_frac": 0.0055,
+    "blown_frac": 0.0,
+    "mean_lum": 90.8,
+    "p05_lum": 37.9,
+    "p95_lum": 180.3,
+    "pixels": 1024000
+   },
+   "seconds": 7.8
+  }
+ },
+ "flicker": {
+  "desk_14": {
+   "frames": 5,
+   "flicker_frac": 0.00031,
+   "flagged_pixels": 320,
+   "regions": [
+    {
+     "box": [
+      800,
+      736,
+      832,
+      768
+     ],
+     "pixels": 110
+    },
+    {
+     "box": [
+      768,
+      704,
+      800,
+      736
+     ],
+     "pixels": 55
+    },
+    {
+     "box": [
+      736,
+      736,
+      768,
+      768
+     ],
+     "pixels": 43
+    },
+    {
+     "box": [
+      800,
+      704,
+      832,
+      736
+     ],
+     "pixels": 34
+    },
+    {
+     "box": [
+      736,
+      672,
+      768,
+      704
+     ],
+     "pixels": 24
+    }
+   ],
+   "mask_image": "flicker_desk_14_mask.png"
+  }
+ },
+ "props": {
+  "desk_14_1280": [
+   {
+    "name": "hangers",
+    "at": [
+     1.42,
+     1.43,
+     -1.33
+    ],
+    "bottom_y": 1.09,
+    "size": [
+     0.65,
+     0.69,
+     0.15
+    ],
+    "gap_mm": 59,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "headphones",
+    "at": [
+     -0.24,
+     1.37,
+     -1.4
+    ],
+    "bottom_y": 1.286,
+    "size": [
+     0.2,
+     0.17,
+     0.08
+    ],
+    "gap_mm": 979,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "decals",
+    "at": [
+     -0.03,
+     1.23,
+     0.06
+    ],
+    "bottom_y": 0.161,
+    "size": [
+     4.03,
+     2.13,
+     3.01
+    ],
+    "gap_mm": 1,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "desk_lamp_arm_01",
+    "at": [
+     -1.66,
+     1.33,
+     -1.32
+    ],
+    "bottom_y": 0.97,
+    "size": [
+     0.51,
+     0.71,
+     0.37
+    ],
+    "gap_mm": 0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "potted_plant_02_leaves",
+    "at": [
+     -1.58,
+     0.61,
+     -0.4
+    ],
+    "bottom_y": 0.337,
+    "size": [
+     0.55,
+     0.54,
+     0.6
+    ],
+    "gap_mm": -41,
+    "hanging": false,
+    "verdict": "sunk"
+   },
+   {
+    "name": "potted_plant_02_pot",
+    "at": [
+     -1.66,
+     0.3,
+     -0.36
+    ],
+    "bottom_y": 0.16,
+    "size": [
+     0.4,
+     0.29,
+     0.4
+    ],
+    "gap_mm": -0.0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "wall_clock",
+    "at": [
+     0.68,
+     1.7,
+     -1.43
+    ],
+    "bottom_y": 1.564,
+    "size": [
+     0.27,
+     0.27,
+     0.04
+    ],
+    "gap_mm": 294,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "alarm_clock_01",
+    "at": [
+     -1.87,
+     1.34,
+     0.62
+    ],
+    "bottom_y": 1.27,
+    "size": [
+     0.08,
+     0.14,
+     0.12
+    ],
+    "gap_mm": -0.0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "cardboard_box_01",
+    "at": [
+     0.1,
+     2.23,
+     -1.28
+    ],
+    "bottom_y": 2.12,
+    "size": [
+     0.27,
+     0.21,
+     0.34
+    ],
+    "gap_mm": -13,
+    "hanging": false,
+    "verdict": "sunk"
+   }
+  ],
+  "sleeping_23_1280": [
+   {
+    "name": "chair",
+    "at": [
+     -1.13,
+     0.77,
+     -0.7
+    ],
+    "bottom_y": 0.16,
+    "size": [
+     0.75,
+     1.21,
+     0.7
+    ],
+    "gap_mm": -0.0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "hangers",
+    "at": [
+     1.42,
+     1.43,
+     -1.33
+    ],
+    "bottom_y": 1.09,
+    "size": [
+     0.65,
+     0.69,
+     0.15
+    ],
+    "gap_mm": 59,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "headphones",
+    "at": [
+     -0.24,
+     1.37,
+     -1.4
+    ],
+    "bottom_y": 1.286,
+    "size": [
+     0.2,
+     0.17,
+     0.08
+    ],
+    "gap_mm": 979,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "desk_lamp_arm_01",
+    "at": [
+     -1.66,
+     1.33,
+     -1.32
+    ],
+    "bottom_y": 0.97,
+    "size": [
+     0.51,
+     0.71,
+     0.37
+    ],
+    "gap_mm": 0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "potted_plant_04_dirt",
+    "at": [
+     -0.48,
+     1.09,
+     -1.13
+    ],
+    "bottom_y": 0.97,
+    "size": [
+     0.19,
+     0.24,
+     0.2
+    ],
+    "gap_mm": 0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "wall_clock",
+    "at": [
+     0.68,
+     1.7,
+     -1.43
+    ],
+    "bottom_y": 1.564,
+    "size": [
+     0.27,
+     0.27,
+     0.04
+    ],
+    "gap_mm": 294,
+    "hanging": true,
+    "verdict": "hangs"
+   },
+   {
+    "name": "alarm_clock_01",
+    "at": [
+     -1.87,
+     1.34,
+     0.62
+    ],
+    "bottom_y": 1.27,
+    "size": [
+     0.08,
+     0.14,
+     0.12
+    ],
+    "gap_mm": -0.0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "cardboard_box_01",
+    "at": [
+     0.1,
+     2.23,
+     -1.28
+    ],
+    "bottom_y": 2.12,
+    "size": [
+     0.27,
+     0.21,
+     0.34
+    ],
+    "gap_mm": -13,
+    "hanging": false,
+    "verdict": "sunk"
+   },
+   {
+    "name": "office_notepads_sticky_stack",
+    "at": [
+     -1.42,
+     1.18,
+     -1.3
+    ],
+    "bottom_y": 1.17,
+    "size": [
+     0.09,
+     0.02,
+     0.09
+    ],
+    "gap_mm": 0,
+    "hanging": false,
+    "verdict": "ok"
+   },
+   {
+    "name": "scene#28(#a9d6b0)",
+    "at": [
+     -0.83,
+     1.08,
+     -0.85
+    ],
+    "bottom_y": 0.97,
+    "size": [
+     0.06,
+     0.22,
+     0.06
+    ],
+    "gap_mm": 0,
+    "hanging": false,
+    "verdict": "ok"
+   }
+  ]
+ },
+ "hard_failures": [
+  "desk_14_1280: chair penetration 6 sampled vertices (budget 0)"
+ ],
+ "note": "headless Chromium with SwiftShader: FPS is a CPU rasteriser's, not a phone GPU's; DPR 1",
+ "pip": {
+  "url": "/brain?mini (served as web/index.html)",
+  "embed_src": "/brain?mini",
+  "size": [
+   300,
+   225
+  ],
+  "render": {
+   "calls": 2,
+   "points": 0,
+   "lines": 230000,
+   "triangles": 124522,
+   "neurons_wanted": false,
+   "forest": false,
+   "n3_class": false,
+   "text": ""
+  },
+  "exposure": {
+   "black_frac": 0.6559,
+   "blown_frac": 0.0001,
+   "mean_lum": 49.4,
+   "p05_lum": 3.1,
+   "p95_lum": 234.2,
+   "pixels": 67500
+  },
+  "specks": 141,
+  "largest": [
+   {
+    "x": 229,
+    "y": 89,
+    "area": 10
+   },
+   {
+    "x": 39,
+    "y": 70,
+    "area": 7
+   },
+   {
+    "x": 94,
+    "y": 21,
+    "area": 6
+   },
+   {
+    "x": 200,
+    "y": 150,
+    "area": 6
+   },
+   {
+    "x": 73,
+    "y": 36,
+    "area": 5
+   },
+   {
+    "x": 227,
+    "y": 94,
+    "area": 5
+   },
+   {
+    "x": 227,
+    "y": 102,
+    "area": 5
+   },
+   {
+    "x": 86,
+    "y": 112,
+    "area": 5
+   },
+   {
+    "x": 122,
+    "y": 133,
+    "area": 5
+   },
+   {
+    "x": 185,
+    "y": 149,
+    "area": 5
+   },
+   {
+    "x": 166,
+    "y": 15,
+    "area": 4
+   },
+   {
+    "x": 163,
+    "y": 21,
+    "area": 4
+   },
+   {
+    "x": 98,
+    "y": 26,
+    "area": 4
+   },
+   {
+    "x": 87,
+    "y": 42,
+    "area": 4
+   },
+   {
+    "x": 44,
+    "y": 107,
+    "area": 4
+   },
+   {
+    "x": 63,
+    "y": 111,
+    "area": 4
+   },
+   {
+    "x": 83,
+    "y": 115,
+    "area": 4
+   },
+   {
+    "x": 117,
+    "y": 134,
+    "area": 4
+   },
+   {
+    "x": 191,
+    "y": 155,
+    "area": 4
+   },
+   {
+    "x": 149,
+    "y": 15,
+    "area": 3
+   }
+  ],
+  "bright_frac": 0.2017,
+  "errors": [],
+  "failed": [],
+  "started": true,
+  "seconds": 10.3
+ },
+ "animate_ms_per_frame_1280": 5.706,
+ "textures": [
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "croissant",
+    "rice-ball",
+    "bowl"
+   ],
+   "max_dim_m": 0.19,
+   "material": "colormap",
+   "texels_per_m": 2632
+  },
+  {
+   "kind": "map",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_1"
+   ],
+   "max_dim_m": 4,
+   "material": "floor",
+   "texels_per_m": 512
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_1"
+   ],
+   "max_dim_m": 4,
+   "material": "floor",
+   "texels_per_m": 256
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_1"
+   ],
+   "max_dim_m": 4,
+   "material": "floor",
+   "texels_per_m": 256
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_1"
+   ],
+   "max_dim_m": 4,
+   "material": "floor",
+   "texels_per_m": 512
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_2",
+    "room_static_7",
+    "room_static_11",
+    "room_static_12"
+   ],
+   "max_dim_m": 4,
+   "material": "cut",
+   "texels_per_m": 512
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_3"
+   ],
+   "max_dim_m": 4,
+   "material": "wall",
+   "texels_per_m": 256
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_3"
+   ],
+   "max_dim_m": 4,
+   "material": "wall",
+   "texels_per_m": 256
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_3"
+   ],
+   "max_dim_m": 4,
+   "material": "wall",
+   "texels_per_m": 128
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_3"
+   ],
+   "max_dim_m": 4,
+   "material": "wall",
+   "texels_per_m": 512
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    256,
+    256
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_4"
+   ],
+   "max_dim_m": 3.9,
+   "material": "white",
+   "texels_per_m": 66
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_4"
+   ],
+   "max_dim_m": 3.9,
+   "material": "white",
+   "texels_per_m": 131
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_4"
+   ],
+   "max_dim_m": 3.9,
+   "material": "white",
+   "texels_per_m": 525
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_5",
+    "hangers_1"
+   ],
+   "max_dim_m": 2.95,
+   "material": "oak",
+   "texels_per_m": 347
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_5",
+    "room_static_22",
+    "hangers_1",
+    "?"
+   ],
+   "max_dim_m": 2.95,
+   "material": "oak",
+   "texels_per_m": 347
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_5",
+    "room_static_22",
+    "hangers_1",
+    "?"
+   ],
+   "max_dim_m": 2.95,
+   "material": "oak",
+   "texels_per_m": 174
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_5"
+   ],
+   "max_dim_m": 2.95,
+   "material": "oak",
+   "texels_per_m": 694
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_6",
+    "room_static_8",
+    "room_static_15",
+    "hangers_2"
+   ],
+   "max_dim_m": 4.13,
+   "material": "alu",
+   "texels_per_m": 124
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_6",
+    "room_static_8",
+    "room_static_15",
+    "hangers_2"
+   ],
+   "max_dim_m": 4.13,
+   "material": "alu",
+   "texels_per_m": 124
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_6"
+   ],
+   "max_dim_m": 2.86,
+   "material": "alu",
+   "texels_per_m": 716
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_8"
+   ],
+   "max_dim_m": 4.13,
+   "material": "metal_dark",
+   "texels_per_m": 496
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_9"
+   ],
+   "max_dim_m": 2.18,
+   "material": "curtain",
+   "texels_per_m": 234
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_9",
+    "hangers_3"
+   ],
+   "max_dim_m": 2.18,
+   "material": "curtain",
+   "texels_per_m": 234
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_9"
+   ],
+   "max_dim_m": 2.18,
+   "material": "curtain",
+   "texels_per_m": 938
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    256,
+    256
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_10",
+    "headphones_1",
+    "keyboard_plastic_black"
+   ],
+   "max_dim_m": 3.62,
+   "material": "plastic_black",
+   "texels_per_m": 71
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_10",
+    "headphones_1",
+    "keyboard_plastic_black"
+   ],
+   "max_dim_m": 3.62,
+   "material": "plastic_black",
+   "texels_per_m": 141
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_10",
+    "keyboard_plastic_black"
+   ],
+   "max_dim_m": 3.62,
+   "material": "plastic_black",
+   "texels_per_m": 566
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_13",
+    "headphones_2"
+   ],
+   "max_dim_m": 0.8,
+   "material": "fabric_black",
+   "texels_per_m": 640
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_13"
+   ],
+   "max_dim_m": 0.8,
+   "material": "fabric_black",
+   "texels_per_m": 2560
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_14",
+    "keyboard_keycap"
+   ],
+   "max_dim_m": 0.36,
+   "material": "keycap",
+   "texels_per_m": 1438
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_14",
+    "keyboard_keycap"
+   ],
+   "max_dim_m": 0.36,
+   "material": "keycap",
+   "texels_per_m": 5751
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_15"
+   ],
+   "max_dim_m": 3.32,
+   "material": "steel",
+   "texels_per_m": 617
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_17"
+   ],
+   "max_dim_m": 2.16,
+   "material": "book",
+   "texels_per_m": 475
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_17"
+   ],
+   "max_dim_m": 2.16,
+   "material": "book",
+   "texels_per_m": 950
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_18"
+   ],
+   "max_dim_m": 1.65,
+   "material": "sheet",
+   "texels_per_m": 310
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_18",
+    "room_static_19"
+   ],
+   "max_dim_m": 3.48,
+   "material": "sheet",
+   "texels_per_m": 147
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_18"
+   ],
+   "max_dim_m": 1.65,
+   "material": "sheet",
+   "texels_per_m": 1241
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_19"
+   ],
+   "max_dim_m": 3.48,
+   "material": "jersey",
+   "texels_per_m": 588
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_20"
+   ],
+   "max_dim_m": 1.43,
+   "material": "duvet",
+   "texels_per_m": 358
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_20"
+   ],
+   "max_dim_m": 1.43,
+   "material": "duvet",
+   "texels_per_m": 358
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_20"
+   ],
+   "max_dim_m": 1.43,
+   "material": "duvet",
+   "texels_per_m": 1432
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_21"
+   ],
+   "max_dim_m": 2.52,
+   "material": "posters",
+   "texels_per_m": 203
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_21"
+   ],
+   "max_dim_m": 2.52,
+   "material": "posters",
+   "texels_per_m": 813
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_22",
+    "?"
+   ],
+   "max_dim_m": 1.93,
+   "material": "door",
+   "texels_per_m": 530
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_22",
+    "?"
+   ],
+   "max_dim_m": 1.93,
+   "material": "door",
+   "texels_per_m": 1060
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_23"
+   ],
+   "max_dim_m": 1.42,
+   "material": "rug",
+   "texels_per_m": 361
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_23"
+   ],
+   "max_dim_m": 1.42,
+   "material": "rug",
+   "texels_per_m": 361
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_23"
+   ],
+   "max_dim_m": 1.42,
+   "material": "rug",
+   "texels_per_m": 1442
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_24"
+   ],
+   "max_dim_m": 0.36,
+   "material": "pinboard",
+   "texels_per_m": 1422
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_24"
+   ],
+   "max_dim_m": 0.36,
+   "material": "pinboard",
+   "texels_per_m": 5689
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_25"
+   ],
+   "max_dim_m": 0.46,
+   "material": "bag",
+   "texels_per_m": 1112
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_25"
+   ],
+   "max_dim_m": 0.46,
+   "material": "bag",
+   "texels_per_m": 4448
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_27"
+   ],
+   "max_dim_m": 0.42,
+   "material": "knit",
+   "texels_per_m": 1229
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_27"
+   ],
+   "max_dim_m": 0.42,
+   "material": "knit",
+   "texels_per_m": 4916
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_28"
+   ],
+   "max_dim_m": 0.4,
+   "material": "terry",
+   "texels_per_m": 1292
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "room_static_28"
+   ],
+   "max_dim_m": 0.4,
+   "material": "terry",
+   "texels_per_m": 1292
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "room_static_28"
+   ],
+   "max_dim_m": 0.4,
+   "material": "terry",
+   "texels_per_m": 5166
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_1"
+   ],
+   "max_dim_m": 0.68,
+   "material": "chair_armpad",
+   "texels_per_m": 750
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_1"
+   ],
+   "max_dim_m": 0.68,
+   "material": "chair_armpad",
+   "texels_per_m": 750
+  },
+  {
+   "kind": "metalnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_1"
+   ],
+   "max_dim_m": 0.68,
+   "material": "chair_armpad",
+   "texels_per_m": 750
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_2"
+   ],
+   "max_dim_m": 0.95,
+   "material": "chair_plastic",
+   "texels_per_m": 541
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_2"
+   ],
+   "max_dim_m": 0.95,
+   "material": "chair_plastic",
+   "texels_per_m": 541
+  },
+  {
+   "kind": "metalnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_2"
+   ],
+   "max_dim_m": 0.95,
+   "material": "chair_plastic",
+   "texels_per_m": 541
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_3"
+   ],
+   "max_dim_m": 0.54,
+   "material": "chair_fabric",
+   "texels_per_m": 955
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_3"
+   ],
+   "max_dim_m": 0.54,
+   "material": "chair_fabric",
+   "texels_per_m": 955
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_3"
+   ],
+   "max_dim_m": 0.54,
+   "material": "chair_fabric",
+   "texels_per_m": 955
+  },
+  {
+   "kind": "metalnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_3"
+   ],
+   "max_dim_m": 0.54,
+   "material": "chair_fabric",
+   "texels_per_m": 955
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_4"
+   ],
+   "max_dim_m": 0.45,
+   "material": "chair_mesh",
+   "texels_per_m": 1137
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_4"
+   ],
+   "max_dim_m": 0.45,
+   "material": "chair_mesh",
+   "texels_per_m": 1137
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_4"
+   ],
+   "max_dim_m": 0.45,
+   "material": "chair_mesh",
+   "texels_per_m": 1137
+  },
+  {
+   "kind": "metalnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_4"
+   ],
+   "max_dim_m": 0.45,
+   "material": "chair_mesh",
+   "texels_per_m": 1137
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_5"
+   ],
+   "max_dim_m": 0.75,
+   "material": "chair_caster",
+   "texels_per_m": 684
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_5"
+   ],
+   "max_dim_m": 0.75,
+   "material": "chair_caster",
+   "texels_per_m": 684
+  },
+  {
+   "kind": "metalnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_5"
+   ],
+   "max_dim_m": 0.75,
+   "material": "chair_caster",
+   "texels_per_m": 684
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "chair_owner_6"
+   ],
+   "max_dim_m": 0.67,
+   "material": "chair_base",
+   "texels_per_m": 767
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "hangers_3"
+   ],
+   "max_dim_m": 0.54,
+   "material": "hang_canvas",
+   "texels_per_m": 948
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_6a2cac63-a839-4d0c-8e0f-53c67e641321"
+   ],
+   "max_dim_m": 0.17,
+   "material": "tripo_headphones",
+   "texels_per_m": 6206
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_6a2cac63-a839-4d0c-8e0f-53c67e641321"
+   ],
+   "max_dim_m": 0.17,
+   "material": "tripo_headphones",
+   "texels_per_m": 6206
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_6a2cac63-a839-4d0c-8e0f-53c67e641321"
+   ],
+   "max_dim_m": 0.17,
+   "material": "tripo_headphones",
+   "texels_per_m": 6206
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 8,
+   "objects": [
+    "decals"
+   ],
+   "max_dim_m": 4.03,
+   "material": "decal",
+   "texels_per_m": 254
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Box001",
+    "Box001_1"
+   ],
+   "max_dim_m": 0.71,
+   "material": "desk_lamp_arm_01",
+   "texels_per_m": 717
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Box001",
+    "Box001_1"
+   ],
+   "max_dim_m": 0.71,
+   "material": "desk_lamp_arm_01",
+   "texels_per_m": 717
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Box001",
+    "Box001_1"
+   ],
+   "max_dim_m": 0.71,
+   "material": "desk_lamp_arm_01",
+   "texels_per_m": 717
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "frame001"
+   ],
+   "max_dim_m": 0.24,
+   "material": "wall_clock_glass",
+   "texels_per_m": 2111
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "frame001_1"
+   ],
+   "max_dim_m": 0.27,
+   "material": "wall_clock",
+   "texels_per_m": 1879
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "frame001_1"
+   ],
+   "max_dim_m": 0.27,
+   "material": "wall_clock",
+   "texels_per_m": 1879
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "frame001_1"
+   ],
+   "max_dim_m": 0.27,
+   "material": "wall_clock",
+   "texels_per_m": 1879
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Cylinder030"
+   ],
+   "max_dim_m": 0.09,
+   "material": "alarm_clock_01_Glass",
+   "texels_per_m": 5418
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Cylinder030",
+    "Cylinder030_1"
+   ],
+   "max_dim_m": 0.14,
+   "material": "alarm_clock_01_Glass",
+   "texels_per_m": 3675
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Cylinder030",
+    "Cylinder030_1"
+   ],
+   "max_dim_m": 0.14,
+   "material": "alarm_clock_01_Glass",
+   "texels_per_m": 3675
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "Cylinder030_1"
+   ],
+   "max_dim_m": 0.14,
+   "material": "alarm_clock_01",
+   "texels_per_m": 3675
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "office_notepads_sticky_stack"
+   ],
+   "max_dim_m": 0.09,
+   "material": "office_notepads",
+   "texels_per_m": 5513
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "office_notepads_sticky_stack"
+   ],
+   "max_dim_m": 0.09,
+   "material": "office_notepads",
+   "texels_per_m": 5513
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 8,
+   "objects": [
+    "office_notepads_sticky_stack"
+   ],
+   "max_dim_m": 0.09,
+   "material": "office_notepads",
+   "texels_per_m": 5513
+  },
+  {
+   "kind": "map",
+   "size": [
+    1100,
+    650
+   ],
+   "aniso": 8,
+   "objects": [
+    "?"
+   ],
+   "max_dim_m": 0.64,
+   "material": "",
+   "texels_per_m": 1017
+  },
+  {
+   "kind": "map",
+   "size": [
+    4096,
+    4096
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82",
+    "slides",
+    "slides_parked"
+   ],
+   "max_dim_m": 1.27,
+   "material": "tripo_material_6bf04053-4eb9-4c81-aed9-ebf290057e82",
+   "texels_per_m": 3235
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82",
+    "slides",
+    "slides_parked"
+   ],
+   "max_dim_m": 1.27,
+   "material": "tripo_material_6bf04053-4eb9-4c81-aed9-ebf290057e82",
+   "texels_per_m": 1618
+  },
+  {
+   "kind": "map",
+   "size": [
+    4096,
+    4096
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1"
+   ],
+   "max_dim_m": 0.34,
+   "material": "owner_head",
+   "texels_per_m": 11952
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1"
+   ],
+   "max_dim_m": 0.34,
+   "material": "owner_head",
+   "texels_per_m": 5976
+  },
+  {
+   "kind": "map",
+   "size": [
+    571,
+    1280
+   ],
+   "aniso": 8,
+   "objects": [
+    "?"
+   ],
+   "max_dim_m": 0.14,
+   "material": "",
+   "texels_per_m": 3961
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_a83d386d-d198-4a71-bd43-a41b0897a874"
+   ],
+   "max_dim_m": 0.22,
+   "material": "tripo_material_a83d386d-d198-4a71-bd43-a41b0897a874",
+   "texels_per_m": 2379
+  },
+  {
+   "kind": "map",
+   "size": [
+    256,
+    180
+   ],
+   "aniso": 1,
+   "objects": [
+    "?"
+   ],
+   "max_dim_m": 0.17,
+   "material": "",
+   "texels_per_m": 1059
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_277633c0-2bfe-4b38-ae60-0bcaa9445a0f"
+   ],
+   "max_dim_m": 0.11,
+   "material": "tripo_mug",
+   "texels_per_m": 9193
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_277633c0-2bfe-4b38-ae60-0bcaa9445a0f"
+   ],
+   "max_dim_m": 0.11,
+   "material": "tripo_mug",
+   "texels_per_m": 9193
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_277633c0-2bfe-4b38-ae60-0bcaa9445a0f"
+   ],
+   "max_dim_m": 0.11,
+   "material": "tripo_mug",
+   "texels_per_m": 9193
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_62e8af56-3302-4a6a-9fe4-d4af8bd5d821"
+   ],
+   "max_dim_m": 0.36,
+   "material": "tripo_sneakers",
+   "texels_per_m": 2836
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_62e8af56-3302-4a6a-9fe4-d4af8bd5d821"
+   ],
+   "max_dim_m": 0.36,
+   "material": "tripo_sneakers",
+   "texels_per_m": 2836
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_62e8af56-3302-4a6a-9fe4-d4af8bd5d821"
+   ],
+   "max_dim_m": 0.36,
+   "material": "tripo_sneakers",
+   "texels_per_m": 2836
+  },
+  {
+   "kind": "map",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "T2_lamp",
+    "mesh_1"
+   ],
+   "max_dim_m": 3.91,
+   "material": "tripo_props2",
+   "texels_per_m": 524
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "T2_lamp",
+    "mesh_1"
+   ],
+   "max_dim_m": 3.91,
+   "material": "tripo_props2",
+   "texels_per_m": 262
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "T2_lamp",
+    "mesh_1"
+   ],
+   "max_dim_m": 3.91,
+   "material": "tripo_props2",
+   "texels_per_m": 262
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "mouse"
+   ],
+   "max_dim_m": 0.15,
+   "material": "mouse",
+   "texels_per_m": 3341
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "mouse"
+   ],
+   "max_dim_m": 0.15,
+   "material": "mouse",
+   "texels_per_m": 3341
+  },
+  {
+   "kind": "map",
+   "size": [
+    128,
+    128
+   ],
+   "aniso": 1,
+   "objects": [
+    "mouse_contact"
+   ],
+   "max_dim_m": 0.15,
+   "material": "mouse_contact",
+   "texels_per_m": 835
+  },
+  {
+   "kind": "map",
+   "size": [
+    128,
+    128
+   ],
+   "aniso": 1,
+   "objects": [
+    "controller_contact"
+   ],
+   "max_dim_m": 0.2,
+   "material": "controller_contact",
+   "texels_per_m": 627
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "controller_1"
+   ],
+   "max_dim_m": 0.18,
+   "material": "controller",
+   "texels_per_m": 2844
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "monitor_1"
+   ],
+   "max_dim_m": 0.8,
+   "material": "monitor",
+   "texels_per_m": 640
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "notebook"
+   ],
+   "max_dim_m": 0.22,
+   "material": "binder_notebook",
+   "texels_per_m": 2370
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "notebook"
+   ],
+   "max_dim_m": 0.22,
+   "material": "binder_notebook",
+   "texels_per_m": 2370
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "notebook"
+   ],
+   "max_dim_m": 0.22,
+   "material": "binder_notebook",
+   "texels_per_m": 2370
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "pen_pencil"
+   ],
+   "max_dim_m": 0.15,
+   "material": "stationery_supplies",
+   "texels_per_m": 3465
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "pen_pencil"
+   ],
+   "max_dim_m": 0.15,
+   "material": "stationery_supplies",
+   "texels_per_m": 3465
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "pen_pencil"
+   ],
+   "max_dim_m": 0.15,
+   "material": "stationery_supplies",
+   "texels_per_m": 3465
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "key_bowl"
+   ],
+   "max_dim_m": 0.13,
+   "material": "wooden_bowl_02",
+   "texels_per_m": 3991
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "key_bowl"
+   ],
+   "max_dim_m": 0.13,
+   "material": "wooden_bowl_02",
+   "texels_per_m": 3991
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "key_bowl"
+   ],
+   "max_dim_m": 0.13,
+   "material": "wooden_bowl_02",
+   "texels_per_m": 3991
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    256,
+    256
+   ],
+   "aniso": 1,
+   "objects": [
+    "keys_2"
+   ],
+   "max_dim_m": 0.13,
+   "material": "leather",
+   "texels_per_m": 2039
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "keys_2"
+   ],
+   "max_dim_m": 0.13,
+   "material": "leather",
+   "texels_per_m": 4078
+  },
+  {
+   "kind": "map",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "hamper"
+   ],
+   "max_dim_m": 0.45,
+   "material": "wicker_basket_02",
+   "texels_per_m": 1135
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "hamper"
+   ],
+   "max_dim_m": 0.45,
+   "material": "wicker_basket_02",
+   "texels_per_m": 1135
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "hamper"
+   ],
+   "max_dim_m": 0.45,
+   "material": "wicker_basket_02",
+   "texels_per_m": 1135
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "sneakers_door_1"
+   ],
+   "max_dim_m": 0.3,
+   "material": "painted",
+   "texels_per_m": 6759
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    512,
+    512
+   ],
+   "aniso": 1,
+   "objects": [
+    "sneakers_door_2"
+   ],
+   "max_dim_m": 0.3,
+   "material": "jersey",
+   "texels_per_m": 1690
+  },
+  {
+   "kind": "aoMap",
+   "size": [
+    2048,
+    2048
+   ],
+   "aniso": 1,
+   "objects": [
+    "sneakers_door_2"
+   ],
+   "max_dim_m": 0.3,
+   "material": "jersey",
+   "texels_per_m": 6759
+  },
+  {
+   "kind": "map",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_4a044baf-40b1-4c6f-a5f6-e290acc4c5b2"
+   ],
+   "max_dim_m": 0.2,
+   "material": "tripo_ramen",
+   "texels_per_m": 5034
+  },
+  {
+   "kind": "normalMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_4a044baf-40b1-4c6f-a5f6-e290acc4c5b2"
+   ],
+   "max_dim_m": 0.2,
+   "material": "tripo_ramen",
+   "texels_per_m": 5034
+  },
+  {
+   "kind": "roughnessMap",
+   "size": [
+    1024,
+    1024
+   ],
+   "aniso": 1,
+   "objects": [
+    "tripo_node_4a044baf-40b1-4c6f-a5f6-e290acc4c5b2"
+   ],
+   "max_dim_m": 0.2,
+   "material": "tripo_ramen",
+   "texels_per_m": 5034
+  }
+ ],
+ "fps_390_cpu_x4_software_gl": {
+  "renders": 5,
+  "fps": 1.25
+ },
+ "animate_ms_per_frame_390_cpu_x4": 19.93,
+ "page_1280": {
+  "errors": [],
+  "failed": [],
+  "glb_loaded": 36,
+  "ready": {
+   "boy": true,
+   "room": true,
+   "hand": true,
+   "boot": true,
+   "clips": [
+    "sit",
+    "edge",
+    "sleep",
+    "eat",
+    "idle",
+    "door",
+    "stand",
+    "walk",
+    "phone_sit",
+    "phone_stand",
+    "phone_lie",
+    "dine",
+    "type",
+    "lean",
+    "deliver",
+    "listen",
+    "lie_phone"
+   ],
+   "mixer": true
+  },
+  "console": [
+   "warning: THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "warning: THREE.PropertyBinding: No target node found for track: headfront.quaternion.",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry"
+  ]
+ },
+ "page_390": {
+  "errors": [],
+  "failed": [],
+  "glb_loaded": 36,
+  "ready": {
+   "boy": true,
+   "room": true,
+   "hand": true,
+   "boot": true,
+   "clips": [
+    "sit",
+    "edge",
+    "sleep",
+    "eat",
+    "phone_sit",
+    "phone_lie",
+    "idle",
+    "phone_stand",
+    "door",
+    "stand",
+    "walk",
+    "dine",
+    "type",
+    "lean",
+    "deliver",
+    "listen",
+    "lie_phone"
+   ],
+   "mixer": true
+  },
+  "console": [
+   "warning: THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "warning: THREE.PropertyBinding: No target node found for track: headfront.position.",
+   "warning: THREE.PropertyBinding: No target node found for track: headfront.quaternion.",
+   "warning: THREE.PropertyBinding: No target node found for track: headfront.scale.",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry",
+   "error: THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The \"position\" attribute is likely to have NaN values. BufferGeometry"
+  ]
+ },
+ "seconds": 296.3,
+ "cdn_cache": {
+  "hits": 24,
+  "misses": 0,
+  "failed": []
+ }
+}

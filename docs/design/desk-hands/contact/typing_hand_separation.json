@@ -1,0 +1,51 @@
+{
+ "what": "hand separation across the keyboard, per frame over room_mx_typing (16.5 s, 30 fps), in the keyboard's frame, + = right hand to his right of the left",
+ "capture_alone_resolver_off": {
+  "wrists_cm": {
+   "min": 14.8,
+   "min_at_s": 2.93,
+   "median": 19.5,
+   "frames_negative": 0
+  },
+  "inner_edges_cm": {
+   "min": 6.0,
+   "min_at_s": 2.93,
+   "median": 11.0,
+   "frames_under_8cm": 112,
+   "frames_negative": 0
+  },
+  "frames": 495
+ },
+ "before_8fd5c5f": {
+  "wrists_cm": {
+   "min": -5.6,
+   "min_at_s": 10.23,
+   "median": -0.4,
+   "frames_negative": 256
+  },
+  "inner_edges_cm": {
+   "min": -15.0,
+   "min_at_s": 10.23,
+   "median": -9.4,
+   "frames_under_8cm": 323,
+   "frames_negative": 284
+  },
+  "frames": 495
+ },
+ "now": {
+  "wrists_cm": {
+   "min": 14.7,
+   "min_at_s": 2.93,
+   "median": 19.4,
+   "frames_negative": 0
+  },
+  "inner_edges_cm": {
+   "min": 5.9,
+   "min_at_s": 2.93,
+   "median": 10.9,
+   "frames_under_8cm": 135,
+   "frames_negative": 0
+  },
+  "frames": 495
+ }
+}

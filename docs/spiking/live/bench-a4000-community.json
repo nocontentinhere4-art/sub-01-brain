@@ -1,0 +1,192 @@
+{
+ "mode": "bench",
+ "gpu": "NVIDIA RTX A4000",
+ "cloud": "COMMUNITY",
+ "pod_id": "9fd5htrbozacib",
+ "usd_per_hour": 0.17,
+ "boot_s": 36.6,
+ "results": {
+  "session_id": "bench-a4000-community",
+  "day": null,
+  "validate": true,
+  "phases": {
+   "bench": [
+    {
+     "plasticity_off": {
+      "steps_per_s": 1278.1,
+      "realtime_x": 1.278,
+      "mean_rate_hz": 2.606
+     },
+     "plasticity_on": {
+      "steps_per_s": 240.2,
+      "realtime_x": 0.24,
+      "mean_rate_hz": 3.492
+     },
+     "n_neurons": 1000000,
+     "synapses": 100972600,
+     "gpu": "NVIDIA RTX A4000",
+     "gpu_mem_gb": 5.71,
+     "steps_per_s": 240.2,
+     "realtime_x": 0.24
+    }
+   ],
+   "live_bench": [
+    {
+     "gpu": "NVIDIA RTX A4000",
+     "n_neurons": 1000000,
+     "steps_per_s_free": 1242.4,
+     "realtime_x_free": 1.242,
+     "steps_per_s_with_decisions": 1060.7,
+     "realtime_x_with_decisions": 1.061,
+     "decisions": 40,
+     "decision_wall_ms_p50": 78.2,
+     "decision_wall_ms_p95": 102.9,
+     "decision_wall_ms_max": 125.7,
+     "decision_sim_ms_mean": 50.0,
+     "timeout_frac": 0.0,
+     "calibration": {
+      "pool_rate_mean_hz": 2.93,
+      "pool_rate_sd_hz": 0.24,
+      "threshold_hz": 3.41,
+      "thr_z": 2.0
+     },
+     "gpu_mem_gb": 5.72
+    }
+   ]
+  },
+  "files": [
+   "results.json",
+   "session.log"
+  ],
+  "build": {
+   "device": "cuda",
+   "gpu": "NVIDIA RTX A4000",
+   "n_neurons": 1000000,
+   "synapses": 100972600,
+   "max_delay_ms": 60,
+   "plastic_synapses": 60778400,
+   "build_s": 3.5,
+   "config_hash": "46439342c79e7f9c",
+   "config": {
+    "n_neurons": 1000000,
+    "seed": 1,
+    "frac_exc": 0.8,
+    "min_region": 10,
+    "hc_scale": 1.0,
+    "k_e_local": 45,
+    "k_i_local": 25,
+    "k_long": 30,
+    "k_hc_rec": 100,
+    "k_hc_rec_i": 100,
+    "k_vis_sm": 0,
+    "j_vis_sm": 0.1,
+    "dt": 1.0,
+    "tau_m": 20.0,
+    "v_th": 20.0,
+    "v_reset": 10.0,
+    "t_ref": 2.0,
+    "j_e": 0.5,
+    "g_i": 5.0,
+    "j_hc_rec": 0.05,
+    "j_hc_ei": 0.3,
+    "delay_local": [
+     1,
+     2
+    ],
+    "velocity_mm_ms": 6.0,
+    "mu_ext": 15.0,
+    "sigma_ext": 4.0,
+    "baseline_gain": 0.05,
+    "baseline_dt_ms": 50,
+    "plastic": true,
+    "tau_plus": 20.0,
+    "tau_minus": 20.0,
+    "a_plus": 1.0,
+    "a_minus": 0.5,
+    "x_theta": 0.1,
+    "h_pre": 0.1,
+    "tau_elig": 1000.0,
+    "elig_every": 10,
+    "tau_da": 200.0,
+    "w_max_ctx": 2.0,
+    "w_max_hc": 2.0,
+    "eta": {
+     "ctx": {
+      "da": 0.5,
+      "enc": 0.0005,
+      "cons": 0.002
+     },
+     "hc": {
+      "da": 0.0,
+      "enc": 0.025,
+      "cons": 0.0
+     }
+    },
+    "da_groups": [
+     "somatomotor"
+    ],
+    "hebb_theta": 10.0,
+    "hebb_ltd": 0.25,
+    "homeo_every": 1000,
+    "rate_target": 5.0,
+    "tau_rate": 10000.0,
+    "eta_theta": 0.0001,
+    "theta_max": 3.0,
+    "eta_scale": 0.0001,
+    "tau_forget_hc_days": 3.0,
+    "tau_forget_ctx_days": 60.0
+   },
+   "torch": "2.8.0+cu128",
+   "baseline_runs": 3,
+   "weights_loaded": false
+  },
+  "timing": {
+   "0:bench": {
+    "wall_s": 25.2
+   },
+   "1:live_bench": {
+    "wall_s": 28.3
+   }
+  },
+  "weights": {
+   "nonzero": 60375177,
+   "P": 60778400,
+   "dense": true,
+   "stats": {
+    "plastic_synapses": 60778400,
+    "updates": 440,
+    "ctx": {
+     "w_mean": 0.49973583221435547,
+     "dw_mean": -0.00026412552688270807,
+     "dw_absmax": 1.5,
+     "frac_changed": 0.924579918384552
+    },
+    "hc": {
+     "w_mean": 0.24319025874137878,
+     "dw_mean": 0.00033312023151665926,
+     "dw_absmax": 0.0008910894393920898,
+     "frac_changed": 0.4285714328289032
+    }
+   },
+   "bytes": 123564646
+  },
+  "wall_s": 58.1,
+  "sim_s": 41.1,
+  "error": null
+ },
+ "deleted": true,
+ "still_listed": false,
+ "cost": {
+  "pod_id": "9fd5htrbozacib",
+  "name": "sub01-spiking-live-bench-20261002-140440",
+  "gpu": "NVIDIA RTX A4000 (community)",
+  "cost_per_hr": 0.17,
+  "start": "2026-10-02T14:04:42.386493+00:00",
+  "stop": "2026-10-02T14:06:25.023786+00:00",
+  "hours": 0.0285,
+  "cost_usd": 0.0048,
+  "reason": "done",
+  "purpose": "live-bench"
+ },
+ "brain_pod_still_there": true
+}

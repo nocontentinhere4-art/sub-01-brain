@@ -1,0 +1,11 @@
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { simplify, weld, prune, join } from '@gltf-transform/functions';
+import { MeshoptSimplifier } from 'meshoptimizer';
+await MeshoptSimplifier.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
+const doc = await io.read(process.argv[2]);
+const ratio = +process.argv[4];
+await doc.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio, error: 0.01 }), prune());
+let tris = 0; for (const m of doc.getRoot().listMeshes()) for (const p of m.listPrimitives()) tris += p.getIndices().getCount()/3;
+await io.write(process.argv[3], doc); console.log('tris', tris);

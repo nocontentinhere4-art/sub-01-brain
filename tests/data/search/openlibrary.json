@@ -1,0 +1,181 @@
+{
+"key": "/subjects/sleep",
+"name": "sleep",
+"subject_type": "subject",
+"solr_query": "subject_key:\"sleep\"",
+"work_count": 2820,
+"works": [
+{
+"key": "/works/OL151798W",
+"title": "Goodnight Moon",
+"edition_count": 143,
+"cover_id": 35556,
+"cover_edition_key": "OL9236212M",
+"printdisabled": true,
+"lending_edition": "OL58725727M",
+"lending_identifier": "bwb_W9-CUE-071",
+"authors": [
+{
+"key": "/authors/OL22122A",
+"name": "Margaret Wise Brown"
+}
+],
+"first_publish_year": 1947,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL63877W",
+"title": "Rip Van Winkle and Sleepy Hollow",
+"edition_count": 96,
+"cover_id": 8999022,
+"cover_edition_key": "OL13233802M",
+"printdisabled": true,
+"lending_edition": "OL6646798M",
+"lending_identifier": "ripvanwinklelege01irvi",
+"authors": [
+{
+"key": "/authors/OL19725A",
+"name": "Washington Irving"
+}
+],
+"first_publish_year": 1867,
+"public_scan": true,
+"has_fulltext": true
+},
+{
+"key": "/works/OL2195990W",
+"title": "Trollkarlens hatt",
+"edition_count": 54,
+"cover_id": 3180402,
+"cover_edition_key": "OL12685302M",
+"printdisabled": true,
+"lending_edition": "OL32149667M",
+"lending_identifier": "trollkarlenshatt0000jans",
+"authors": [
+{
+"key": "/authors/OL279921A",
+"name": "Tove Jansson"
+}
+],
+"first_publish_year": 1950,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL114207W",
+"title": "Can't You Sleep, Little Bear?",
+"edition_count": 51,
+"cover_id": 799299,
+"cover_edition_key": "OL1574145M",
+"printdisabled": true,
+"lending_edition": "OL27559982M",
+"lending_identifier": "cantyousleeplitt0000wadd",
+"authors": [
+{
+"key": "/authors/OL32625A",
+"name": "Martin Waddell"
+},
+{
+"key": "/authors/OL3121091A",
+"name": "Barbara Firth"
+},
+{
+"key": "/authors/OL34080A",
+"name": "Virginia Miller"
+}
+],
+"first_publish_year": 1988,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL8012480W",
+"title": "Trackers",
+"edition_count": 41,
+"cover_id": 2331660,
+"cover_edition_key": "OL10139939M",
+"printdisabled": true,
+"lending_edition": "OL10139908M",
+"lending_identifier": "earthlingstudysk0000flem",
+"authors": [
+{
+"key": "/authors/OL2667340A",
+"name": "Sarah Fleming"
+}
+],
+"first_publish_year": 2004,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL547418W",
+"title": "The Napping House (La Casa Adormecida)",
+"edition_count": 31,
+"cover_id": 114437,
+"cover_edition_key": "OL3170862M",
+"printdisabled": true,
+"lending_edition": "OL25925158M",
+"lending_identifier": "lacasadurmiente0000wood",
+"authors": [
+{
+"key": "/authors/OL5116752A",
+"name": "Audrey Wood"
+},
+{
+"key": "/authors/OL893532A",
+"name": "Don Wood"
+}
+],
+"first_publish_year": 1984,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL68803W",
+"title": "Biscuit Board Book (Biscuit)",
+"edition_count": 28,
+"cover_id": 35356,
+"cover_edition_key": "OL9236118M",
+"printdisabled": true,
+"lending_edition": "",
+"lending_identifier": "",
+"authors": [
+{
+"key": "/authors/OL23624A",
+"name": "Alyssa Satin Capucilli"
+}
+],
+"first_publish_year": 1996,
+"public_scan": false,
+"has_fulltext": true
+},
+{
+"key": "/works/OL1841294W",
+"title": "On becoming babywise",
+"edition_count": 22,
+"cover_id": 677301,
+"cover_edition_key": "OL545108M",
+"printdisabled": true,
+"lending_edition": "OL24403068M",
+"lending_identifier": "onbecomingbabywiezz00ezzo",
+"authors": [
+{
+"key": "/authors/OL220528A",
+"name": "Gary Ezzo"
+},
+{
+"key": "/authors/OL2873975A",
+"name": "Robert Bucknam"
+},
+{
+"key": "/authors/OL2943081A",
+"name": "Jose Andres"
+}
+],
+"first_publish_year": 1993,
+"public_scan": false,
+"has_fulltext": true
+}
+]
+}

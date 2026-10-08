@@ -1,0 +1,285 @@
+{
+ "tag": "before",
+ "scenarios": [],
+ "states": {
+  "load": {
+   "slides": true,
+   "socks": null,
+   "parked": false,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  },
+  "standing": {
+   "slides": true,
+   "socks": null,
+   "parked": false,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  },
+  "cams": {
+   "standing_front": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     1.689,
+     0.499,
+     -1.18
+    ],
+    "tgt": [
+     1.204,
+     0.279,
+     -0.827
+    ]
+   },
+   "standing_front-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     1.795,
+     0.499,
+     -0.725
+    ],
+    "tgt": [
+     1.204,
+     0.279,
+     -0.827
+    ]
+   },
+   "standing_right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     1.558,
+     0.499,
+     -0.342
+    ],
+    "tgt": [
+     1.204,
+     0.279,
+     -0.827
+    ]
+   },
+   "seated_right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.36,
+     0.621,
+     -0.94
+    ],
+    "tgt": [
+     -1.06,
+     0.371,
+     -0.94
+    ]
+   },
+   "seated_left": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -1.76,
+     0.621,
+     -0.94
+    ],
+    "tgt": [
+     -1.06,
+     0.371,
+     -0.94
+    ]
+   },
+   "seated_back-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.587,
+     0.621,
+     -0.423
+    ],
+    "tgt": [
+     -1.06,
+     0.371,
+     -0.94
+    ]
+   },
+   "on_the_bed_front": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.488,
+     1.477,
+     1.481
+    ],
+    "tgt": [
+     -0.099,
+     1.127,
+     0.9
+    ]
+   },
+   "on_the_bed_front-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.788,
+     1.477,
+     1.026
+    ],
+    "tgt": [
+     -0.099,
+     1.127,
+     0.9
+    ]
+   },
+   "on_the_bed_front-left": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     0.047,
+     1.477,
+     1.584
+    ],
+    "tgt": [
+     -0.099,
+     1.127,
+     0.9
+    ]
+   },
+   "asleep_front-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.984,
+     1.698,
+     1.062
+    ],
+    "tgt": [
+     -0.099,
+     1.098,
+     0.9
+    ]
+   },
+   "asleep_left": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     0.649,
+     1.698,
+     1.4
+    ],
+    "tgt": [
+     -0.099,
+     1.098,
+     0.9
+    ]
+   },
+   "asleep_back-left": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     0.775,
+     1.698,
+     0.686
+    ],
+    "tgt": [
+     -0.099,
+     1.098,
+     0.9
+    ]
+   },
+   "parked_front-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -1.201,
+     0.514,
+     0.179
+    ],
+    "tgt": [
+     -0.66,
+     0.214,
+     0.08
+    ]
+   },
+   "parked_right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -1.117,
+     0.514,
+     -0.225
+    ],
+    "tgt": [
+     -0.66,
+     0.214,
+     0.08
+    ]
+   },
+   "parked_back-right": {
+    "clear": true,
+    "by": null,
+    "pos": [
+     -0.743,
+     0.514,
+     -0.464
+    ],
+    "tgt": [
+     -0.66,
+     0.214,
+     0.08
+    ]
+   }
+  },
+  "seated": {
+   "slides": true,
+   "socks": null,
+   "parked": false,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  },
+  "on_the_bed": {
+   "slides": false,
+   "socks": null,
+   "parked": true,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  },
+  "asleep": {
+   "slides": false,
+   "socks": null,
+   "parked": true,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  },
+  "parked": {
+   "slides": false,
+   "socks": null,
+   "parked": true,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:321168",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "slides:19854"
+   ]
+  }
+ },
+ "errors": []
+}

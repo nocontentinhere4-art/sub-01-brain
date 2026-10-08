@@ -1,0 +1,45 @@
+ok  desk_lamp            x -1.885..-1.434  y 0.970..1.684  z -1.424..-1.155  support y=0.970    gap +0.0 mm   
+ok  floor_plant          x -1.862..-1.303  y 0.160..0.875  z -0.697..-0.101  support y=0.160    gap -0.0 mm   
+ok  desk_succulent       x -0.555..-0.397  y 0.970..1.211  z -1.215..-1.046  support y=0.970    gap +0.0 mm   
+ok  wall_clock           x +0.544..+0.816  y 1.564..1.836  z -1.450..-1.410  support back wall  gap -0.0 mm   
+ok  alarm_clock          x -1.910..-1.830  y 1.270..1.409  z +0.564..+0.678  support y=1.270    gap -0.0 mm   
+ok  shelf_carton         x -0.025..+0.229  y 2.120..2.332  z -1.443..-1.122  support y=2.120    gap -0.0 mm   
+ok  sticky_notes         x -1.566..-1.474  y 1.170..1.192  z -1.346..-1.254  support y=1.170    gap -0.0 mm   
+ok  pinboard             x -1.900..-1.878  y 1.705..2.095  z -1.415..-1.025  support -          gap -         
+ok  game_pad             x -0.877..-0.733  y 0.970..1.005  z -1.243..-1.143  support y=0.970    gap +0.0 mm   
+ok  manga_stack          x -0.311..-0.164  y 0.160..0.308  z -1.416..-1.224  support y=0.160    gap -0.0 mm   
+ok  headphone_hook       x -0.256..-0.224  y 1.414..1.455  z -1.450..-1.374  support back wall  gap -0.0 mm   
+ok  headphones           x -0.336..-0.144  y 1.289..1.452  z -1.437..-1.363  support -          gap -         
+ok  hoodie               x +1.124..+1.536  y 1.125..1.735  z -1.368..-1.264  support -          gap -         
+ok  backpack             x -0.192..+0.015  y 0.160..0.601  z +1.090..+1.390  support y=0.160    gap -0.0 mm   
+ok  cushion              x +0.976..+1.664  y 0.160..0.238  z +0.625..+1.335  support y=0.160    gap -0.0 mm   
+ok  fan                  x +1.582..+1.818  y 0.160..0.658  z +0.182..+0.418  support y=0.160    gap -0.0 mm   
+ok  slippers             x +0.673..+0.927  y 0.160..0.212  z +0.898..+1.111  support y=0.160    gap -0.0 mm   
+ok  laundry_hanger       x -1.906..-1.581  y 1.650..2.224  z +0.282..+0.618  support -          gap -         
+ok  cat_figure           x -1.897..-1.848  y 1.270..1.334  z +0.381..+0.417  support y=1.270    gap -0.0 mm   
+ok  socket               x -1.470..-1.390  y 0.340..0.460  z -1.450..-1.420  support back wall  gap -0.0 mm   
+ok  power_strip          x -1.320..-1.020  y 0.160..0.220  z -1.438..-1.388  support y=0.160    gap -0.0 mm   
+ok  cables               x -1.640..-1.077  y 0.174..1.270  z -1.447..-1.257  support -          gap -         
+ok  mug                  x -0.541..-0.459  y 0.970..1.066  z -1.021..-0.939  support y=0.970    gap +0.0 mm   
+ok  pencup               x -0.504..-0.436  y 0.970..1.070  z -1.364..-1.296  support y=0.970    gap +0.0 mm   
+ok  desk_book            x -1.836..-1.564  y 0.970..1.038  z -1.181..-0.859  support y=0.970    gap +0.0 mm   
+ok  deskmat              x -1.470..-0.670  y 0.970..0.973  z -1.120..-0.840  support y=0.970    gap +0.0 mm   
+ok  kb_body              x -1.253..-0.887  y 0.973..0.992  z -1.045..-0.895  support y=0.973    gap -0.0 mm   
+ok  mouse                x -0.791..-0.729  y 0.974..0.998  z -1.008..-0.892  support y=0.973    gap +1.0 mm   
+ok  mon_base             x -1.173..-0.954  y 0.970..0.982  z -1.294..-1.156  support y=0.970    gap +0.0 mm   
+ok  spk_l_box            x -1.598..-1.442  y 0.970..1.170  z -1.386..-1.214  support y=0.970    gap +0.0 mm   
+ok  spk_r_box            x -0.656..-0.504  y 0.970..1.170  z -1.384..-1.216  support y=0.970    gap +0.0 mm   
+ok  bin                  x -0.670..-0.430  y 0.160..0.460  z -1.340..-1.100  support y=0.160    gap -0.0 mm   
+ok  cupnoodle            x +0.531..+0.629  y 1.270..1.476  z -1.229..-1.131  support y=1.270    gap -0.0 mm   
+ok  tissues              x +0.700..+0.880  y 1.270..1.345  z -1.330..-1.220  support y=1.270    gap -0.0 mm   
+ok  shelf_box            x +0.142..+0.297  y 0.238..0.438  z -1.420..-1.180  support y=0.238    gap +0.0 mm   
+ok  doormat              x +1.080..+1.820  y 0.160..0.172  z -1.400..-0.980  support y=0.160    gap -0.0 mm   
+ok  rug                  x -0.500..+0.950  y 0.160..0.172  z -0.620..+0.850  support y=0.160    gap -0.0 mm   
+ok  curtain_a            x -1.878..-1.786  y 1.271..2.200  z -0.923..-0.567  support y=1.270    gap +1.4 mm   
+ok  curtain_b            x -1.876..-1.782  y 1.271..2.200  z +0.830..+1.260  support y=1.270    gap +1.4 mm   
+ok  poster_a_frame       x -1.236..-0.884  y 1.714..2.226  z -1.450..-1.432  support back wall  gap -0.0 mm   
+ok  poster_b_frame       x -0.706..-0.414  y 1.649..2.071  z -1.450..-1.432  support back wall  gap -0.0 mm   
+ok  poster_c_frame       x -1.736..-1.464  y 1.834..2.106  z -1.450..-1.432  support back wall  gap -0.0 mm   
+ok  switch_plate         x +0.930..+1.000  y 1.170..1.290  z -1.450..-1.442  support back wall  gap -0.0 mm   
+ok  ac_body              x +0.360..+1.000  y 2.020..2.290  z -1.450..-1.240  support back wall  gap -0.0 mm   
+SWEEP 44 props, 0 offenders

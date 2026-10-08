@@ -1,0 +1,214 @@
++ cd /work
+++ nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
++ echo 'gpu: NVIDIA RTX A5000, 580.159.04'
+gpu: NVIDIA RTX A5000, 580.159.04
++ export DEBIAN_FRONTEND=noninteractive
++ DEBIAN_FRONTEND=noninteractive
++ apt-get update -qq
++ apt-get install -y -qq ffmpeg fonts-dejavu-core libegl1 libgles2 libgl1 libvulkan1 mesa-vulkan-drivers
++ tail -2
+Processing triggers for libc-bin (2.35-0ubuntu3.9) ...
+Processing triggers for libgdk-pixbuf-2.0-0:amd64 (2.42.8+dfsg-1ubuntu0.5) ...
++ tail -1
++ pip install -q playwright pillow
+[notice] To update, run: python -m pip install --upgrade pip
++ python3 -m playwright install --with-deps chromium
++ tail -2
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.3 MiB
+Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1243
++ ls /usr/lib/x86_64-linux-gnu/
++ grep -i 'nvidia-egl\|EGL_nvidia\|nvidia-glvkspirv\|GLX_nvidia'
++ head -5
+libEGL_nvidia.so.0
+libEGL_nvidia.so.580.159.04
+libGLX_nvidia.so.0
+libGLX_nvidia.so.580.159.04
+libnvidia-egl-gbm.so.1
++ ls /etc/vulkan/icd.d/ /usr/share/vulkan/icd.d/
++ head -5
+/etc/vulkan/icd.d/:
+nvidia_icd.json
+
+/usr/share/vulkan/icd.d/:
+intel_hasvk_icd.x86_64.json
++ mkdir -p /work/old /work/new /work/frames
++ tar -xzf /in/old.tar.gz -C /work/old
++ tar -xzf /in/new.tar.gz -C /work/new
++ R=/work/new/tools/gpu_preview_render.py
++ GPU_ARGS=
++ for cand in "channel=chromium,--use-gl=angle,--use-angle=gl-egl" "channel=chromium,--use-angle=vulkan,--use-vulkan=native,--enable-features=Vulkan" "channel=chromium,--use-gl=egl" "--use-gl=angle,--use-angle=gl-egl" "--use-angle=vulkan,--use-vulkan=native,--enable-features=Vulkan" "--use-gl=egl" "channel=chromium,--use-angle=gl,--use-gl=angle"
+++ python3 /work/new/tools/gpu_preview_render.py --probe --gpu-args=channel=chromium,--use-gl=angle,--use-angle=gl-egl
+++ tail -1
++ r='ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)'
++ echo 'probe [channel=chromium,--use-gl=angle,--use-angle=gl-egl] -> ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)'
+probe [channel=chromium,--use-gl=angle,--use-angle=gl-egl] -> ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
++ case "$r" in
++ GPU_ARGS=channel=chromium,--use-gl=angle,--use-angle=gl-egl
++ break
++ '[' -z channel=chromium,--use-gl=angle,--use-angle=gl-egl ']'
++ echo channel=chromium,--use-gl=angle,--use-angle=gl-egl
++ for size in $SIZES
++ for side in old new
++ SHOTS_ARG=
++ '[' -n '' ']'
+++ '[' old = old ']'
+++ echo ''
++ Q=
+++ '[' old = old ']'
+++ echo 71
++ python3 /work/new/tools/gpu_preview_render.py --web /work/old/web --side old --size 1280x800 --fps 30 --segments 14:60,23:30 --query '' --frames /work/frames/1280x800 --gpu-args=channel=chromium,--use-gl=angle,--use-angle=gl-egl --require-gpu --port 8871
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+WebGL: ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
+  old 1280x800 14:00 frame 0/1800 (27 s)
+  old 1280x800 14:00 frame 150/1800 (36 s)
+  old 1280x800 14:00 frame 300/1800 (44 s)
+  old 1280x800 14:00 frame 450/1800 (52 s)
+  old 1280x800 14:00 frame 600/1800 (61 s)
+  old 1280x800 14:00 frame 750/1800 (69 s)
+  old 1280x800 14:00 frame 900/1800 (78 s)
+  old 1280x800 14:00 frame 1050/1800 (87 s)
+  old 1280x800 14:00 frame 1200/1800 (95 s)
+  old 1280x800 14:00 frame 1350/1800 (104 s)
+  old 1280x800 14:00 frame 1500/1800 (112 s)
+  old 1280x800 14:00 frame 1650/1800 (121 s)
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+  old 1280x800 23:00 frame 0/900 (133 s)
+  old 1280x800 23:00 frame 150/900 (141 s)
+  old 1280x800 23:00 frame 300/900 (148 s)
+  old 1280x800 23:00 frame 450/900 (156 s)
+  old 1280x800 23:00 frame 600/900 (163 s)
+  old 1280x800 23:00 frame 750/900 (170 s)
+old: 2700 frames in 178.5 s on ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
++ for side in old new
++ SHOTS_ARG=
++ '[' -n '' ']'
+++ '[' new = old ']'
+++ echo ''
++ Q=
+++ '[' new = old ']'
+++ echo 72
++ python3 /work/new/tools/gpu_preview_render.py --web /work/new/web --side new --size 1280x800 --fps 30 --segments 14:60,23:30 --query '' --frames /work/frames/1280x800 --gpu-args=channel=chromium,--use-gl=angle,--use-angle=gl-egl --require-gpu --port 8872
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+WebGL: ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
+  new 1280x800 14:00 frame 0/1800 (25 s)
+  new 1280x800 14:00 frame 150/1800 (35 s)
+  new 1280x800 14:00 frame 300/1800 (45 s)
+  new 1280x800 14:00 frame 450/1800 (55 s)
+  new 1280x800 14:00 frame 600/1800 (66 s)
+  new 1280x800 14:00 frame 750/1800 (76 s)
+  new 1280x800 14:00 frame 900/1800 (86 s)
+  new 1280x800 14:00 frame 1050/1800 (96 s)
+  new 1280x800 14:00 frame 1200/1800 (105 s)
+  new 1280x800 14:00 frame 1350/1800 (115 s)
+  new 1280x800 14:00 frame 1500/1800 (125 s)
+  new 1280x800 14:00 frame 1650/1800 (135 s)
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+  new 1280x800 23:00 frame 0/900 (150 s)
+  new 1280x800 23:00 frame 150/900 (159 s)
+  new 1280x800 23:00 frame 300/900 (167 s)
+  new 1280x800 23:00 frame 450/900 (176 s)
+  new 1280x800 23:00 frame 600/900 (185 s)
+  new 1280x800 23:00 frame 750/900 (194 s)
+new: 2700 frames in 204.0 s on ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
++ python3 /work/new/tools/gpu_preview_render.py --encode --frames /work/frames/1280x800 --out /out/preview_1280x800.mp4 --max-mb 25 --label-old 'main (old)' --label-new 'feature/gl-render #103 (new)'
+wrote /out/preview_1280x800.mp4: 2700 frames, 90.0 s, 20.1 MB (crf 23)
++ cp /work/frames/1280x800/new_meta.json /work/frames/1280x800/old_meta.json /out/
++ for s in old new
++ cp /work/frames/1280x800/old_meta.json /out/old_1280x800_meta.json
++ for s in old new
++ cp /work/frames/1280x800/new_meta.json /out/new_1280x800_meta.json
++ for size in $SIZES
++ for side in old new
++ SHOTS_ARG=
++ '[' -n '' ']'
+++ '[' old = old ']'
+++ echo ''
++ Q=
+++ '[' old = old ']'
+++ echo 71
++ python3 /work/new/tools/gpu_preview_render.py --web /work/old/web --side old --size 390x844 --fps 30 --segments 14:60,23:30 --query '' --frames /work/frames/390x844 --gpu-args=channel=chromium,--use-gl=angle,--use-angle=gl-egl --require-gpu --port 8871
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+WebGL: ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
+  old 390x844 14:00 frame 0/1800 (5 s)
+  old 390x844 14:00 frame 150/1800 (9 s)
+  old 390x844 14:00 frame 300/1800 (14 s)
+  old 390x844 14:00 frame 450/1800 (18 s)
+  old 390x844 14:00 frame 600/1800 (22 s)
+  old 390x844 14:00 frame 750/1800 (27 s)
+  old 390x844 14:00 frame 900/1800 (31 s)
+  old 390x844 14:00 frame 1050/1800 (35 s)
+  old 390x844 14:00 frame 1200/1800 (39 s)
+  old 390x844 14:00 frame 1350/1800 (44 s)
+  old 390x844 14:00 frame 1500/1800 (48 s)
+  old 390x844 14:00 frame 1650/1800 (52 s)
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+  old 390x844 23:00 frame 0/900 (60 s)
+  old 390x844 23:00 frame 150/900 (63 s)
+  old 390x844 23:00 frame 300/900 (66 s)
+  old 390x844 23:00 frame 450/900 (70 s)
+  old 390x844 23:00 frame 600/900 (73 s)
+  old 390x844 23:00 frame 750/900 (76 s)
+old: 2700 frames in 79.7 s on ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
++ for side in old new
++ SHOTS_ARG=
++ '[' -n '' ']'
+++ '[' new = old ']'
+++ echo ''
++ Q=
+++ '[' new = old ']'
+++ echo 72
++ python3 /work/new/tools/gpu_preview_render.py --web /work/new/web --side new --size 390x844 --fps 30 --segments 14:60,23:30 --query '' --frames /work/frames/390x844 --gpu-args=channel=chromium,--use-gl=angle,--use-angle=gl-egl --require-gpu --port 8872
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+WebGL: ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
+  new 390x844 14:00 frame 0/1800 (7 s)
+  new 390x844 14:00 frame 150/1800 (11 s)
+  new 390x844 14:00 frame 300/1800 (15 s)
+  new 390x844 14:00 frame 450/1800 (20 s)
+  new 390x844 14:00 frame 600/1800 (24 s)
+  new 390x844 14:00 frame 750/1800 (28 s)
+  new 390x844 14:00 frame 900/1800 (32 s)
+  new 390x844 14:00 frame 1050/1800 (37 s)
+  new 390x844 14:00 frame 1200/1800 (41 s)
+  new 390x844 14:00 frame 1350/1800 (45 s)
+  new 390x844 14:00 frame 1500/1800 (49 s)
+  new 390x844 14:00 frame 1650/1800 (53 s)
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+pageerror Failed to execute 'json' on 'Response': Unexpected end of JSON input
+  new 390x844 23:00 frame 0/900 (61 s)
+  new 390x844 23:00 frame 150/900 (65 s)
+  new 390x844 23:00 frame 300/900 (69 s)
+  new 390x844 23:00 frame 450/900 (73 s)
+  new 390x844 23:00 frame 600/900 (77 s)
+  new 390x844 23:00 frame 750/900 (81 s)
+new: 2700 frames in 86.0 s on ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)
++ python3 /work/new/tools/gpu_preview_render.py --encode --frames /work/frames/390x844 --out /out/preview_390x844.mp4 --max-mb 25 --label-old 'main (old)' --label-new 'feature/gl-render #103 (new)'
+wrote /out/preview_390x844.mp4: 2700 frames, 90.0 s, 10.9 MB (crf 20)
++ cp /work/frames/390x844/new_meta.json /work/frames/390x844/old_meta.json /out/
++ for s in old new
++ cp /work/frames/390x844/old_meta.json /out/old_390x844_meta.json
++ for s in old new
++ cp /work/frames/390x844/new_meta.json /out/new_390x844_meta.json
++ ls -la /out
+total 46520
+drwxr-xr-x 2 root root     4096 Oct  4 03:33 .
+drwxr-xr-x 1 root root      185 Oct  4 03:19 ..
+-rw-r--r-- 1 root root        3 Oct  4 03:19 UP
+-rw-r--r-- 1 root root       51 Oct  4 03:20 gpu_args.txt
+-rw-r--r-- 1 root root    10690 Oct  4 03:33 log.txt
+-rw-r--r-- 1 root root      372 Oct  4 03:30 new_1280x800_meta.json
+-rw-r--r-- 1 root root      370 Oct  4 03:33 new_390x844_meta.json
+-rw-r--r-- 1 root root      370 Oct  4 03:33 new_meta.json
+-rw-r--r-- 1 root root      372 Oct  4 03:30 old_1280x800_meta.json
+-rw-r--r-- 1 root root      370 Oct  4 03:33 old_390x844_meta.json
+-rw-r--r-- 1 root root      370 Oct  4 03:33 old_meta.json
+-rw-r--r-- 1 root root      942 Oct  4 03:30 preview_1280x800.json
+-rw-r--r-- 1 root root 20122553 Oct  4 03:30 preview_1280x800.mp4
+-rw-r--r-- 1 root root      938 Oct  4 03:33 preview_390x844.json
+-rw-r--r-- 1 root root 10923130 Oct  4 03:33 preview_390x844.mp4

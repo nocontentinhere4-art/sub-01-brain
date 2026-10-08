@@ -1,0 +1,26 @@
+/* "Neurons" panel: one million simulated spiking neurons inside the real wiring of one person's brain;
+   a model, not a mind; not the person. Shared by /brain (index.html) and / (life.html). */
+.nx { font-size:11px; color:#80808f; border:1px solid #1c1c26; border-radius:4px; padding:8px 10px; background:#040406; max-width:100%; min-width:0; }
+.nx summary { cursor:pointer; letter-spacing:.1em; text-transform:uppercase; color:#80808f; list-style:none; display:flex; align-items:center; gap:7px; }
+.nx summary::-webkit-details-summary { display:none; }
+.nx summary::marker { content:""; }
+.nx summary b { font-weight:normal; color:#ececf2; }
+.nx[data-live="1"] summary b { color:#ff6a00; }
+.nx-body { margin-top:8px; display:flex; flex-direction:column; gap:6px; min-width:0; }
+.nx-count { color:#ececf2; font-size:12px; }
+.nx-row { line-height:1.5; overflow-wrap:anywhere; }
+.nx-row b { color:#ececf2; font-weight:normal; }
+.nx-row i { color:#ff6a00; font-style:normal; }
+.nx-raster { display:block; width:100%; height:84px; background:#07070b; border:1px solid #15151d; border-radius:3px; }
+.nx-pongrow { display:flex; gap:10px; align-items:center; min-width:0; }
+.nx-pong { display:block; width:108px; height:72px; flex:none; background:#07070b; border:1px solid #15151d; border-radius:3px; }
+.nx-pongstats { line-height:1.5; min-width:0; }
+.nx-curve { display:block; width:100%; height:56px; }
+.nx-curve svg { display:block; width:100%; height:100%; overflow:visible; }
+.nx-cap { font-size:10px; color:#55556a; }
+.nx-day { display:flex; flex-direction:column; gap:4px; border-top:1px solid #15151d; padding-top:6px; min-width:0; }
+.nx-results { line-height:1.5; overflow-wrap:anywhere; }
+.nx-results b { color:#ececf2; font-weight:normal; }
+.nx-note { font-size:10px; color:#55556a; border-top:1px solid #15151d; padding-top:6px; }
+.nx-fixed { font-size:10px; color:#80808f; }
+.nx-hidden { display:none !important; }

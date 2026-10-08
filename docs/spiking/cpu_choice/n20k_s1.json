@@ -1,0 +1,158 @@
+{
+ "k": 4,
+ "probs": [
+  0.8,
+  0.6,
+  0.4,
+  0.2
+ ],
+ "trials": 200,
+ "reversal_at": 100,
+ "criterion": "14 of the last 20 trials correct",
+ "calibration": {
+  "pool_rate_mean_hz": 6.13,
+  "pool_rate_sd_hz": 1.1,
+  "threshold_hz": 8.33
+ },
+ "cue_pool_synapses": [
+  [
+   28,
+   28,
+   29,
+   40
+  ],
+  [
+   26,
+   24,
+   26,
+   33
+  ],
+  [
+   31,
+   24,
+   27,
+   28
+  ],
+  [
+   26,
+   19,
+   22,
+   42
+  ]
+ ],
+ "pool_sizes": [
+  84,
+  82,
+  82,
+  76
+ ],
+ "cue_sizes": [
+  532,
+  532,
+  532,
+  532
+ ],
+ "frozen": {
+  "trials": 200,
+  "frac_correct": 0.27,
+  "reward_rate": 0.475,
+  "trials_to_criterion": null,
+  "frac_correct_last20_before_reversal": 0.15,
+  "curve": [
+   0.1,
+   0.2,
+   0.1,
+   0.15,
+   0.15,
+   0.45,
+   0.45,
+   0.4,
+   0.4,
+   0.3
+  ],
+  "reversal_at": 100,
+  "trials_to_criterion_after_reversal": null,
+  "frac_correct_after_reversal": 0.4,
+  "frac_correct_last20": 0.3,
+  "timeout_frac": 0.705
+ },
+ "learned": {
+  "trials": 200,
+  "frac_correct": 0.75,
+  "reward_rate": 0.705,
+  "trials_to_criterion": 25,
+  "frac_correct_last20_before_reversal": 1.0,
+  "curve": [
+   0.55,
+   0.85,
+   0.85,
+   0.8,
+   1.0,
+   0.1,
+   0.85,
+   0.95,
+   0.6,
+   0.95
+  ],
+  "reversal_at": 100,
+  "trials_to_criterion_after_reversal": 36,
+  "frac_correct_after_reversal": 0.69,
+  "frac_correct_last20": 0.95,
+  "timeout_frac": 0.225,
+  "mean_rt_ms": 120.4
+ },
+ "random": {
+  "trials": 200,
+  "frac_correct": 0.23,
+  "reward_rate": 0.46,
+  "trials_to_criterion": null,
+  "frac_correct_last20_before_reversal": 0.3,
+  "curve": [
+   0.25,
+   0.2,
+   0.15,
+   0.1,
+   0.3,
+   0.3,
+   0.2,
+   0.3,
+   0.25,
+   0.25
+  ],
+  "reversal_at": 100,
+  "trials_to_criterion_after_reversal": null,
+  "frac_correct_after_reversal": 0.26,
+  "frac_correct_last20": 0.25
+ },
+ "dw_cue_pool_mean_mv": [
+  [
+   -0.375,
+   -0.28,
+   0.1235,
+   1.2482
+  ],
+  [
+   -0.4293,
+   -0.3056,
+   0.003,
+   1.2676
+  ],
+  [
+   -0.3674,
+   -0.2735,
+   0.1126,
+   1.2251
+  ],
+  [
+   -0.3974,
+   -0.2868,
+   0.1871,
+   1.2373
+  ]
+ ],
+ "n_neurons": 20000,
+ "net_seed": 1,
+ "task_kw": {},
+ "wall_s": 131.5,
+ "sim_s": 59.2
+}

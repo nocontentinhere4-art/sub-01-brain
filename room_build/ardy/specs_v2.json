@@ -1,0 +1,21 @@
+{
+  "model": "core",
+  "char_hip_height": 0.919,
+  "_note": "second pass (#98 G3): stronger text guidance (cfg 3.5) and more seeds for the clips the first pass under-followed; the walk picks the sample that really walks",
+  "clips": [
+    {"name": "walk", "duration": 8.0, "seeds": [0, 1, 2, 3, 4, 5], "cfg": [3.5, 2.0], "select": "speed",
+     "prompt": "A person walks forward at a normal everyday pace, taking full steps and swinging the arms naturally, and keeps walking straight ahead.", "pin": null},
+    {"name": "window", "duration": 8.0, "seeds": [0, 1, 2, 3], "cfg": [3.5, 2.0],
+     "prompt": "A person stands at a waist-high window sill, leans forward and rests both forearms on the sill, looking out of the window, slowly turning the head.", "pin": null},
+    {"name": "stretch", "duration": 7.0, "seeds": [0, 1, 2, 3], "cfg": [3.5, 2.0],
+     "prompt": "A person sitting on a chair raises both arms high above the head and stretches, arching the back and yawning, then lowers the arms and relaxes.", "pin": null},
+    {"name": "lie_back", "duration": 8.0, "seeds": [0, 1, 2, 3], "cfg": [3.5, 2.0],
+     "prompt": "A person lies flat on their back on the floor and holds a phone up above the face with both arms raised, looking at the phone and scrolling.", "pin": null},
+    {"name": "turn_over", "duration": 6.0, "seeds": [0, 1, 2, 3], "cfg": [3.5, 2.0],
+     "prompt": "A person lying on their back on the floor rolls over onto their left side, pulling the knees up a little, and lies still.", "pin": null},
+    {"name": "type", "duration": 8.0, "seeds": [0, 1, 2, 3], "cfg": [3.0, 2.0],
+     "prompt": "A person sits on a chair at a desk with both hands forward on a keyboard, typing, and now and then moves the right hand to a mouse.", "pin": null},
+    {"name": "door", "duration": 5.0, "seeds": [0, 1, 2, 3], "cfg": [3.5, 2.0],
+     "prompt": "A person reaches forward with the left hand to a door handle at waist height, pulls the door open towards themselves while stepping back with the left foot, and lets go.", "pin": null}
+  ]
+}

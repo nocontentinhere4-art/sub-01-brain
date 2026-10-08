@@ -1,0 +1,12 @@
+{
+  "note": "Real walking footage of SUB-01's neighbourhood (Kichijoji, Tokyo), played through YouTube's official embed while it is outside. Adjust start (seconds) to the best stretch.",
+  "day": {
+    "home-bakery": [{"id": "1-mcQRDX18w", "start": 180, "label": "Kichijoji, spring 2026 walking tour (4K)"},
+                    {"id": "7Qpo9YEwjiw", "start": 120, "label": "Kichijoji walk (4K 60fps)"}],
+    "home-park":   [{"id": "hRwh1Y3mmbA", "start": 600, "label": "Kichijoji + Inokashira Park walking tour (4K)"}]
+  },
+  "night": {
+    "home-bakery": [{"id": "VRvpNsmppWU", "start": 900, "label": "Kugayama to Kichijoji evening walk"}],
+    "home-park":   [{"id": "VRvpNsmppWU", "start": 1500, "label": "Kugayama to Kichijoji evening walk"}]
+  }
+}

@@ -1,0 +1,33 @@
+{
+ "offline_1280": {
+  "button": "neurons offline",
+  "caption": "neurons offline — the 1M network runs while he is awake when the GPU is on"
+ },
+ "live_1280": {
+  "caption": "live · 20k-neuron network on CPU · showing 33 of 2,186 recorded spikes in the last frame · a choice is racing in the striatum\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.",
+  "errors": []
+ },
+ "offline_390": {
+  "button": "neurons offline",
+  "caption": "neurons offline — the 1M network runs while he is awake when the GPU is on"
+ },
+ "live_390": {
+  "caption": "live · 20k-neuron network on CPU · last frame: 6,043 spikes recorded, none sent (the stream's 3 KB/s budget was used up)\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.",
+  "errors": []
+ },
+ "mini": {
+  "text": "simulated spiking neurons, live · each dot a sampled model neuron · a model, not a mind",
+  "errors": []
+ },
+ "fps_x4_390px_fibres_cortex_hidden": {
+  "neurons_off": 12.1,
+  "neurons_on": 9.9
+ },
+ "neurons_layer_js_cost_x4": {
+  "points": 20000,
+  "build_ms": 312,
+  "per_frame_msg_ms": 0.078,
+  "per_render_ms": 0.0054
+ },
+ "fps_errors": []
+}

@@ -1,0 +1,173 @@
+{
+ "engine": {
+  "t": 1790917200.0,
+  "asleep": false,
+  "stage": "AWAKE",
+  "depth": 0.0,
+  "onset": 1790872890.0,
+  "k_base": 1,
+  "awake_since": 1790895600.0,
+  "arousal": 2.946032343059908e-65,
+  "arousal_log": [],
+  "last_stim": 1790895600.0,
+  "debt": 0.10124999999999404,
+  "night": null,
+  "last_night": {
+   "date": "2026-10-01",
+   "timezone": "Europe/Rome",
+   "sleep_onset": "2026-10-02T00:00",
+   "woke_up": "2026-10-02T08:00",
+   "timeline": [
+    {
+     "t": "2026-10-02T00:00",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T01:19",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T01:30",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T01:31",
+     "stage": "AWAKE"
+    },
+    {
+     "t": "2026-10-02T01:41",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T02:53",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T03:11",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T04:16",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T04:41",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T05:39",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T06:11",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T07:02",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T07:41",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T08:00",
+     "stage": "AWAKE"
+    }
+   ],
+   "wakeups": [
+    {
+     "t": "2026-10-02T01:31",
+     "cause": "4 messages"
+    }
+   ],
+   "sleep_debt": {
+    "start": 0.0,
+    "end": 0.1
+   },
+   "replays": [
+    {
+     "t": "2026-10-02T02:56",
+     "text": "are you asleep?",
+     "emotion": "neutral",
+     "networks": [
+      "language"
+     ],
+     "received": "2026-10-02T01:31",
+     "received_stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T02:57",
+     "text": "are you asleep?",
+     "emotion": "neutral",
+     "networks": [
+      "language"
+     ],
+     "received": "2026-10-02T01:31",
+     "received_stage": "NREM"
+    }
+   ]
+  },
+  "params": {
+   "f_hz": 10.0,
+   "coupling": 1.0,
+   "noise": 0.5126562499999993,
+   "a": -5.0,
+   "gain": 0.9873437500000007
+  }
+ },
+ "memory": [
+  {
+   "t": 1790872200.0,
+   "text": "are you asleep?",
+   "stage": "REM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872230.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872260.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872290.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  }
+ ]
+}

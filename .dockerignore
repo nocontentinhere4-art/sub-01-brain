@@ -1,0 +1,14 @@
+.venv
+data
+out_2022
+__pycache__
+*.log
+.env
+out/*.nii.gz
+out/*.png
+out/*.mp4
+out/*.webm
+out/brand
+out/eye
+docs
+tests

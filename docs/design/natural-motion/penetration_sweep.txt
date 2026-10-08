@@ -1,0 +1,93 @@
+# Penetration sweep (#42 check: every skinned vertex inside the bed or the chair), final part 1 code
+# One page; activities chained as listed (each for the seconds in tools/sweep.mjs, 0.05 s steps); every vertex sampled every 0.25 s.
+# Columns: activity, max vertices inside (bed + chair) over that segment.
+
+## seed 63
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0
+
+## seed 7
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0
+
+## seed 1234
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0
+
+## with listen_music (#68), seed 99
+research      max 0 
+listen_music  max 0 
+window        max 0 
+listen_music  max 0 
+phone         max 0 
+listen_music  max 0 
+eat           max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+listen_music  max 0 
+WORST 0
+
+# Per case of the strips (every 0.1 s, every 4th vertex):
+delivery_door max 0
+desk2min max 0
+eat_bread max 0
+eat_meal max 0
+get_delivery max 0
+idle2min max 0
+order_food max 0
+order_hold max 0
+phone max 0
+phone_lie max 0
+window max 0
+window_hold max 0

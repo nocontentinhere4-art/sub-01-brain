@@ -1,0 +1,118 @@
+{
+ "kind": "youtube#searchListResponse",
+ "etag": "x",
+ "nextPageToken": "CAUQAA",
+ "regionCode": "JP",
+ "pageInfo": {
+  "totalResults": 1000000,
+  "resultsPerPage": 5
+ },
+ "items": [
+  {
+   "kind": "youtube#searchResult",
+   "etag": "x",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "aB3dE5fG7hI"
+   },
+   "snippet": {
+    "publishedAt": "2026-09-30T10:00:00Z",
+    "channelId": "UCx",
+    "title": "Making ramen noodles from scratch #shorts",
+    "description": "",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/aB3dE5fG7hI/default.jpg"
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/aB3dE5fG7hI/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Noodle Lab",
+    "liveBroadcastContent": "none"
+   }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "etag": "x",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "Zx9_Yw8-Vu7"
+   },
+   "snippet": {
+    "publishedAt": "2026-09-30T10:00:00Z",
+    "channelId": "UCx",
+    "title": "Tokyo ramen in 30 seconds",
+    "description": "",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/Zx9_Yw8-Vu7/default.jpg"
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/Zx9_Yw8-Vu7/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Tokyo Bites",
+    "liveBroadcastContent": "none"
+   }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "etag": "x",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "Qr4sT6uV8wX"
+   },
+   "snippet": {
+    "publishedAt": "2026-09-30T10:00:00Z",
+    "channelId": "UCx",
+    "title": "The secret to a rich broth #ramen",
+    "description": "",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/Qr4sT6uV8wX/default.jpg"
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/Qr4sT6uV8wX/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Home Cook Kenji Fan",
+    "liveBroadcastContent": "none"
+   }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "etag": "x",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "Lm2nO4pQ6rS"
+   },
+   "snippet": {
+    "publishedAt": "2026-09-30T10:00:00Z",
+    "channelId": "UCx",
+    "title": "Miso ramen at home",
+    "description": "",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/Lm2nO4pQ6rS/default.jpg"
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/Lm2nO4pQ6rS/hqdefault.jpg"
+     }
+    },
+    "channelTitle": "Kitchen Notes",
+    "liveBroadcastContent": "none"
+   }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#channel",
+    "channelId": "UCy"
+   },
+   "snippet": {
+    "title": "a channel"
+   }
+  }
+ ]
+}

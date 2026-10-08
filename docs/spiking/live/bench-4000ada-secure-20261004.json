@@ -1,0 +1,202 @@
+{
+ "mode": "bench",
+ "gpu": "NVIDIA RTX 4000 Ada Generation",
+ "gpus_tried": [
+  [
+   "NVIDIA RTX 4000 Ada Generation",
+   "SECURE"
+  ]
+ ],
+ "cloud": "SECURE",
+ "pod_id": "kedybtcc38ibeh",
+ "usd_per_hour": 0.28,
+ "boot_s": 25.4,
+ "results": {
+  "session_id": "bench-4000ada-secure-20261004",
+  "day": null,
+  "validate": true,
+  "phases": {
+   "bench": [
+    {
+     "plasticity_off": {
+      "steps_per_s": 1292.6,
+      "realtime_x": 1.293,
+      "mean_rate_hz": 2.606
+     },
+     "plasticity_on": {
+      "steps_per_s": 211.6,
+      "realtime_x": 0.212,
+      "mean_rate_hz": 3.492
+     },
+     "n_neurons": 1000000,
+     "synapses": 100972600,
+     "gpu": "NVIDIA RTX 4000 Ada Generation",
+     "gpu_mem_gb": 5.71,
+     "steps_per_s": 211.6,
+     "realtime_x": 0.212
+    }
+   ],
+   "live_bench": [
+    {
+     "gpu": "NVIDIA RTX 4000 Ada Generation",
+     "n_neurons": 1000000,
+     "steps_per_s_free": 1249.6,
+     "realtime_x_free": 1.25,
+     "steps_per_s_with_decisions": 1077.6,
+     "realtime_x_with_decisions": 1.078,
+     "decisions": 40,
+     "decision_wall_ms_p50": 262.7,
+     "decision_wall_ms_p95": 304.3,
+     "decision_wall_ms_max": 334.6,
+     "decision_sim_ms_mean": 248.2,
+     "timeout_frac": 0.975,
+     "calibration": {
+      "readout": "diff",
+      "pool_rate_mean_hz": 2.93,
+      "pool_rate_sd_hz": 0.245,
+      "threshold_hz": 3.41,
+      "thr_z": 2.0,
+      "pool_size_calib": 3889.5,
+      "diff_k": 3.0,
+      "diff_sd_hz": 0.118
+     },
+     "gpu_mem_gb": 5.72
+    }
+   ]
+  },
+  "files": [
+   "results.json",
+   "session.log"
+  ],
+  "build": {
+   "device": "cuda",
+   "gpu": "NVIDIA RTX 4000 Ada Generation",
+   "n_neurons": 1000000,
+   "synapses": 100972600,
+   "max_delay_ms": 60,
+   "plastic_synapses": 60778400,
+   "build_s": 4.3,
+   "config_hash": "46439342c79e7f9c",
+   "config": {
+    "n_neurons": 1000000,
+    "seed": 1,
+    "frac_exc": 0.8,
+    "min_region": 10,
+    "hc_scale": 1.0,
+    "k_e_local": 45,
+    "k_i_local": 25,
+    "k_long": 30,
+    "k_hc_rec": 100,
+    "k_hc_rec_i": 100,
+    "k_vis_sm": 0,
+    "j_vis_sm": 0.1,
+    "dt": 1.0,
+    "tau_m": 20.0,
+    "v_th": 20.0,
+    "v_reset": 10.0,
+    "t_ref": 2.0,
+    "j_e": 0.5,
+    "g_i": 5.0,
+    "j_hc_rec": 0.05,
+    "j_hc_ei": 0.3,
+    "delay_local": [
+     1,
+     2
+    ],
+    "velocity_mm_ms": 6.0,
+    "mu_ext": 15.0,
+    "sigma_ext": 4.0,
+    "baseline_gain": 0.05,
+    "baseline_dt_ms": 50,
+    "plastic": true,
+    "tau_plus": 20.0,
+    "tau_minus": 20.0,
+    "a_plus": 1.0,
+    "a_minus": 0.5,
+    "x_theta": 0.1,
+    "h_pre": 0.1,
+    "tau_elig": 1000.0,
+    "elig_every": 10,
+    "tau_da": 200.0,
+    "w_max_ctx": 2.0,
+    "w_max_hc": 2.0,
+    "eta": {
+     "ctx": {
+      "da": 0.5,
+      "enc": 0.0005,
+      "cons": 0.002
+     },
+     "hc": {
+      "da": 0.0,
+      "enc": 0.025,
+      "cons": 0.0
+     }
+    },
+    "da_groups": [
+     "somatomotor"
+    ],
+    "hebb_theta": 10.0,
+    "hebb_ltd": 0.25,
+    "homeo_every": 1000,
+    "rate_target": 5.0,
+    "tau_rate": 10000.0,
+    "eta_theta": 0.0001,
+    "theta_max": 3.0,
+    "eta_scale": 0.0001,
+    "tau_forget_hc_days": 3.0,
+    "tau_forget_ctx_days": 60.0
+   },
+   "torch": "2.8.0+cu128",
+   "baseline_runs": 3,
+   "weights_loaded": false
+  },
+  "timing": {
+   "0:bench": {
+    "wall_s": 28.0
+   },
+   "1:live_bench": {
+    "wall_s": 35.4
+   }
+  },
+  "weights": {
+   "nonzero": 60431366,
+   "P": 60778400,
+   "dense": true,
+   "stats": {
+    "plastic_synapses": 60778400,
+    "updates": 440,
+    "ctx": {
+     "w_mean": 0.49957796931266785,
+     "dw_mean": -0.0004220254486426711,
+     "dw_absmax": 1.5,
+     "frac_changed": 0.9375600814819336
+    },
+    "hc": {
+     "w_mean": 0.24325710535049438,
+     "dw_mean": 0.0003999540931545198,
+     "dw_absmax": 0.0011159777641296387,
+     "frac_changed": 0.43951383233070374
+    }
+   },
+   "bytes": 123564326
+  },
+  "wall_s": 69.1,
+  "sim_s": 49.0,
+  "error": null
+ },
+ "deleted": true,
+ "still_listed": false,
+ "cost": {
+  "pod_id": "kedybtcc38ibeh",
+  "name": "sub01-spiking-live-bench-20261004-061608",
+  "gpu": "NVIDIA RTX 4000 Ada Generation",
+  "cost_per_hr": 0.28,
+  "start": "2026-10-04T06:16:09.580012+00:00",
+  "stop": "2026-10-04T06:17:51.578508+00:00",
+  "hours": 0.0283,
+  "cost_usd": 0.0079,
+  "reason": "done",
+  "purpose": "live-bench"
+ },
+ "brain_pod_still_there": true
+}

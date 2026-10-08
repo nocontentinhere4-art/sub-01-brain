@@ -1,0 +1,470 @@
+{
+ "tag": "after",
+ "scenarios": [
+  {
+   "frames": 60,
+   "slides_on_frames": 60,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     18.9,
+     18.9
+    ],
+    "R": [
+     5.3,
+     5.3
+    ],
+    "lowest_foot": [
+     5.3,
+     5.3
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 171,
+    "depth_max_mm": 0.41,
+    "gap_max_mm": 1.017,
+    "by_depth_worst": {
+     "<0.5mm": 171,
+     "0.5-1mm": 0,
+     "1-2mm": 0,
+     ">2mm": 0
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "standing at the door (mh_stand)",
+   "seconds": 6,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 3.5
+  },
+  {
+   "frames": 140,
+   "slides_on_frames": 140,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     -2,
+     92
+    ],
+    "R": [
+     -2,
+     54.3
+    ],
+    "lowest_foot": [
+     -2,
+     54.3
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 256,
+    "depth_max_mm": 2.17,
+    "gap_max_mm": 1.601,
+    "by_depth_worst": {
+     "<0.5mm": 212,
+     "0.5-1mm": 26,
+     "1-2mm": 15,
+     ">2mm": 3
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "getting up, walking to the window, standing there",
+   "seconds": 14,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 7.9
+  },
+  {
+   "frames": 100,
+   "slides_on_frames": 100,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     91.8,
+     95.6
+    ],
+    "R": [
+     53.5,
+     61.4
+    ],
+    "lowest_foot": [
+     53.5,
+     61.4
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 260,
+    "depth_max_mm": 2.18,
+    "gap_max_mm": 1.101,
+    "by_depth_worst": {
+     "<0.5mm": 219,
+     "0.5-1mm": 26,
+     "1-2mm": 15,
+     ">2mm": 3
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "seated: desk typing (desk_type_ik)",
+   "seconds": 10,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 6.4
+  },
+  {
+   "frames": 80,
+   "slides_on_frames": 80,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     91.6,
+     94.5
+    ],
+    "R": [
+     53.5,
+     59
+    ],
+    "lowest_foot": [
+     53.5,
+     59
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 258,
+    "depth_max_mm": 2.18,
+    "gap_max_mm": 1.103,
+    "by_depth_worst": {
+     "<0.5mm": 214,
+     "0.5-1mm": 26,
+     "1-2mm": 15,
+     ">2mm": 3
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "seated: desk mouse (desk_mouse_ik)",
+   "seconds": 8,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 5.0
+  },
+  {
+   "frames": 60,
+   "slides_on_frames": 60,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     18.9,
+     18.9
+    ],
+    "R": [
+     5.3,
+     5.3
+    ],
+    "lowest_foot": [
+     5.3,
+     5.3
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 171,
+    "depth_max_mm": 0.41,
+    "gap_max_mm": 1.017,
+    "by_depth_worst": {
+     "<0.5mm": 171,
+     "0.5-1mm": 0,
+     "1-2mm": 0,
+     ">2mm": 0
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "seated: desk watch (desk_watch)",
+   "seconds": 6,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 2.9
+  },
+  {
+   "frames": 160,
+   "slides_on_frames": 160,
+   "slides_off_frames": 0,
+   "sole_mm": {
+    "L": [
+     -0.3,
+     94.4
+    ],
+    "R": [
+     -2,
+     59
+    ],
+    "lowest_foot": [
+     -2,
+     59
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 258,
+    "depth_max_mm": 2.18,
+    "gap_max_mm": 1.62,
+    "by_depth_worst": {
+     "<0.5mm": 214,
+     "0.5-1mm": 26,
+     "1-2mm": 15,
+     ">2mm": 3
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "sitting down at the desk (room_sit_down)",
+   "seconds": 16,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 8.6
+  },
+  {
+   "frames": 220,
+   "slides_on_frames": 101,
+   "slides_off_frames": 119,
+   "sole_mm": {
+    "L": [
+     -2,
+     1025.7
+    ],
+    "R": [
+     -2,
+     791.9
+    ],
+    "lowest_foot": [
+     -2,
+     791.5
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 256,
+    "depth_max_mm": 2.17,
+    "gap_max_mm": 1.601,
+    "by_depth_worst": {
+     "<0.5mm": 212,
+     "0.5-1mm": 26,
+     "1-2mm": 15,
+     ">2mm": 3
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "bedtime: to bed (slides come off)",
+   "seconds": 22,
+   "state_end": {
+    "slides": false,
+    "socks": true,
+    "parked": true,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 24.7
+  },
+  {
+   "frames": 60,
+   "slides_on_frames": 0,
+   "slides_off_frames": 60,
+   "sole_mm": {
+    "L": [
+     763.2,
+     763.2
+    ],
+    "R": [
+     752.9,
+     752.9
+    ],
+    "lowest_foot": [
+     752.9,
+     752.9
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 170,
+    "depth_max_mm": 0.41,
+    "gap_max_mm": 0.999,
+    "by_depth_worst": {
+     "<0.5mm": 170,
+     "0.5-1mm": 0,
+     "1-2mm": 0,
+     ">2mm": 0
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "in bed, asleep",
+   "seconds": 6,
+   "state_end": {
+    "slides": false,
+    "socks": true,
+    "parked": true,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 7.2
+  },
+  {
+   "frames": 120,
+   "slides_on_frames": 51,
+   "slides_off_frames": 69,
+   "sole_mm": {
+    "L": [
+     13.4,
+     963.7
+    ],
+    "R": [
+     2.4,
+     946.6
+    ],
+    "lowest_foot": [
+     2.4,
+     946.6
+    ]
+   },
+   "sock_slide": {
+    "inside_max": 171,
+    "depth_max_mm": 0.41,
+    "gap_max_mm": 1.168,
+    "by_depth_worst": {
+     "<0.5mm": 171,
+     "0.5-1mm": 0,
+     "1-2mm": 0,
+     ">2mm": 0
+    },
+    "info": {
+     "cand": 6204,
+     "pairs": 4093,
+     "seam": 1993
+    }
+   },
+   "label": "waking, out of bed (slides go back on)",
+   "seconds": 12,
+   "state_end": {
+    "slides": true,
+    "socks": true,
+    "parked": false,
+    "parked_children": 1,
+    "meshes": [
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+     "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+     "socks:25801",
+     "slides:28848"
+    ]
+   },
+   "wall_s": 18.3
+  }
+ ],
+ "states": {
+  "load": {
+   "slides": true,
+   "socks": true,
+   "parked": false,
+   "parked_children": 1,
+   "meshes": [
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82:308556",
+    "tripo_mesh_6bf04053-4eb9-4c81-aed9-ebf290057e82_1:61296",
+    "socks:25801",
+    "slides:28848"
+   ]
+  }
+ },
+ "errors": []
+}

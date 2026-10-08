@@ -1,0 +1,151 @@
+# Penetration and the bed checks (G4's #119 mesh, #114's motion layer with this PR's guards), every vertex every 0.25 s.
+# node ../tools/sweep_s.mjs <port> 1 <seed>: into bed, both turns, the phone and music on top, back to sleep, getting up.
+# 'worst' counts bed + chair vertices, and (lying) vertices past the curtain line x = -1.775; head-pillow is the
+# furthest his head's centre got from the pillow's centre (-1.571, 0.867) while he lay on the bed.
+
+## sleep sweep, seed 63
+research                worst 1 head-pillow 0.000 | max 1 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0
+sleep                   worst 0 head-pillow 0.036 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.049 | max 0
+ROLL.force = 0          worst 0 head-pillow 0.035 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.044 | max 0
+ROLL.force = null; ROL  worst 0 head-pillow 0.036 | max 0
+phone                   worst 0 head-pillow 0.077 | max 0
+listen_music            worst 0 head-pillow 0.036 | max 0
+sleep                   worst 0 head-pillow 0.036 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.047 | max 0
+research                worst 1 head-pillow 0.034 | max 1 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 10.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.
+sleep                   worst 0 head-pillow 0.035 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.043 | max 0
+window                  worst 0 head-pillow 0.034 | max 0
+order_food              worst 1701 head-pillow 0.000 | max 1701 0.25 1701 walk  {"bed:LeftLeg":567,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+sleep                   worst 0 head-pillow 0.036 | max 0
+get_delivery            worst 267 head-pillow 0.000 | max 267 20.5 267  stretch {"chair:LeftHand":267,"pts":[[0.212,1.049,0.353,-0.92,1.21,-0.38],[0.197,1.044,0.372,-0.93,1.2,-0.36],[0.211,1.04,0.342,
+WORST 1701
+
+## sleep sweep, seed 7
+research                worst 1 head-pillow 0.000 | max 1 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,
+sleep                   worst 0 head-pillow 0.038 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.055 | max 0
+ROLL.force = 0          worst 0 head-pillow 0.037 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.051 | max 0
+ROLL.force = null; ROL  worst 0 head-pillow 0.038 | max 0
+phone                   worst 0 head-pillow 0.081 | max 0
+listen_music            worst 0 head-pillow 0.038 | max 0
+sleep                   worst 0 head-pillow 0.037 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.051 | max 0
+research                worst 1 head-pillow 0.031 | max 1 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 10.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.
+sleep                   worst 0 head-pillow 0.036 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.043 | max 0
+window                  worst 0 head-pillow 0.034 | max 0
+order_food              worst 1701 head-pillow 0.000 | max 1701 0.25 1701 walk  {"bed:LeftLeg":567,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+sleep                   worst 0 head-pillow 0.036 | max 0
+get_delivery            worst 0 head-pillow 0.000 | max 0
+WORST 1701
+
+## sleep sweep, seed 1234
+research                worst 1 head-pillow 0.000 | max 1 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,
+sleep                   worst 0 head-pillow 0.035 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.050 | max 0
+ROLL.force = 0          worst 0 head-pillow 0.035 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.045 | max 0
+ROLL.force = null; ROL  worst 0 head-pillow 0.036 | max 0
+phone                   worst 0 head-pillow 0.077 | max 0
+listen_music            worst 0 head-pillow 0.036 | max 0
+sleep                   worst 0 head-pillow 0.036 | max 0
+ROLL.force = ROLL.ang   worst 0 head-pillow 0.048 | max 0
+research                worst 1 head-pillow 0.034 | max 1 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 10.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.
+sleep                   worst 0 head-pillow 0.036 | max 0
+ROLL.force = -ROLL.ang  worst 0 head-pillow 0.043 | max 0
+window                  worst 0 head-pillow 0.034 | max 0
+order_food              worst 1701 head-pillow 0.000 | max 1701 0.25 1701 walk  {"bed:LeftLeg":567,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+sleep                   worst 0 head-pillow 0.036 | max 0
+get_delivery            worst 272 head-pillow 0.000 | max 272 30.5 272  stretch {"chair:LeftHand":272,"pts":[[0.167,1.116,0.358,-0.96,1.28,-0.38],[0.164,1.142,0.346,-0.97,1.3,-0.39],[0.16,1.138,0.351,
+WORST 1701
+
+# The chained sweep of every activity (17 changes, ~12 simulated minutes), ../tools/sweep.mjs: this branch, then main.
+
+## this branch, seed 63
+research      max 1 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 1 1   {"chair:LeftLeg":1,"p
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+phone         max 0
+order_food    max 0
+window        max 0
+get_delivery  max 0
+eat           max 0
+research      max 1 1.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 1.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 2 1   {"chair:LeftLeg":1,"p
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+window        max 0
+order_food    max 0
+chat          max 1 7.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 7.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 8 1   {"chair:LeftLeg":1,"p
+sleep         max 0
+phone         max 0
+get_delivery  max 160 31.75 160  stretch {"chair:LeftHand":160,"pts":[[0.101,1.125,0.353,-1.03,1.29,-0.38],[0.106,1.13,0.353,-1.02,1.29,-0.38],[0.104,1.13,0.356,-1.03,1.29,-0.38],[0.099,1.127,0.357,-1
+window        max 0
+research      max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171} | 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,
+WORST 1698
+
+## this branch, seed 7
+research      max 1 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 1 1   {"chair:LeftLeg":1,"pts
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+phone         max 139 13 139 walk  {"bed:RightToeBase":139}
+order_food    max 0
+window        max 0
+get_delivery  max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+eat           max 0
+research      max 1 1.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 1.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 2 1   {"chair:LeftLeg":1,"p
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+window        max 0
+order_food    max 1701 0.25 1701 walk  {"bed:LeftLeg":567,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+chat          max 1 7.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 7.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 8 1   {"chair:LeftLeg":1,"p
+sleep         max 0
+phone         max 0
+get_delivery  max 0
+window        max 0
+research      max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171} | 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,
+WORST 1701
+
+## this branch, seed 1234
+research      max 1 0.25 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+phone         max 0
+order_food    max 0
+window        max 0
+get_delivery  max 0
+eat           max 0
+research      max 1 1.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 1.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 2 1   {"chair:LeftLeg":1,"p
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+window        max 0
+order_food    max 130 0.25 130 walk  {"bed:LeftLeg":35,"bed:LeftFoot":95}
+chat          max 1 7.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 7.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 8 1   {"chair:LeftLeg":1,"p
+sleep         max 0
+phone         max 0
+get_delivery  max 0
+window        max 0
+research      max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171} | 10.25 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,
+WORST 1698
+
+## main c88eade, seed 63
+research      max 1 0.25 1   {"chair:LeftLeg":1,"pts":[[-0.1,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.101,0.435,-0.243,-1.23,0.6,-0.83]]} | 0.75 1   {"chair:LeftLeg":1,"
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+phone         max 0
+order_food    max 0
+window        max 0
+get_delivery  max 0
+eat           max 15 3.5 8 pose  {"chair:LeftUpLeg":8,"pts":[[-0.112,0.471,-0.234,-0.9,0.63,-0.45],[-0.112,0.471,-0.234,-0.9,0.63,-0.45],[-0.117,0.47,-0.237,-0.89,0.63,-0.45],[-0.117,0.47,-0.237,-0.89
+research      max 1 1.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 1.75 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.23,0.6,-0.83]]} | 2 1   {"chair:LeftLeg":1,"p
+eat           max 3 0.5 1   {"chair:LeftLeg":1,"pts":[[-0.102,0.435,-0.243,-1.35,0.6,-0.83]]} | 0.75 3 pose  {"chair:RightLeg":3,"pts":[[0.141,0.486,-0.242,-1.11,0.65,-0.83],[0.141,0.486,-0.242,-1.11,
+window        max 0
+order_food    max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171}
+chat          max 228 5.25 54 pose  {"chair:RightLeg":17,"pts":[[0.168,0.451,-0.213,-0.92,0.61,-0.17],[0.158,0.435,-0.199,-0.93,0.6,-0.18],[0.147,0.483,-0.237,-0.89,0.64,-0.19],[0.146,0.448,-0.208,-0.
+sleep         max 1908 6.75 93 pose  {"bed:RightFoot":93} | 7 4 pose  {"bed:RightFoot":4} | 7.75 551 pose  {"bed:RightLeg":24,"bed:LeftLeg":439,"bed:LeftFoot":88} | 8 1709 pose  {"bed:RightLeg":500,"b
+phone         max 0
+get_delivery  max 160 31.75 160  stretch {"chair:LeftHand":160,"pts":[[0.101,1.125,0.353,-1.03,1.28,-0.38],[0.106,1.129,0.353,-1.02,1.29,-0.38],[0.104,1.129,0.356,-1.03,1.29,-0.38],[0.099,1.126,0.357,
+window        max 0
+research      max 1698 0.25 1698 walk  {"bed:LeftLeg":564,"bed:LeftFoot":869,"bed:LeftToeBase":265} | 0.5 171 walk  {"bed:LeftFoot":171} | 7.5 24 pose  {"chair:RightLeg":9,"pts":[[0.151,0.433,-0.208,-
+WORST 1908
+
+# On main the lie-down puts up to 1,908 of his vertices in the bed and sitting down at the desk up to 228 in the chair;
+# here both are 0-3 (the 1-3 chair vertices are on main before #114 too). What is left, the same on main: #114's walk
+# clip carries his leg through the bed frame as he walks from the window past the bed's corner (1,698 for one frame),
+# and the stretch beside the desk puts his hand in the chair's back (160-272). Neither is the bed's: reported to G3.

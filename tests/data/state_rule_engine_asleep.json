@@ -1,0 +1,141 @@
+{
+ "engine": {
+  "t": 1790877600.0,
+  "asleep": true,
+  "stage": "REM",
+  "depth": 0.0,
+  "onset": 1790872890.0,
+  "k_base": 1,
+  "awake_since": 1790809200.0,
+  "arousal": 6.253297946102083e-08,
+  "arousal_log": [],
+  "last_stim": 1790872290.0,
+  "debt": 0.351249999999999,
+  "night": {
+   "date": "2026-10-01",
+   "timezone": "Europe/Rome",
+   "sleep_onset": "2026-10-02T00:00",
+   "woke_up": null,
+   "timeline": [
+    {
+     "t": "2026-10-02T00:00",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T01:19",
+     "stage": "REM"
+    },
+    {
+     "t": "2026-10-02T01:30",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T01:31",
+     "stage": "AWAKE"
+    },
+    {
+     "t": "2026-10-02T01:41",
+     "stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T02:53",
+     "stage": "REM"
+    }
+   ],
+   "wakeups": [
+    {
+     "t": "2026-10-02T01:31",
+     "cause": "4 messages"
+    }
+   ],
+   "sleep_debt": {
+    "start": 0.0,
+    "end": null
+   },
+   "replays": [
+    {
+     "t": "2026-10-02T02:56",
+     "text": "are you asleep?",
+     "emotion": "neutral",
+     "networks": [
+      "language"
+     ],
+     "received": "2026-10-02T01:31",
+     "received_stage": "NREM"
+    },
+    {
+     "t": "2026-10-02T02:57",
+     "text": "are you asleep?",
+     "emotion": "neutral",
+     "networks": [
+      "language"
+     ],
+     "received": "2026-10-02T01:31",
+     "received_stage": "NREM"
+    }
+   ]
+  },
+  "last_night": null,
+  "params": {
+   "f_hz": 5.999997281571194,
+   "coupling": 0.6000012760615309,
+   "noise": 0.8999994954867023,
+   "a": -4.999997281571194,
+   "gain": 0.39999985624406703
+  }
+ },
+ "memory": [
+  {
+   "t": 1790872200.0,
+   "text": "are you asleep?",
+   "stage": "REM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872230.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872260.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  },
+  {
+   "t": 1790872290.0,
+   "text": "are you asleep?",
+   "stage": "NREM",
+   "stimulus": {
+    "language": 6
+   },
+   "emotion": "neutral",
+   "networks": [
+    "language"
+   ],
+   "asleep": true
+  }
+ ]
+}

@@ -1,0 +1,668 @@
+{
+ "what": "the mouse thumb over 15 s of mouse mode, desk_14, every 0.5 s (thumb) / 0.25 s (whole hand)",
+ "before_7772f12": {
+  "thumb_angle_to_mouse_axis_deg": 44,
+  "thumb_tip_along": -0.22,
+  "thumb_into_shell_mm_max": 5.9,
+  "thumb_base_triangles_over_2_5x": "20-38",
+  "worst_stretch": "up to 10x",
+  "hand_into_shell_mm_max": 9.3
+ },
+ "clip_thumb_unedited_roll12": {
+  "thumb_angle_deg": 14.5,
+  "thumb_tip_along": 0.14,
+  "thumb_into_shell_mm_max": 8.8,
+  "thumb_base_triangles_over_2_5x": 0
+ },
+ "now_roll25": {
+  "thumb_samples": [
+   {
+    "thumbSideGap_mm": 0,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 3.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 3.5
+   },
+   {
+    "thumbSideGap_mm": 0.4,
+    "thumbIntoShell_mm": 0.8,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.06,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.79,
+    "t": 4.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 4.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 5.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.76,
+    "t": 5.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 6.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 6.5
+   },
+   {
+    "thumbSideGap_mm": 0.2,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 7.0
+   },
+   {
+    "thumbSideGap_mm": 0.2,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 7.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 0.8,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.06,
+    "indexMiddleKnuckleAlong": 0.28,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.75,
+    "t": 8.0
+   },
+   {
+    "thumbSideGap_mm": 0.5,
+    "thumbIntoShell_mm": 0.8,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.06,
+    "indexMiddleKnuckleAlong": 0.28,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.75,
+    "t": 8.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 9.0
+   },
+   {
+    "thumbSideGap_mm": 0,
+    "thumbIntoShell_mm": 1.2,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.08,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.79,
+    "t": 9.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 10.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 10.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 11.0
+   },
+   {
+    "thumbSideGap_mm": 0,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 11.5
+   },
+   {
+    "thumbSideGap_mm": 0,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 12.0
+   },
+   {
+    "thumbSideGap_mm": 0.4,
+    "thumbIntoShell_mm": 0.9,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.06,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.76,
+    "t": 12.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 13.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.75,
+    "t": 13.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 14.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 14.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 15.0
+   },
+   {
+    "thumbSideGap_mm": 0,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 15.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.3,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 16.0
+   },
+   {
+    "thumbSideGap_mm": 0.4,
+    "thumbIntoShell_mm": 0.8,
+    "thumbAngleToMouseAxis_deg": 15.8,
+    "thumbTipAlong": 0.06,
+    "indexMiddleKnuckleAlong": 0.29,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.79,
+    "t": 16.5
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 17.0
+   },
+   {
+    "thumbSideGap_mm": 0.1,
+    "thumbIntoShell_mm": 1.4,
+    "thumbAngleToMouseAxis_deg": 15.9,
+    "thumbTipAlong": 0.07,
+    "indexMiddleKnuckleAlong": 0.3,
+    "handTriangles": 4119,
+    "stretchedOver2_5": 4,
+    "worstStretch": 2.74,
+    "t": 17.5
+   }
+  ],
+  "whole_hand": {
+   "window_s": [
+    3,
+    18
+   ],
+   "samples": 60,
+   "hand_into_shell_mm": {
+    "max": 1.7,
+    "median": 1.3,
+    "p90": 1.4
+   },
+   "hand_below_pad_mm_max": 1.7,
+   "over_2mm": {
+    "3.0": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "3.25": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "3.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "3.75": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "4.0": [
+     1,
+     "finger1-3R",
+     8
+    ],
+    "4.25": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "4.5": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "4.75": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "5.0": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "5.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "5.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "5.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "6.0": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "6.25": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "6.5": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "6.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "7.0": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "7.25": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "7.5": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "7.75": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "8.0": [
+     0.9,
+     "finger1-3R",
+     8
+    ],
+    "8.25": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "8.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "8.75": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "9.0": [
+     1.7,
+     "finger1-3R",
+     16
+    ],
+    "9.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "9.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "9.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "10.0": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "10.25": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "10.5": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "10.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "11.0": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "11.25": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "11.5": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "11.75": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "12.0": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "12.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "12.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "12.75": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "13.0": [
+     1.2,
+     "finger1-3R",
+     10
+    ],
+    "13.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "13.5": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "13.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "14.0": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "14.25": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "14.5": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "14.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "15.0": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "15.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "15.5": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "15.75": [
+     0.9,
+     "finger1-3R",
+     8
+    ],
+    "16.0": [
+     0.8,
+     "finger1-3R",
+     8
+    ],
+    "16.25": [
+     1.4,
+     "finger1-3R",
+     12
+    ],
+    "16.5": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "16.75": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "17.0": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "17.25": [
+     1.4,
+     "finger1-3R",
+     11
+    ],
+    "17.5": [
+     1.3,
+     "finger1-3R",
+     11
+    ],
+    "17.75": [
+     1.4,
+     "finger1-3R",
+     11
+    ]
+   }
+  }
+ },
+ "along_scale": "-1 the mouse's back, 0 its middle, +1 its front (half-length 6 cm)",
+ "remaining_over_2_5x": "2 faces (counted twice: duplicated in the index buffer) at the index knuckle, 3.0-3.1 mm edges at 8.4 mm (2.74x), from the accepted grip's index bend; 0 with the page's hand solve off; present before this change too"
+}

@@ -1,0 +1,51 @@
+{
+ "frames": 2700,
+ "fps": 30,
+ "seconds": 90.0,
+ "bytes": 10923130,
+ "crf": 20,
+ "sides": {
+  "old": {
+   "side": "old",
+   "size": "390x844",
+   "fps": 30,
+   "segments": [
+    {
+     "hour": 14,
+     "seconds": 60.0,
+     "first": 0,
+     "frames": 1800
+    },
+    {
+     "hour": 23,
+     "seconds": 30.0,
+     "first": 1800,
+     "frames": 900
+    }
+   ],
+   "renderer": "ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)",
+   "seconds_render": 79.7
+  },
+  "new": {
+   "side": "new",
+   "size": "390x844",
+   "fps": 30,
+   "segments": [
+    {
+     "hour": 14,
+     "seconds": 60.0,
+     "first": 0,
+     "frames": 1800
+    },
+    {
+     "hour": 23,
+     "seconds": 30.0,
+     "first": 1800,
+     "frames": 900
+    }
+   ],
+   "renderer": "ANGLE (NVIDIA Corporation, NVIDIA RTX A5000/PCIe/SSE2, OpenGL ES 3.2) | Google Inc. (NVIDIA Corporation)",
+   "seconds_render": 86.0
+  }
+ }
+}

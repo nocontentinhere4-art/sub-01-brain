@@ -1,0 +1,568 @@
+{
+ "v": 1,
+ "frame": "web: the 2015 DWI world frame minus web/fibres.json offset (same as cortex.bin and the fibres)",
+ "template": {
+  "name": "ICBM 152 2009c nonlinear asymmetric (TemplateFlow tpl-MNI152NLin2009cAsym)",
+  "use": "only to find which of HIS voxels are cerebellum / brainstem (its segmentation warped onto his T1)",
+  "licence": "Copyright (C) 1993-2004 Louis Collins, MNI, McGill; use, copy, modify and distribute for any purpose without fee, keeping the notice"
+ },
+ "meshes": {
+  "cerebellum": {
+   "verts": 29880,
+   "faces": 60664,
+   "idx_type": "uint16",
+   "source": "his MRI",
+   "otsu": 1074.1,
+   "voxels": 114089,
+   "note": "his own tissue (T1 above an Otsu threshold of his intensities there) inside the warped template label 'cerebellum', marching cubes at 1 mm, 55 % simplified"
+  },
+  "brainstem": {
+   "verts": 3168,
+   "faces": 6340,
+   "idx_type": "uint16",
+   "source": "his MRI",
+   "otsu": 923.5,
+   "voxels": 32277,
+   "note": "his own tissue (T1 above an Otsu threshold of his intensities there) inside the warped template label 'brainstem', marching cubes at 1 mm, 70 % simplified"
+  },
+  "cortex_part": {
+   "cerebrum": 52457,
+   "cerebellum": 8855,
+   "brainstem": 642
+  }
+ },
+ "volume": {
+  "shape": [
+   92,
+   128,
+   128
+  ],
+  "cols": 12,
+  "rows": 11,
+  "step_mm": 2.0,
+  "web_to_vox": [
+   0.494361,
+   0.013518,
+   0.004425,
+   44.102288,
+   -0.013426,
+   0.495703,
+   -0.014391,
+   57.022793,
+   -0.004829,
+   0.014265,
+   0.495865,
+   60.211566,
+   0.0,
+   0.0,
+   0.0,
+   1.0
+  ],
+  "tissue": {
+   "csf": 0.0792,
+   "grey": 0.3458,
+   "white": 0.4542
+  },
+  "bytes": 562947,
+  "source": "his MRI",
+  "note": "his 2022 T1 (skull-stripped, no face) resampled to 2 mm, 8-bit, one tile a slice (grey) with a soft brain mask in the alpha; intensities as fractions of the 99.5th percentile over 1.2, filled outward past the mask"
+ },
+ "parts": {
+  "file": "parts.bin",
+  "unit_mm": 0.01,
+  "parts": [
+   {
+    "fma": "FMA3947",
+    "kind": "artery",
+    "label": "internal carotid artery",
+    "bp3d_name": "internal carotid artery",
+    "elements": [
+     "FJ1682",
+     "FJ1682M"
+    ],
+    "faces_in": 2544,
+    "faces": 1020,
+    "verts": 530,
+    "pressed": 11,
+    "pos": 0,
+    "idx": 3180,
+    "idx_type": "uint16",
+    "n_idx": 3060,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50028",
+    "kind": "artery",
+    "label": "anterior cerebral artery",
+    "bp3d_name": "anterior cerebral artery",
+    "elements": [
+     "FJ1654",
+     "FJ1654M"
+    ],
+    "faces_in": 800,
+    "faces": 342,
+    "verts": 183,
+    "pressed": 19,
+    "pos": 9300,
+    "idx": 10400,
+    "idx_type": "uint16",
+    "n_idx": 1026,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50169",
+    "kind": "artery",
+    "label": "anterior communicating artery",
+    "bp3d_name": "anterior communicating artery",
+    "elements": [
+     "FJ1655"
+    ],
+    "faces_in": 80,
+    "faces": 80,
+    "verts": 63,
+    "pressed": 0,
+    "pos": 12452,
+    "idx": 12832,
+    "idx_type": "uint16",
+    "n_idx": 240,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50080",
+    "kind": "artery",
+    "label": "middle cerebral artery",
+    "bp3d_name": "zone of middle cerebral artery",
+    "elements": [
+     "FJ1660",
+     "FJ1660M",
+     "FJ1692",
+     "FJ1692M",
+     "FJ1694",
+     "FJ1694M"
+    ],
+    "faces_in": 13320,
+    "faces": 5703,
+    "verts": 2869,
+    "pressed": 1578,
+    "pos": 13312,
+    "idx": 30528,
+    "idx_type": "uint16",
+    "n_idx": 17109,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50589",
+    "kind": "artery",
+    "label": "posterior cerebral artery",
+    "bp3d_name": "zone of posterior cerebral artery",
+    "elements": [
+     "FJ1714",
+     "FJ1714M",
+     "FJ1723",
+     "FJ1723M"
+    ],
+    "faces_in": 1652,
+    "faces": 706,
+    "verts": 379,
+    "pressed": 153,
+    "pos": 64748,
+    "idx": 67024,
+    "idx_type": "uint16",
+    "n_idx": 2118,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50084",
+    "kind": "artery",
+    "label": "posterior communicating artery",
+    "bp3d_name": "posterior communicating artery",
+    "elements": [
+     "FJ1713",
+     "FJ1713M"
+    ],
+    "faces_in": 408,
+    "faces": 200,
+    "verts": 117,
+    "pressed": 28,
+    "pos": 71260,
+    "idx": 71964,
+    "idx_type": "uint16",
+    "n_idx": 600,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50542",
+    "kind": "artery",
+    "label": "basilar artery",
+    "bp3d_name": "basilar artery",
+    "elements": [
+     "FJ1672",
+     "FJ1844",
+     "FJ1656",
+     "FJ1656M",
+     "FJ1661",
+     "FJ1661M",
+     "FJ1675",
+     "FJ1675M",
+     "FJ1677",
+     "FJ1677M",
+     "FJ1678",
+     "FJ1678M",
+     "FJ1680",
+     "FJ1680M",
+     "FJ1684",
+     "FJ1684M",
+     "FJ1687",
+     "FJ1687M",
+     "FJ1689",
+     "FJ1689M",
+     "FJ1691",
+     "FJ1691M",
+     "FJ1720",
+     "FJ1720M",
+     "FJ1726",
+     "FJ1726M",
+     "FJ1727",
+     "FJ1727M"
+    ],
+    "faces_in": 29890,
+    "faces": 12798,
+    "verts": 8080,
+    "pressed": 4354,
+    "pos": 73164,
+    "idx": 121644,
+    "idx_type": "uint16",
+    "n_idx": 38394,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA3956",
+    "kind": "artery",
+    "label": "vertebral artery",
+    "bp3d_name": "vertebral artery",
+    "elements": [
+     "FJ1725",
+     "FJ1725M"
+    ],
+    "faces_in": 1600,
+    "faces": 556,
+    "verts": 351,
+    "pressed": 27,
+    "pos": 198432,
+    "idx": 200540,
+    "idx_type": "uint16",
+    "n_idx": 1668,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50573",
+    "kind": "artery",
+    "label": "superior cerebellar artery",
+    "bp3d_name": "superior cerebellar artery",
+    "elements": [
+     "FJ1726",
+     "FJ1726M"
+    ],
+    "faces_in": 812,
+    "faces": 347,
+    "verts": 197,
+    "pressed": 44,
+    "pos": 203876,
+    "idx": 205060,
+    "idx_type": "uint16",
+    "n_idx": 1041,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50544",
+    "kind": "artery",
+    "label": "anterior inferior cerebellar artery",
+    "bp3d_name": "anterior inferior cerebellar artery",
+    "elements": [
+     "FJ1656",
+     "FJ1656M"
+    ],
+    "faces_in": 1532,
+    "faces": 655,
+    "verts": 430,
+    "pressed": 55,
+    "pos": 207144,
+    "idx": 209724,
+    "idx_type": "uint16",
+    "n_idx": 1965,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50518",
+    "kind": "artery",
+    "label": "posterior inferior cerebellar artery",
+    "bp3d_name": "posterior inferior cerebellar artery",
+    "elements": [
+     "FJ1700",
+     "FJ1700M",
+     "FJ1701",
+     "FJ1701M",
+     "FJ1702",
+     "FJ1702M",
+     "FJ1703",
+     "FJ1703M",
+     "FJ1704",
+     "FJ1704M",
+     "FJ1705",
+     "FJ1705M",
+     "FJ1706",
+     "FJ1706M",
+     "FJ1707",
+     "FJ1707M",
+     "FJ1708",
+     "FJ1708M",
+     "FJ1709",
+     "FJ1709M",
+     "FJ1710",
+     "FJ1710M",
+     "FJ1711",
+     "FJ1711M",
+     "FJ1715",
+     "FJ1715M"
+    ],
+    "faces_in": 8080,
+    "faces": 3459,
+    "verts": 3702,
+    "pressed": 2030,
+    "pos": 213656,
+    "idx": 235868,
+    "idx_type": "uint16",
+    "n_idx": 10377,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50863",
+    "kind": "nerve",
+    "label": "optic nerve (II)",
+    "bp3d_name": "optic nerve",
+    "elements": [
+     "FJ1313",
+     "FJ1364",
+     "FJ1772",
+     "FJ1819"
+    ],
+    "faces_in": 8472,
+    "faces": 2642,
+    "verts": 1445,
+    "pressed": 0,
+    "pos": 256624,
+    "idx": 265296,
+    "idx_type": "uint16",
+    "n_idx": 7926,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA62045",
+    "kind": "nerve",
+    "label": "optic chiasm",
+    "bp3d_name": "optic chiasm",
+    "elements": [
+     "FJ1771",
+     "FJ1818"
+    ],
+    "faces_in": 1788,
+    "faces": 556,
+    "verts": 283,
+    "pressed": 0,
+    "pos": 281148,
+    "idx": 282848,
+    "idx_type": "uint16",
+    "n_idx": 1668,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA62046",
+    "kind": "nerve",
+    "label": "optic tract",
+    "bp3d_name": "optic tract",
+    "elements": [
+     "FJ1773",
+     "FJ1820"
+    ],
+    "faces_in": 4668,
+    "faces": 1455,
+    "verts": 742,
+    "pressed": 0,
+    "pos": 286184,
+    "idx": 290636,
+    "idx_type": "uint16",
+    "n_idx": 4365,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA52571",
+    "kind": "nerve",
+    "label": "oculomotor nerve (III, its orbital branches)",
+    "bp3d_name": "branch of oculomotor nerve",
+    "elements": [
+     "FJ1293",
+     "FJ1321",
+     "FJ1344",
+     "FJ1372"
+    ],
+    "faces_in": 4882,
+    "faces": 1522,
+    "verts": 1217,
+    "pressed": 0,
+    "pos": 299368,
+    "idx": 306672,
+    "idx_type": "uint16",
+    "n_idx": 4566,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA50865",
+    "kind": "nerve",
+    "label": "trochlear nerve (IV)",
+    "bp3d_name": "trochlear nerve",
+    "elements": [
+     "FJ1330",
+     "FJ1381"
+    ],
+    "faces_in": 5478,
+    "faces": 1708,
+    "verts": 885,
+    "pressed": 0,
+    "pos": 315804,
+    "idx": 321116,
+    "idx_type": "uint16",
+    "n_idx": 5124,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA52621",
+    "kind": "nerve",
+    "label": "ophthalmic nerve (V1)",
+    "bp3d_name": "ophthalmic nerve",
+    "elements": [
+     "FJ1312",
+     "FJ1363"
+    ],
+    "faces_in": 3552,
+    "faces": 1108,
+    "verts": 558,
+    "pressed": 0,
+    "pos": 331364,
+    "idx": 334712,
+    "idx_type": "uint16",
+    "n_idx": 3324,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA13889",
+    "kind": "gland",
+    "label": "pituitary gland",
+    "bp3d_name": "pituitary gland",
+    "elements": [
+     "FJ1796"
+    ],
+    "faces_in": 1164,
+    "faces": 598,
+    "verts": 315,
+    "pressed": 0,
+    "pos": 341360,
+    "idx": 343252,
+    "idx_type": "uint16",
+    "n_idx": 1794,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "FMA7647",
+    "kind": "cord",
+    "label": "spinal cord (stub)",
+    "bp3d_name": "spinal cord",
+    "elements": [
+     "FJ1737"
+    ],
+    "faces_in": 728,
+    "faces": 728,
+    "verts": 427,
+    "pressed": 0,
+    "pos": 346840,
+    "idx": 349404,
+    "idx_type": "uint16",
+    "n_idx": 2184,
+    "source": "atlas (BodyParts3D)"
+   },
+   {
+    "fma": "",
+    "kind": "vein",
+    "label": "dural sinuses and large veins",
+    "bp3d_name": "",
+    "elements": [],
+    "faces_in": 14000,
+    "faces": 14000,
+    "verts": 7024,
+    "pressed": 1743,
+    "pos": 353772,
+    "source": "atlas (VENAT)",
+    "idx": 395916,
+    "idx_type": "uint16",
+    "n_idx": 42000
+   }
+  ],
+  "fit": {
+   "rms_mm": 2.63,
+   "median_mm": 2.59,
+   "scale": 0.8716,
+   "matrix": [
+    -0.871331,
+    -0.010532,
+    -0.019946,
+    33.442765,
+    0.009016,
+    -0.869145,
+    0.065057,
+    -165.480083,
+    -0.020675,
+    0.064829,
+    0.868963,
+    -1342.939928,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "trim": 0.8,
+   "fit_set": [
+    "left cerebral hemisphere",
+    "right cerebral hemisphere",
+    "cerebellum",
+    "brainstem"
+   ],
+   "note": "one similarity transform (scale, rotation, translation) of the atlas brain onto his cortex surface; arteries just under his surface pressed onto it"
+  },
+  "not_in_atlas": [
+   "olfactory (I)",
+   "oculomotor trunk (III)",
+   "trigeminal trunk (V)",
+   "abducens (VI)",
+   "facial (VII)",
+   "vestibulocochlear (VIII)",
+   "glossopharyngeal (IX)",
+   "vagus (X)",
+   "accessory (XI)",
+   "hypoglossal (XII)",
+   "dural venous sinuses",
+   "cerebral and bridging veins"
+  ],
+  "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+  "licence": "CC BY 4.0 (NBDC archive licence page, 2025-02-27; the 2011 OBJ headers say CC BY-SA 2.1 JP); the derived parts.bin is offered under CC BY-SA 4.0, which satisfies both",
+  "source_url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/",
+  "version": "BP3D 4.0 (isa_BP3D_4.0_obj_99)",
+  "venat": {
+   "threshold": 0.4,
+   "min_voxels": 500,
+   "pressed": 1743,
+   "attribution": "VENAT venous atlas, Huck et al. 2019 (Brain Struct Funct 224:2467; figshare 10.6084/m9.figshare.7205960), CC BY 4.0",
+   "licence": "CC BY 4.0",
+   "source_url": "https://ndownloader.figshare.com/files/13267316",
+   "note": "population atlas (20 adults), iso-surface of the mean vein partial volume, affinely fitted to his T1 through the template registration; bridging veins below the threshold are not drawn"
+  }
+ }
+}

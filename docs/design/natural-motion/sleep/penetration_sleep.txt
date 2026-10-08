@@ -1,0 +1,123 @@
+# Penetration (the #42 check: every skinned vertex inside the bed or the chair). Under the duvet the bed's top is the
+# sheet (as the duvet comes over him, from the duvet's top to the sheet), with the same 2 cm of give as before.
+# node tools/sweep_s.mjs <port> 1 <seed> (sleep); the part 1 chained sweep for the rest. Every vertex every 0.25 s.
+
+## sleep sweep, seed 63
+research                max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+ROLL.force = 0          max 0 
+ROLL.force = -ROLL.ang  max 0 
+ROLL.force = null; ROL  max 0 
+phone                   max 0 
+listen_music            max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+research                max 0 
+sleep                   max 0 
+ROLL.force = -ROLL.ang  max 0 
+window                  max 0 
+order_food              max 0 
+sleep                   max 0 
+get_delivery            max 0 
+WORST 0
+
+## sleep sweep, seed 7
+research                max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+ROLL.force = 0          max 0 
+ROLL.force = -ROLL.ang  max 0 
+ROLL.force = null; ROL  max 0 
+phone                   max 0 
+listen_music            max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+research                max 0 
+sleep                   max 0 
+ROLL.force = -ROLL.ang  max 0 
+window                  max 0 
+order_food              max 0 
+sleep                   max 0 
+get_delivery            max 0 
+WORST 0
+
+## sleep sweep, seed 1234
+research                max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+ROLL.force = 0          max 0 
+ROLL.force = -ROLL.ang  max 0 
+ROLL.force = null; ROL  max 0 
+phone                   max 0 
+listen_music            max 0 
+sleep                   max 0 
+ROLL.force = ROLL.ang   max 0 
+research                max 0 
+sleep                   max 0 
+ROLL.force = -ROLL.ang  max 0 
+window                  max 0 
+order_food              max 0 
+sleep                   max 0 
+get_delivery            max 0 
+WORST 0
+
+## part 1 chained sweep (17 activity changes, ~12 simulated minutes), seed 63
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0
+
+## part 1 chained sweep (17 activity changes, ~12 simulated minutes), seed 7
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0
+
+## part 1 chained sweep (17 activity changes, ~12 simulated minutes), seed 1234
+research      max 0 
+eat           max 0 
+phone         max 0 
+order_food    max 0 
+window        max 0 
+get_delivery  max 0 
+eat           max 0 
+research      max 0 
+eat           max 0 
+window        max 0 
+order_food    max 0 
+chat          max 0 
+sleep         max 0 
+phone         max 0 
+get_delivery  max 0 
+window        max 0 
+research      max 0 
+WORST 0

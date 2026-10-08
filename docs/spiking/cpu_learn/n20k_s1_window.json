@@ -1,0 +1,124 @@
+{
+ "labels": [
+  "Tea ceremony history",
+  "Moon landing archive",
+  "Inokashira park map",
+  "Sourdough bread starter",
+  "Stock market news",
+  "Football transfer rumours",
+  "Lighthouse keepers",
+  "Origami crane tutorial"
+ ],
+ "probs": [
+  0.85,
+  0.75,
+  0.65,
+  0.55,
+  0.45,
+  0.35,
+  0.25,
+  0.15
+ ],
+ "trials": 240,
+ "reversal_at": 120,
+ "offers": "2-6 of the labels per trial",
+ "value": "+1 paid off / -1 not",
+ "criterion": "14 of the last 20 trials correct (correct: the best offered option)",
+ "random": {
+  "trials": 240,
+  "frac_correct": 0.2958,
+  "reward_rate": 0.4375,
+  "trials_to_criterion": null,
+  "frac_correct_last20_before_reversal": 0.25,
+  "curve": [
+   0.25,
+   0.3,
+   0.25,
+   0.2,
+   0.45,
+   0.25,
+   0.25,
+   0.45,
+   0.2,
+   0.25,
+   0.3,
+   0.4
+  ],
+  "reversal_at": 120,
+  "trials_to_criterion_after_reversal": null,
+  "frac_correct_after_reversal": 0.3083,
+  "frac_correct_last20": 0.4,
+  "chance": 0.2897
+ },
+ "readouts": {
+  "window": {
+   "calibration": {
+    "readout": "window",
+    "pool_rate_mean_hz": 5.76,
+    "pool_rate_sd_hz": 1.046,
+    "threshold_hz": 7.85,
+    "thr_z": 2.0,
+    "pool_size_calib": 81.0,
+    "window_ms": 200
+   },
+   "learned": {
+    "trials": 240,
+    "frac_correct": 0.4375,
+    "reward_rate": 0.55,
+    "trials_to_criterion": 103,
+    "frac_correct_last20_before_reversal": 0.65,
+    "curve": [
+     0.2,
+     0.35,
+     0.15,
+     0.45,
+     0.55,
+     0.65,
+     0.25,
+     0.6,
+     0.3,
+     0.45,
+     0.9,
+     0.4
+    ],
+    "reversal_at": 120,
+    "trials_to_criterion_after_reversal": 36,
+    "frac_correct_after_reversal": 0.4833,
+    "frac_correct_last20": 0.4,
+    "timeout_frac": 0.0,
+    "mean_rt_ms": 200.0,
+    "decided_at_first_check_frac": 0.0
+   },
+   "frozen": {
+    "trials": 240,
+    "frac_correct": 0.2958,
+    "reward_rate": 0.4417,
+    "trials_to_criterion": null,
+    "frac_correct_last20_before_reversal": 0.35,
+    "curve": [
+     0.3,
+     0.2,
+     0.05,
+     0.5,
+     0.35,
+     0.35,
+     0.2,
+     0.35,
+     0.45,
+     0.15,
+     0.3,
+     0.35
+    ],
+    "reversal_at": 120,
+    "trials_to_criterion_after_reversal": null,
+    "frac_correct_after_reversal": 0.3,
+    "frac_correct_last20": 0.35,
+    "timeout_frac": 0.0,
+    "mean_rt_ms": 200.0,
+    "decided_at_first_check_frac": 0.0
+   },
+   "labels_valued": 8
+  }
+ },
+ "wall_s": 187.5
+}

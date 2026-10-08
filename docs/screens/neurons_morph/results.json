@@ -1,0 +1,60 @@
+{
+ "region": 12,
+ "offline_1280": "close-up · left Vis 13 · 96 pyramidal (human) + 24 basket (human) · no live network: shapes only, no activity\nNeuroMorpho.Org reconstructions (NMO_107146, NMO_107145), CC BY 4.0, simplified · credits on /about\nneurons offline — the 1M network runs while he is awake when the GPU is on\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "cortex_1280": "close-up · left Vis 13 · 96 pyramidal (human) + 24 basket (human) · each cell stands for a sampled model neuron here; spikes run soma → axon, slowed ~500×\nNeuroMorpho.Org reconstructions (NMO_107146, NMO_107145), CC BY 4.0, simplified · credits on /about\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "hippocampus_1280": "close-up · Left Hippocampus · 150 CA1 pyramidal (rat) · each cell stands for a sampled model neuron here; spikes run soma → axon, slowed ~500×\nNeuroMorpho.Org reconstructions (NMO_00222), CC BY 4.0, simplified · credits on /about\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "errors_1280": [],
+ "offline_390": "close-up · left Vis 13 · 96 pyramidal (human) + 24 basket (human) · no live network: shapes only, no activity\nNeuroMorpho.Org reconstructions (NMO_107146, NMO_107145), CC BY 4.0, simplified · credits on /about\nneurons offline — the 1M network runs while he is awake when the GPU is on\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "cortex_390": "close-up · left Vis 13 · 96 pyramidal (human) + 24 basket (human) · each cell stands for a sampled model neuron here; spikes run soma → axon, slowed ~500×\nNeuroMorpho.Org reconstructions (NMO_107146, NMO_107145), CC BY 4.0, simplified · credits on /about\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "hippocampus_390": "close-up · Right Hippocampus · 150 CA1 pyramidal (rat) · each cell stands for a sampled model neuron here; spikes run soma → axon, slowed ~500×\nNeuroMorpho.Org reconstructions (NMO_00222), CC BY 4.0, simplified · credits on /about\nSimulated spiking neurons (1M on GPU / 20k on CPU) inside the real wiring of one person's brain; each dot stands for a sampled model neuron; a model, not a mind.\nShapes are real reconstructed neurons from public databases and are illustrative: the simulated network uses point neurons (no dendrites are simulated). Pulses are slowed down to be visible.",
+ "errors_390": [],
+ "strip_1_s": 0.71,
+ "strip_2_s": 1.33,
+ "strip_3_s": 2.2,
+ "strip_errors": [],
+ "js_x4": {
+  "cortex": {
+   "cells": 120,
+   "segments": 34920,
+   "draw_calls": 2,
+   "build_ms": 5.8,
+   "per_message_ms": 0.086,
+   "per_frame_ms": 0.0048
+  },
+  "striatum": {
+   "cells": 220,
+   "segments": 44660,
+   "draw_calls": 1,
+   "build_ms": 4.4,
+   "per_message_ms": 0.057,
+   "per_frame_ms": 0.0023
+  },
+  "thalamus": {
+   "cells": 160,
+   "segments": 35680,
+   "draw_calls": 1,
+   "build_ms": 2.3,
+   "per_message_ms": 0.017,
+   "per_frame_ms": 0.0019
+  },
+  "hippocampus": {
+   "cells": 150,
+   "segments": 45450,
+   "draw_calls": 1,
+   "build_ms": 0.4,
+   "per_message_ms": 0.008,
+   "per_frame_ms": 0.0004
+  },
+  "amygdala": {
+   "cells": 150,
+   "segments": 36450,
+   "draw_calls": 1,
+   "build_ms": 3.4,
+   "per_message_ms": 0.023,
+   "per_frame_ms": 0.0039
+  }
+ },
+ "fps_x4_closeup_cortex_390": 4.9,
+ "fps_x1_closeup_cortex_390": 6.8,
+ "timing_errors": []
+}
