@@ -107,14 +107,15 @@ def test_a_short_counts_after_a_few_seconds_and_a_stale_candidate_is_dropped():
 
 
 # --- 3. safety -------------------------------------------------------------------------------------------------------
-def test_finance_pages_give_only_their_topic_word():
+def test_finance_pages_are_never_a_reading():
+    """S2: a finance / trading page never becomes a reading (nothing of it reaches the memory, the replay or the
+    diary), whether the status carries the `finance` flag or only the trading host."""
     r = BrowseReadings(display_ok=display_ok)
     st = page("https://dexscreener.com/solana/abc", "$BONK +40% — memecoin chart", finance=True)
     _, t = stay(r, st, 0.0, 60)
-    a = r.seen(page("https://example.org/x", "x"), t)
-    assert a["title"] == "memecoins" and a["keywords"] == ["memecoins"] and a["url"] == "" and a["extract"] == ""
-    assert "$" not in str(a) and "40" not in a["title"] and "just browsing" in a["why"]
-    assert RD.finance_word("Nikkei 225 falls") == "stocks" and RD.finance_word("Bitcoin ETF") == "crypto"
+    assert r.seen(page("https://example.org/x", "x"), t) is None and r.pending is None and r.log == []
+    assert r.reading(dict(st, finance=False), "finance", 600, t) is None
+    assert r.reading(page("https://pump.fun/coin/x", "a coin page", finance=True), "page", 600, t) is None
 
 
 def test_unsafe_titles_logged_in_pages_and_excerpts():

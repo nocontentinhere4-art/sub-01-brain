@@ -54,7 +54,7 @@ def test_caption_says_going_to_the_desk_until_he_sits(tmp_path):
         assert seated, "he never sat down"
         pg.evaluate("__qa.step(1/30, 2)")                          # (re-checked every step: not left to the next tick)
         after = pg.evaluate(STATE)
-        assert "at the computer" in after["story"] and "Inokashira" in after["story"], after
+        assert ("at the computer" in after["story"] or "is reading" in after["story"]) and "Inokashira" in after["story"], after   # (R1: the caption names what he reads)
         h.browser.close()
 
 

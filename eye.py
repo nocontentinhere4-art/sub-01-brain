@@ -2,10 +2,15 @@
 
 - World: things people mention become objects in SUB-01's world. Each mention strengthens an object; objects
   fade with time (half-life WORLD_HALF_LIFE_H of simulated time) and are forgotten below a floor.
-- Every frame, a small local language model turns (sleep stage, network activity, market mood, world, recent
-  messages, REM replays) into a first-person scene description + one short "thought". A local image model
+- Every frame, a small language model turns (sleep stage, network activity, what he is doing, world, recent
+  messages, REM replays) into a first-person scene description + one short "thought". An image model
   renders the scene. Awake = clear and realistic, REM = surreal dream remix, NREM = near-dark.
+- Scene, thought and world objects pass the same filters as the chat and his replies (scene_ok / thought_ok /
+  object_ok): no money or trading images, no claims of a mind or a body. A refused scene gets a neutral view of the
+  room; a refused thought is left blank.
 - Everything is logged with its inputs ("why"), so each frame can be traced back to messages and state.
+- The image is reused (no FLUX call) when the scene did not change from the last frame; when the image call fails
+  the previous frame is returned as it was ("resting its eyes"), never a new caption over an old picture.
 
 Images and thoughts are AI-generated from the model's state. They are not what the real person saw or thought.
 """
@@ -18,7 +23,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from state_io import append_jsonl, load_json, save_json
+from state_io import append_jsonl, load_json, read_jsonl, save_json
 
 WORLD_HALF_LIFE_H = 6.0            # simulated hours for an object's strength to halve
 FORGET_BELOW = 0.15
@@ -34,7 +39,7 @@ You receive its current state as JSON. Reply with JSON only:
   not already in world. Skip abstract words, people, brands, tickers, coins, money.
 - new_objects: "said" = the exact words used in the message (any language), "en" = English name. Never invent.
 - scene: one first-person view (max 45 words, English) of exactly what it sees while "doing" that activity
-  (the bakery counter, the park bench, the phone screen in bed, the chart on the desk...). Include the strongest
+  (the bakery counter, the park bench, the phone screen in bed, the page on the monitor...). Include the strongest
   world objects when they fit; in dreams, the place melts into the replayed messages and replayed_articles
   (titles of encyclopedia articles it read that day: use them only as images or places, never as written text).
   Follow the style: awake = coherent, realistic, lighting from mood; rem = surreal dream mixing the replayed
@@ -50,6 +55,63 @@ STYLE = {
     "NREM": "almost completely dark, slow blurred abstract shapes, deep blue and black, very low light",
 }
 BAD = re.compile(r"https?://|www\.|\$[a-z]{2,10}\b|[1-9A-HJ-NP-Za-km-z]{32,44}|0x[0-9a-f]{40}", re.I)
+# what the eye may not draw or think (S7): money / trading images, a mind or a body. Local for now; the money part
+# should come from lexicon.py (S3: HYPE / BUY_ADVICE) once it lands, like chat.HYPE and diary.BLOCK.
+VISUAL_BLOCK = re.compile(
+    r"\b(charts?|candles?|candlesticks?|prices?|coins?|crypto\w*|tokens?|trad(e|es|ing|er|ers)|tickers?|bitcoin|"
+    r"memecoins?|invest\w*|profits?|buy (now|the dip)|conscious\w*|sentien(t|ce)|alive|humans?|real person|"
+    r"heart(beat)?s?|breath\w*|hands?|fingers?|my body)\b", re.I)
+NEUTRAL_SCENE = {
+    "AWAKE": "the apartment, soft daylight on clean surfaces: {doing}",
+    "REM": "the apartment with its walls bending slowly, soft glow, no clear edges",
+    "NREM": "near darkness, slow blurred shapes, deep blue",
+}
+SAME_SCENE = 0.8                   # word-set overlap (Jaccard) at or above which two scenes count as the same view
+
+
+def shared_blocked(text):
+    """The checks every public text of his goes through: the chat filter (links, tickers, money asks, hype, adult),
+    the reply rule against claims of feeling / being human (mind.CLAIM), and the eye's visual list. Lazy imports:
+    mind pulls in the browser modules."""
+    t = str(text or "")
+    if not t.strip():
+        return None
+    if VISUAL_BLOCK.search(t) or BAD.search(t):
+        return "money, mind or body words"
+    from chat import blocked
+    if blocked(t):
+        return "chat filter"
+    from mind import CLAIM
+    if CLAIM.search(t):
+        return "claims to feel or to be human"
+    return None
+
+
+def scene_ok(scene):
+    return shared_blocked(scene) is None
+
+
+def thought_ok(thought):
+    return shared_blocked(thought) is None
+
+
+def object_ok(name):
+    """A world object's name ("said" or "en" as the model gave it): BAD on the raw text (tickers, addresses, links -
+    checked before any character is stripped), then the shared filter."""
+    raw = str(name or "")
+    return bool(raw.strip()) and not BAD.search(raw) and "$" not in raw and shared_blocked(raw) is None
+
+
+def neutral_scene(stage, doing=""):
+    """The scene used when the model's was refused: the room and what he is doing, nothing from the model."""
+    return NEUTRAL_SCENE.get(stage, NEUTRAL_SCENE["AWAKE"]).format(doing=doing or HOME)
+
+
+def same_scene(a, b):
+    wa, wb = set(re.findall(r"[a-z]{3,}", str(a).lower())), set(re.findall(r"[a-z]{3,}", str(b).lower()))
+    if not wa or not wb:
+        return a == b
+    return len(wa & wb) / len(wa | wb) >= SAME_SCENE
 
 
 class World:
@@ -62,8 +124,10 @@ class World:
 
     def add(self, names, t, source_text):
         for n in names[:3]:
+            if not object_ok(n):                       # on the raw name: "$PEPE" and an address never got this far
+                continue                               # before (the characters BAD looks for were stripped first)
             n = re.sub(r"[^a-zA-ZÀ-ſ \-]", "", str(n)).strip().lower()[:30]
-            if not n or BAD.search(n):
+            if not n:
                 continue
             o = self.objects.get(n)
             if o:
@@ -86,8 +150,9 @@ class World:
         return {"objects": self.objects}
 
 
-def mood(groups, stage, market):
-    """Readable summary of the brain state that the language model conditions on."""
+def mood(groups, stage, market=None):
+    """Readable summary of the brain state that the language model conditions on. `market` is accepted and ignored
+    (the trading terminal is gone: no market mood reaches the eye, the frame log or the page)."""
     g = groups or {}
     base = sum(g.values()) / max(1, len(g))
 
@@ -95,8 +160,7 @@ def mood(groups, stage, market):
         return round(g.get(k, base) / max(base, 1e-6), 2)
 
     return {"stage": stage.lower(), "reward": rel("reward"), "fear": rel("fear"), "salience": rel("salience"),
-            "attention": rel("attention"), "self": rel("default"), "language": rel("language"),
-            "market": market}
+            "attention": rel("attention"), "self": rel("default"), "language": rel("language")}
 
 
 def load_env(path):
@@ -183,6 +247,13 @@ class Eye:
         self.llm = self.tok = self.img = None
         self.log = self.out / "frames.jsonl"
         self.ledger = None                               # costs.Ledger (live_server): caps + logs the Replicate calls
+        self.last_rec = self._last_logged()              # the previous frame (scene, thought, image): reused, see step
+        self.refused = {"scene": 0, "thought": 0, "objects": 0}   # how often the filters stepped in (status, tests)
+
+    def _last_logged(self):
+        rows = read_jsonl(self.log, last=1)
+        rec = rows[-1] if rows and isinstance(rows[-1], dict) else None
+        return rec if rec and rec.get("img") and (self.out / Path(rec["img"]).name).exists() else None
 
     # called from the server whenever a chat message is accepted
     def hear(self, text, t):
@@ -219,9 +290,17 @@ class Eye:
             out = {}
         scene = str(out.get("scene", ""))[:400]
         thought = str(out.get("thought", ""))[:140]
-        if BAD.search(thought):
+        if scene and not scene_ok(scene):               # refused: a neutral view of the room instead (step)
+            self.refused["scene"] += 1
+            scene = ""
+        if thought and not thought_ok(thought):         # refused: no thought on this frame
+            self.refused["thought"] += 1
             thought = ""
-        return out.get("new_objects") or [], scene, thought
+        raw_objects = out.get("new_objects") if isinstance(out.get("new_objects"), list) else []
+        objects = [o for o in raw_objects if isinstance(o, dict)       # both names through the shared check
+                   and object_ok(o.get("said")) and (not o.get("en") or object_ok(o.get("en")))]
+        self.refused["objects"] += len(raw_objects) - len(objects)
+        return objects, scene, thought
 
     def _check(self):
         """Before every paid call: over the eye's or the total daily cap raises costs.Capped (the server keeps the
@@ -239,15 +318,22 @@ class Eye:
                 tin, tout = self.llm.last_usage or (len(system + user) // 4, 0)
                 self.ledger.record("eye", "meta/meta-llama-3-8b-instruct", tin + tout, costs.llm_usd(tin, tout), "thought")
 
-    def step(self, t, stage, groups, market, replays, sim_hhmm, doing="", articles=()):
-        """One frame. Blocking (runs in a worker thread): returns the frame record."""
+    def step(self, t, stage, groups, market=None, replays=(), sim_hhmm="", doing="", articles=()):
+        """One frame. Blocking (runs in a worker thread): returns the frame record. `market` is accepted for the
+        caller and ignored (see mood). The image is made only when the scene changed from the last frame (same stage,
+        word overlap under SAME_SCENE): otherwise the last image is kept and only the thought is new (and billed).
+        When the image call fails the previous record comes back as it was, marked resting: a caption never changes
+        over an old picture, no new frame is written."""
         self._load()
+        replays = list(dict.fromkeys(list(replays)[-4:]))          # the same line replayed twice is one image
         recent = [x for x, ts in self.heard if t - ts < 3 * 3600][-5:]
-        state = {"time": sim_hhmm, "home": HOME, "doing": doing, **mood(groups, stage, market), "world": self.world.top(t),
-                 "recent_messages": recent, "replayed_messages": replays[-4:]}
+        state = {"time": sim_hhmm, "home": HOME, "doing": doing, **mood(groups, stage), "world": self.world.top(t),
+                 "recent_messages": recent, "replayed_messages": replays}
         if articles:
             state["replayed_articles"] = list(articles)[-3:]
         new, scene, thought = self._ask(state)
+        if not scene:                                    # the model's scene was empty or refused: the room, as it is
+            scene = neutral_scene(stage, doing)
         fresh = [x for x, ts in self.heard if t - ts < 3 * 3600 and x not in self.absorbed]
         if fresh:                                        # a message shapes the world once; objects must come from it
             said = " ".join(fresh).lower()
@@ -257,10 +343,17 @@ class Eye:
             self.absorbed.update(fresh)
         style = STYLE.get(stage, STYLE["AWAKE"])
         # image models ignore "no X": describe the absence positively instead
-        prompt = f"{scene or 'an empty quiet room'}. {style}. uninhabited scene, empty of humans, seen through the viewer's own eyes, clean surfaces without writing"
-        name = f"{int(time.time() * 1000)}.jpg"
+        prompt = f"{scene}. {style}. uninhabited scene, empty of humans, seen through the viewer's own eyes, clean surfaces without writing"
         t0 = time.time()
-        reused = False
+        last = self.last_rec if self.last_rec and (self.out / Path(self.last_rec["img"]).name).exists() else None
+        why = {"messages": recent, "replayed": replays, "replayed_articles": list(articles)[-3:],
+               "world": self.world.top(t, 5), "mood": {k: state[k] for k in ("reward", "fear", "salience")}}
+        if last and last.get("stage") == stage and same_scene(last.get("scene", ""), scene):
+            # the view did not change: the same image, a new thought; nothing is rendered or darkened again
+            rec = {"t": sim_hhmm, "stage": stage, "img": last["img"], "thought": thought, "scene": scene, "why": why,
+                   "render_s": round(time.time() - t0, 1), "reused": True, "same_scene": True}
+            return self._done(rec)
+        name = f"{int(time.time() * 1000)}.jpg"
         if isinstance(self.img, ReplicateImages):
             self._check()                                # over a cap: no frame is written (the server keeps the last)
             try:
@@ -268,14 +361,11 @@ class Eye:
                 if self.ledger is not None:
                     import costs
                     self.ledger.record("eye", "black-forest-labs/flux-schnell", 1, costs.FLUX_SCHNELL_USD, "frame")
-            except Exception as e:                        # provider queue/outage: keep thinking, reuse last view
-                last = sorted(self.out.glob("*.jpg"))
-                if not last:
+            except Exception as e:                        # provider queue/outage: the previous frame, as it was
+                if last is None:
                     raise
-                print("eye: image failed, reusing last view:", repr(e)[:160], flush=True)
-                from PIL import Image
-                pil = Image.open(last[-1])
-                reused = True
+                print("eye: image failed, keeping the last frame:", repr(e)[:160], flush=True)
+                return {**last, "reused": True, "resting": "resting its eyes", "image_failed": True}
         else:
             image = self.img.generate_image(seed=int(t) % 100000, prompt=prompt, width=self.size[0],
                                             height=self.size[1], num_inference_steps=self.steps, guidance=0.0)
@@ -284,26 +374,21 @@ class Eye:
             from PIL import ImageEnhance
             pil = ImageEnhance.Brightness(pil).enhance(0.25)
         pil.convert("RGB").save(self.out / name, quality=88)
-        rec = {"t": sim_hhmm, "stage": stage, "img": f"/eye/{name}", "thought": thought, "scene": scene,
-               "why": {"messages": recent, "replayed": replays[-4:], "replayed_articles": list(articles)[-3:],
-                       "world": self.world.top(t, 5),
-                       "mood": {k: v for k, v in state.items() if k in ("reward", "fear", "salience", "market")}},
-               "render_s": round(time.time() - t0, 1), "reused": reused}
+        rec = {"t": sim_hhmm, "stage": stage, "img": f"/eye/{name}", "thought": thought, "scene": scene, "why": why,
+               "render_s": round(time.time() - t0, 1), "reused": False}
         jpgs = sorted(self.out.glob("*.jpg"))
         for old in jpgs[:-KEEP_FRAMES]:                    # bounded disk use on a server volume
             old.unlink(missing_ok=True)
+        return self._done(rec)
+
+    def _done(self, rec):
         append_jsonl(self.log, rec)
         save_json(self.world_path, self.world.to_dict())
+        self.last_rec = rec
         return rec
 
 
 def market_mood(trades, window_s=120):
-    """'pumping' / 'dumping' / 'calm' from the last few minutes of trades [(t, kind, usd)]."""
-    now = time.time()
-    recent = [(k, u) for ts, k, u in trades if now - ts < window_s]
-    buy = sum(u for k, u in recent if k == "buy")
-    sell = sum(u for k, u in recent if k == "sell")
-    if buy + sell < 50:
-        return "calm"
-    r = (buy - sell) / (buy + sell)
-    return "pumping" if r > 0.25 else "dumping" if r < -0.25 else "choppy"
+    """Gone with the trading terminal (S1/S7): the eye no longer reads a market mood. Kept only so live_server's
+    import and `step(..., market_mood(...), ...)` call keep working until that caller is removed; always "calm"."""
+    return "calm"

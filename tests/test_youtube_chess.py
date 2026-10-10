@@ -278,8 +278,11 @@ def test_chromium_watch_is_muted_restricted_bounded_then_decides_again(monkeypat
 
 # --- 4. chess: legal moves only, 5 candidates, the vote picks one ---------------------------------------------------
 def test_games_are_legal_to_the_end_and_logged_fields():
+    """Four whole games with a uniform pick among the candidates (the vote does not read the value): legal to the end,
+    logged, and not the old record (49 of 50 lost, a piece hung in 18% of his moves). ~1 s per game of CPU."""
     rng = random.Random(3)
-    for seed in range(3):
+    results, picks, hung = [], 0, 0
+    for seed in range(4):
         g = C.Game(0.0, color=chess.WHITE if seed % 2 else chess.BLACK, rng=random.Random(seed))
         ref = chess.Board()
         while not g.over:
@@ -288,7 +291,8 @@ def test_games_are_legal_to_the_end_and_logged_fields():
                 assert 1 <= len(cands) <= C.CANDIDATES and len({c["target"] for c in cands}) == len(cands)
                 assert all(chess.Move.from_uci(c["target"]) in ref.legal_moves for c in cands)
                 assert all(0.0 <= w <= 1.0 for c in cands for w in c["networks"].values())
-                mv = rng.choice(cands)["target"]
+                pick = rng.choice(cands)
+                mv, picks, hung = pick["target"], picks + 1, hung + bool(pick["features"].get("hanging"))
             else:
                 mv = g.opponent().uci()
             assert chess.Move.from_uci(mv) in ref.legal_moves
@@ -297,6 +301,9 @@ def test_games_are_legal_to_the_end_and_logged_fields():
         assert g.board.fen() == ref.fen() and g.result in ("won", "lost", "draw", "unfinished")
         rec = g.record(100.0)
         assert rec["plies"] == len(g.sans) and rec["moves"].split() == g.sans and rec["result"] == g.result
+        results.append(g.result)
+    assert results.count("lost") <= 3 and results.count("unfinished") <= 1, results
+    assert hung / picks <= 0.15, (hung, picks)
 
 
 def test_illegal_moves_are_refused():
@@ -317,11 +324,61 @@ def test_scorer_ranks_a_free_queen_first_and_tags_it_as_reward():
 
 def test_opponent_takes_free_material_and_sees_mate_in_one():
     b = chess.Board("4k3/8/8/8/4p3/3Q4/8/4K3 b - - 0 1")               # exd3 takes the queen for free
-    assert C.opponent_move(b, random.Random(0)).uci() == "e4d3"
+    assert C.opponent_move(b, random.Random(0), level=1.0).uci() == "e4d3"
     b = chess.Board("6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1")              # Ra8# for white
-    assert C.opponent_move(b, random.Random(1)).uci() == "a1a8"
+    assert C.opponent_move(b, random.Random(1), level=1.0).uci() == "a1a8"
     b = chess.Board("4k3/8/8/8/8/8/1q6/K7 w - - 0 1")                   # one legal move: Kxb2
     assert C.opponent_move(b, random.Random(0)).uci() == "a1b2"
+
+
+def test_the_opponent_is_uneven_and_its_level_follows_the_record():
+    """At level 0 it plays a random capture or one of the 5 best one-ply moves: legal, and not always the best."""
+    fen = "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 3"
+    picks = {C.opponent_move(chess.Board(fen), random.Random(s), level=0.0).uci() for s in range(30)}
+    assert len(picks) > 1 and all(chess.Move.from_uci(u) in chess.Board(fen).legal_moves for u in picks)
+    best = {C.opponent_move(chess.Board(fen), random.Random(s), level=1.0).uci() for s in range(10)}
+    assert len(best) == 1                                                 # the search's move, for every seed
+    assert C.level_for([]) == C.LEVEL
+    assert C.level_for([{"result": "won"}] * 20) == C.LEVEL_RANGE[1]      # he keeps winning: a harder opponent
+    assert C.level_for([{"result": "lost"}] * 20) == C.LEVEL_RANGE[0]     # he keeps losing: an easier one
+    mixed = [{"result": r} for r in ("won", "lost", "draw") * 6] + [{"result": "unfinished"}]
+    assert abs(C.level_for(mixed) - C.LEVEL) < 1e-9                       # an even record: unchanged
+    g = C.Game(0.0, color=chess.WHITE, level=0.8)
+    assert g.record(0.0)["level"] == 0.8
+
+
+def test_the_winning_side_does_not_shuffle_into_a_repetition_and_mates_a_bare_king():
+    b = chess.Board("7k/8/8/8/8/8/5PPP/R5K1 w - - 0 1")                 # a rook up: Ra8# exists
+    assert C.opponent_move(b, random.Random(0), level=1.0).uci() == "a1a8"
+    b = chess.Board("8/k7/8/8/8/8/5PPP/1R4K1 w - - 0 1")                # no mate in one; Rb1-a1 would return...
+    after = b.copy()
+    after.push_uci("b1a1")
+    ranked = C.search(b.copy(stack=False), random.Random(0), seen={C.position_key(after): 2})   # ...a third time
+    assert all(m.uci() != "b1a1" for _, m in ranked[:5]) and any(m.uci() == "b1a1" for _, m in ranked)
+    ranked = C.search(b.copy(stack=False), random.Random(0), seen={C.position_key(after): 2}.fromkeys([], 0))
+    assert ranked[0][0] - dict((m.uci(), v) for v, m in ranked)["b1a1"] < C.REPEAT   # unseen: an ordinary move
+    g = C.Game(0.0, color=chess.WHITE)
+    g.push("e2e4")
+    assert g.seen[C.position_key(g.board)] == 1 and g.seen[C.position_key(chess.Board())] == 1
+    assert C.positional(chess.Board("k7/8/8/8/8/8/5PPP/R5K1 w - - 0 1"), chess.WHITE) > \
+        C.positional(chess.Board("8/8/8/3k4/8/8/5PPP/R5K1 w - - 0 1"), chess.WHITE)   # a cornered king is worth more
+
+
+def test_the_search_keeps_a_queen_sacrifice_off_the_card():
+    """Qxe5+ wins a pawn with check and loses the queen to Nxe5: the one-ply scorer liked it, the search does not."""
+    b = chess.Board("r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 2 3")
+    cands = C.candidates(b, random.Random(0))
+    labels = [c["label"] for c in cands]
+    assert "Qxe5+" not in labels and labels[0] == "Qxf7#" and not cands[0]["features"].get("hanging")
+    b = chess.Board("r1bqkbnr/pppp1ppp/2n5/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR w KQkq - 2 3")   # no mate: the same test
+    cands = C.candidates(b, random.Random(0))
+    assert "Qxe5+" not in [c["label"] for c in cands] and 1 <= len(cands) <= C.CANDIDATES
+    assert all(c["score"] >= cands[0]["score"] - C.MARGIN for c in cands)
+    b = chess.Board("r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 6")
+    t0 = time.perf_counter()
+    cands = C.candidates(b, random.Random(0))
+    assert time.perf_counter() - t0 < 1.5 and len(cands) == C.CANDIDATES    # a middlegame: ~50 ms, 5 options
+    assert "O-O" in [c["label"] for c in cands]                           # castling is one of them
 
 
 def test_the_brain_vote_picks_among_the_candidates(brain):
@@ -426,7 +483,7 @@ def test_at_most_one_chess_game_an_hour_and_no_videos_without_a_browser():
     lf.hear("let's play chess", NOON)
     assert lf.desire("play_chess", NOON) > 0
     lf.start("play_chess", NOON, "test")
-    assert not lf.chess_ok(NOON + 3599) and lf.chess_ok(NOON + 3600)
+    assert not lf.chess_ok(NOON + 3599) and not lf.chess_ok(NOON + 3600) and lf.chess_ok(NOON + 86400)   # one a day (L1)
     for seed in range(200):
         lf.rng = random.Random(seed)
         lf.hear("chess chess", NOON + 1800)

@@ -42,7 +42,6 @@
   #ticker div { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #ticker div:first-child { color:var(--fg); }
   #ticker b { color:var(--st); font-weight:normal; }
-  #ticker .buy { color:#39f5a0; } #ticker .sell { color:#ff4d6d; }
 
   /* the right column: the cards end 14 px above the dock, however tall the dock grows (layer row, close-up row, caption) */
   #cards { position:fixed; right:24px; top:24px; width:var(--panel-w); display:flex; flex-direction:column; gap:12px;
@@ -160,7 +159,7 @@
 <div id="scene"></div><div id="vignette"></div>
 
 <div id="top">
-  <div id="brand"><h1>SUB-01</h1><nav><a class="on" href="/brain">brain</a><a href="/">life</a><a href="/diary">diary</a><a href="/world.html">sees</a></nav></div>
+  <div id="brand"><h1>SUB-01</h1><nav><a class="on" href="/brain">brain</a><a href="/">room</a><a href="/diary">diary</a><a href="/world.html">sees</a><a href="https://city.subzerone.live/" target="_blank" rel="noopener">city</a></nav></div>
   <div id="state"><span id="live" title="live connection"></span><span id="chip">…</span><span id="clock"></span><span id="where"></span></div>
   <div id="story">connecting…</div>
   <div id="sub"></div>
@@ -198,7 +197,7 @@
   <a class="card" href="/diary" id="c-diary">
     <div class="k"><span>Last night</span><span>diary →</span></div>
     <img id="d-img" alt="" hidden>
-    <div class="t" id="d-title">The first dream entry is written the morning after its first REM sleep.</div>
+    <div class="t" id="d-title">The first diary entry is written the morning after his first night of REM sleep.</div>
     <div class="m" id="d-meta"></div>
   </a>
   <a class="card" href="/world.html" id="c-eye" hidden>
@@ -653,7 +652,9 @@ function tick(html){ if (MINI) return; tickerEl.insertAdjacentHTML("afterbegin",
 let lastReplay = null, heard = null, doing = "", where = "", sleepInfo = null, sync = 0, baseline = null, slow = null;
 function story(){
   const now = performance.now();
-  if (heard && now - heard.at < 9000) return `heard <em>“${esc(heard.text)}”</em>. the signal is travelling along its real fibres.`;
+  if (heard && now - heard.at < 9000) return heard.asleep   // asleep, a word gets through at the sleep's gain, no more (R3: never "heard" as if awake)
+    ? `<em>“${esc(heard.text)}”</em> reaches him through the sleep at ${Math.round((heard.gain || 0) * 100)}%${(heard.gain || 0) < 0.3 ? ", barely" : ""}.`
+    : `heard <em>“${esc(heard.text)}”</em>. the signal is travelling along its real fibres.`;
   if (stage === "REM") return lastReplay && now - lastReplay.at < 300000
     ? `is replaying <em>“${esc(lastReplay.text)}”</em>, heard at ${esc(lastReplay.received)}.`
     : `is <em>dreaming</em>. the diary is recording.`;
@@ -676,12 +677,12 @@ function setStage(s){
   if (cortexMat) cortexMat.uniforms.tint.value.set(CHIP[s] || CHIP.AWAKE);
   controls.autoRotateSpeed = s === "AWAKE" ? 0.35 : s === "REM" ? 0.22 : 0.1;
 }
-function fire(text, networks){
+function fire(text, networks, asleep, gain){
   tgOn.fill(0);
   const nets = (networks || []).filter(x => GROUPS.includes(x));
   for (const x of (nets.length ? nets : ["default", "attention"])) tgOn[GROUPS.indexOf(x)] = 1;
   pulse = {t:0, start:performance.now()};
-  heard = {text: String(text).slice(0, 80), at: performance.now()};
+  heard = {text: String(text).slice(0, 80), at: performance.now(), asleep: !!asleep, gain: asleep ? +gain || 0 : 1};
 }
 
 // ---------- cards ----------
@@ -795,7 +796,7 @@ const SPOTIFY_EMBED = /^https:\/\/open\.spotify\.com\/embed\/track\/[A-Za-z0-9]{
 function renderMusic(){
   const m = musicNow;
   $("music").hidden = !m;
-  if (!m) return;
+  if (!m) { if (musicEmbed) { musicEmbed = ""; $("mu-embed").removeAttribute("src"); } return; }   // (R2: a stopped track's player goes too)
   $("mu-k").textContent = m.mode === "background" ? "in the background" : "headphones on";
   $("mu-t").textContent = m.title; $("mu-a").textContent = [m.artist, m.genre_label].filter(Boolean).join(" · ");
   const art = $("mu-art"); art.hidden = !m.art; if (m.art && art.src !== m.art) art.src = m.art;
@@ -819,7 +820,7 @@ const ACT_LUT = Float32Array.from({length:256}, (_, b) => ACT_LO * Math.pow(ACT_
 const unq = s => { const bin = atob(s), a = new Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = ACT_LUT[bin.charCodeAt(i)]; return a; };
 let sock = null, act = null, base = null, actFrom = null, actTo = null, actAt = 0, actDt = 1000 / RATE;
 let full = false, retry = 0;                       // the server sends {"type":"full"} when it has no room for us
-const FULL_TXT = "the room is full, try again in a minute";
+const FULL_TXT = "the room is full · coming back by itself in a minute";   // (the page retries on its own: see ws.onclose)
 // ---------- #89: his screens (what the browser really shows) and the dopamine-like trace ----------
 const DA_N = 240, daTrace = [], daSpikes = [];
 let daLast = 0, daCount = 0;                       // daCount: samples pushed so far (spikes keep their sample number)
@@ -847,8 +848,11 @@ function drawDA(){
     g.fillRect(x(i) - 1, H - 4 - Math.min(1, s.size) * (H - 8), 2, Math.min(1, s.size) * (H - 8)); }
   g.fillStyle = "rgba(236,236,242,.6)"; g.font = "10px sans-serif"; g.fillText("DA", 4, 11);
 }
-// an official embed player (Spotify, TikTok) in the screens card: replaced only when its source changes, never autoplayed
+// an official embed player (Spotify, TikTok, YouTube) in the screens card: replaced only when its source changes, never
+// autoplayed; one allowlist of the official players' hosts, whatever the server sends (R2)
+const EMBED_OK = /^https:\/\/(open\.spotify\.com\/embed\/|www\.tiktok\.com\/(embed|player)\/|www\.youtube-nocookie\.com\/embed\/)/;
 function screenEmbed(el, src, h, label){
+  if (src && !EMBED_OK.test(src)) src = "";
   if ((el.dataset.src || "") === (src || "")) return;
   el.dataset.src = src || "";
   el.innerHTML = src ? `<div class="m">${esc(label)}</div><iframe src="${esc(src)}" title="${esc(label)}" style="width:100%;height:${+h || 80}px;border:0;border-radius:8px" allow="encrypted-media; fullscreen; picture-in-picture"></iframe>` : "";
@@ -898,8 +902,8 @@ function connect(){
       return;
     }
     if (m.type === "chat") {
-      tick(`${esc(m.t)} · message <b>“${esc(m.text.slice(0, 60))}”</b> → language → ${esc(m.networks.join(", "))}${m.asleep ? ` (heard asleep, ${Math.round(m.gain * 100)}%)` : ""}`);
-      fire(m.text, m.networks); return;
+      tick(`${esc(m.t)} · message <b>“${esc(m.text.slice(0, 60))}”</b> → language → ${esc(m.networks.join(", "))}${m.asleep ? ` (through the sleep at ${Math.round(m.gain * 100)}%)` : ""}`);
+      fire(m.text, m.networks, m.asleep, m.gain); return;
     }
     if (m.type === "eye") { showEye(m); return; }
     if (m.type === "music") { if (m.playing) { musicNow = m; renderMusic(); } else if (musicNow && musicNow.id === m.id) { musicNow = null; renderMusic(); } return; }
@@ -915,7 +919,7 @@ function connect(){
     }
     if (m.type === "taught") {
       tick(`${esc(m.t)} · taught <b>“${esc(m.text.slice(0, 60))}”</b>${m.nick ? ` by ${esc(m.nick)}` : ""} → ${esc(m.networks.join(", "))}`);
-      fire(m.text, m.networks); if (!MINI) loadTaught(); return;
+      fire(m.text, m.networks, m.asleep, m.gain); if (!MINI) loadTaught(); return;
     }
     if (m.type === "chat_ack") {
       $("note").textContent = m.ok ? "sent · watch it travel" : `not sent: ${m.reason}`; $("note").className = m.ok ? "" : "err"; return;
@@ -926,7 +930,7 @@ function connect(){
       sleepInfo = sl; setStage(sl.stage); burst = Math.max(burst, sl.burst || 0);
       if (!MINI) $("clock").textContent = `${sl.clock} ${sl.tz || "Tokyo"}`;
     }
-    if (m.neuro && typeof m.neuro.DA === "number") daLevel(m.neuro.DA);
+    if (m.neuro && typeof m.neuro.DA === "number") { daLevel(m.neuro.DA); boost = Math.max(boost, Math.min(0.3, (m.neuro.DA - 1.05) * 0.6)); }   // (the fibres brighten with the reward signal itself; no trade feed on this page)
     if (m.life) {
       doing = m.life.walking ? `walking (${m.life.doing})` : m.life.doing;
       if (deskVideo && (m.life.walking || !/computer/.test(m.life.doing))) { deskVideo = null; renderDesk(); }
@@ -938,10 +942,6 @@ function connect(){
         tick(`${esc(ev.t)} · replay ${{reading: "of what it read or watched ", taught: "of what it was taught "}[ev.source] || ""}<b>“${esc(ev.text.slice(0, 60))}”</b> (from ${esc(ev.received)}) → ${esc((ev.networks || []).join(", "))}`);
         fire(ev.text, ev.networks); heard = null; }
       else tick(`${esc(ev.t)} · ${esc(ev.text)}`);
-    }
-    for (const t of m.trades || []) {
-      tick(`<span class="${t.kind}">${t.kind} $${t.usd.toFixed(t.usd < 10 ? 2 : 0)}</span> → ${t.kind === "buy" ? "reward, visual" : "salience, fear"}`);
-      if (t.kind === "buy") boost = Math.min(0.3, boost + 0.05);
     }
     const a = m.aq ? unq(m.aq) : m.act;           // m.act: a server without the q feed
     if (!a) return;
@@ -1011,8 +1011,11 @@ if ("IntersectionObserver" in window)            // draw only while the brain is
   new IntersectionObserver(es => { onScreen = es[es.length - 1].isIntersecting; }).observe(host);
 if (!MINI) { loadDiary(); setInterval(loadDiary, 10 * 60 * 1000); loadTaught(); setInterval(loadTaught, 60 * 1000); loadChess(); loadMusic();
   fetch("/api/frames?n=1").then(r => r.json()).then(d => showEye(d.frames[d.frames.length - 1])).catch(() => {}); }
-if (!MINI) setInterval(() => { if (full) $("story").textContent = FULL_TXT;
-  else if (stage) { $("story").innerHTML = story(); $("sub").innerHTML = subline(); } }, 500);
+// the caption twice a second, written only when it changed (R4: a rewrite every 500 ms re-laid the header for nothing)
+const capShown = {story: null, sub: null};
+function capPut(id, html){ if (capShown[id] === html) return; capShown[id] = html; $(id).innerHTML = html; }
+if (!MINI) setInterval(() => { if (full) capPut("story", esc(FULL_TXT));
+  else if (stage) { capPut("story", story()); capPut("sub", subline()); } }, 500);
 
 // ---------- loop ----------
 let last = performance.now(), t = 0;

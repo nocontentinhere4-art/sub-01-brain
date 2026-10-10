@@ -18,10 +18,12 @@ export function tokyoTime(date = new Date()){
   catch { return date.toTimeString().slice(0, 5); }
 }
 
-// a battery level that drains through his day and charges at night (a look only; nothing measures it)
+// a battery level that drains through his day and charges at night (a look only; nothing measures it): one continuous
+// curve, 12 % at midnight, full at 07:00, back to 12 % by the next midnight (no jump at 00:00)
+const BAT_LO = 0.12, BAT_FULL_H = 7;
 export function batteryAt(hour){
   const h = ((hour % 24) + 24) % 24;
-  return h < 7 ? Math.min(1, 0.35 + 0.65 * h / 7) : Math.max(0.12, 1 - (h - 7) * 0.052);
+  return h < BAT_FULL_H ? BAT_LO + (1 - BAT_LO) * h / BAT_FULL_H : Math.max(BAT_LO, 1 - (1 - BAT_LO) * (h - BAT_FULL_H) / (24 - BAT_FULL_H));
 }
 
 // how bright the light the screen throws on his face and hand is: only when the screen is on, soft by day, clear at night

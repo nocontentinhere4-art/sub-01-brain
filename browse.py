@@ -159,9 +159,12 @@ LINK_ACTIONS = {"click": None, "open_video": "video", "play_video": "video", "ne
                 "open_comments": "comments"}
 
 # --- guard ---------------------------------------------------------------------------------------------------------
-# Crypto and finance pages (exchanges, DEX, launchpads, charts, our own coin's pages) may be viewed, read-only (owner,
-# #56: "NO RESTRICTIONS"); wallet apps stay blocked (he never connects a wallet), and nothing with money is ever
-# clicked (MONEY_ACTION). The harmful categories stay: adult, gore, self-harm, extremism, illegal; gambling too.
+# Owner rules: no money-hype or trading content on the monitor, no financial advice, no buy pressure. Trading hosts
+# (exchanges, DEX, launchpads, chart and quote sites: TRADING_HOST) are refused like the harmful categories, so
+# they never reach a screen, a reading, the diary or the reward; wallet apps stay blocked (he never connects a
+# wallet), and nothing with money is ever clicked (MONEY_ACTION). Neutral memecoin / altcoin / market NEWS on a news
+# site stays readable (the owner's choice): only price / chart / ticker / trading titles go (trading_title). The
+# harmful categories stay: adult, gore, self-harm, extremism, illegal; gambling too.
 BAD_HOST = re.compile(
     r"porn|xxx|xvideo|xhamster|redtube|youporn|sex|nsfw|onlyfans|fansly|hentai|escort|camgirl|chaturbate|stripchat|"
     r"livejasmin|adult|nude|naked|erotic|fetish|"
@@ -169,6 +172,12 @@ BAD_HOST = re.compile(
     r"phantom\.app|metamask|walletconnect|"
     r"4chan|8kun|kiwifarms|bestgore|liveleak|theync|"
     r"railway\.app|up\.railway", re.I)
+# B7: the same list for titles and link labels, word-bounded: "Sussex Cricket Club", "Adulthood in Japan" and
+# "Sextant navigation" pass; "free sex cams" does not. BAD_HOST (substrings) stays for host names.
+TITLE_BAD_HOST = re.compile(
+    r"\b(porn\w*|xxx|xvideos?|xhamster|redtube|youporn|sex|nsfw|onlyfans|fansly|hentai|escorts?|camgirls?|chaturbate|"
+    r"stripchat|livejasmin|adult|nudes?|naked|erotic\w*|fetish\w*|casinos?|poker|betting|bet365|sportsbet|stake\.com|"
+    r"gambl\w*|slots|lottery|phantom\.app|metamask|walletconnect|4chan|8kun|kiwifarms|bestgore|liveleak|theync)\b", re.I)
 # words that must not be on a page shown live (title anywhere; body when repeated)
 _HARM_WORDS = (r"porn\w*|xxx|nsfw|nude|nudes|naked|hentai|onlyfans|escort\w*|camgirl\w*|fetish\w*|erotic\w*|"
                r"gore|beheading|dismember\w*|suicide|self[- ]?harm|rape|raped|child abuse|"
@@ -179,6 +188,10 @@ MEDIA_BAD_WORDS = re.compile(r"\b(" + _HARM_WORDS + r")\b", re.I)
 # ... but gambling promotion still counts, like coin pressure ("Best online casino bonus", "free spins")
 GAMBLING_PROMO = re.compile(r"\b(online casinos?|casino bonus(es)?|free spins?|no deposit bonus|sportsbooks?|"
                             r"sports betting|betting (tips|odds)|bet365|stake\.com)\b", re.I)
+# money-making and trading promotion (owner rules: no financial advice or buy pressure, no Fomo / trading on the monitor;
+# live 2026-10-09 09:03 Tokyo: "How to make millions on FOMO app", "Prop Firm Scalper ... Made $2.5+ Million"): never
+# searched, opened or shown, as a page, a video or a song; plain finance words ("Stockholm", "stock photo") pass
+MONEY_HYPE = re.compile(r"\b(fomo app|pump\.fun|crypto (trading|signals|gems?)|day ?trad(ing|er|ers)|forex|scalp(ing|er|ers)|prop firms?|ict trader|options trading|trading (strategy|signals|bot|course)|get rich|make (\$?\d[\d,.]*[kmb]?|millions?|thousands?|money) (fast|online|daily|a day|with|from|on|trading)|how to make (millions?|money|\$\d)|passive income|100x|1000x|to the moon|financial freedom)\b", re.I)
 BOT_WALL = re.compile(r"attention required|just a moment|access denied|are you a (robot|human)|verify you are human|"
                       r"checking your browser|pardon our interruption|access to this page has been denied|"
                       r"ddos-guard|please wait while we verify|"
@@ -379,15 +392,16 @@ def display_ok(text):
 
 
 def title_ok(text):
-    """A web page's title, a link label or a search result on the public screen (#56): finance words, prices and
-    tickers may show (crypto and stock pages are viewable), but never links, addresses, e-mails, money requests,
-    slurs or the guard's blocked words and topics."""
+    """A web page's title, a link label or a search result on the public screen: plain market words may show
+    (neutral memecoin / stock news is readable), but never links, addresses, e-mails, money requests, slurs, the
+    guard's blocked words and topics, money hype, or a price / chart / ticker / trading title (trading_title)."""
     import chat
     from research import BLOCK as TOPIC_BLOCK
     t = text or ""
     return not (chat.URL.search(t) or chat.SOL_ADDR.search(t) or chat.ETH_ADDR.search(t) or chat.EMAIL.search(t)
                 or MONEY_ASK.search(t) or chat.SLUR_RE.search(chat.normalise(t))
-                or BAD_WORDS.search(t) or BAD_HOST.search(t) or TOPIC_BLOCK.search(t))
+                or BAD_WORDS.search(t) or TITLE_BAD_HOST.search(t) or TOPIC_BLOCK.search(t) or MONEY_HYPE.search(t)
+                or trading_title(t))
 
 
 def media_title_ok(text):
@@ -400,7 +414,7 @@ def media_title_ok(text):
     in "Nazionale", "Killing in the Name"), FINANCE_TALK ("Stockholm Syndrome") and the phone rule ("2000 - 2010")."""
     import chat
     t = text or ""
-    return (not (MEDIA_BAD_WORDS.search(t) or GAMBLING_PROMO.search(t))
+    return (not (MEDIA_BAD_WORDS.search(t) or GAMBLING_PROMO.search(t) or MONEY_HYPE.search(t))
             and chat.blocked(t, media=True) is None)
 
 
@@ -418,37 +432,62 @@ MONEY_ACTION = re.compile(r"\b(buy|sell|swap|trade( now)?|connect( (your )?walle
                           r"(coin|token)|place (an )?order|invest( now)?|bet|get started|open (an )?account)\b", re.I)
 MONEY_HREF = re.compile(r"/(buy|sell|connect|deposit|withdraw|stake|bridge|claim|mint|create|launch|wallet)"
                         r"(/|\?|$|-)|[?&](action|side)=(buy|sell)", re.I)
-# finance pages: the card adds the advice line
-FINANCE_HOST = re.compile(r"(^|\.)(binance|coinbase|kraken|bybit|okx|kucoin|bitget|mexc|gate|htx|huobi|crypto|"
+# S2: trading hosts (exchanges, DEX, launchpads, chart / quote / "social trading" sites) are refused by host_ok, so
+# no page, link, result or screenshot of them ever reaches a screen. News sites that also cover markets (coindesk,
+# cointelegraph, decrypt, bloomberg, reuters, cnbc, nikkei...) are not here: neutral news stays readable.
+TRADING_HOST = re.compile(r"(^|\.)(binance|coinbase|kraken|bybit|okx|kucoin|bitget|mexc|gate|htx|huobi|crypto|"
                           r"dexscreener|dextools|pump|gmgn|birdeye|raydium|jup|jupiter|uniswap|pancakeswap|"
-                          r"coinmarketcap|coingecko|tradingview|solscan|etherscan|coindesk|cointelegraph|decrypt|"
-                          r"theblock|bloomberg|marketwatch|investing|morningstar|nasdaq|nikkei|kabutan|minkabu|"
-                          r"stocktwits|seekingalpha|cnbc|reuters)\.\w+|finance\.yahoo\.\w+|"
-                          r"(^|\.)google\.\w+$", re.I)
-FINANCE_WORDS = re.compile(r"\b(crypto\w*|bitcoin|ethereum|solana|memecoins?|altcoins?|tokens?|dex|stocks?|shares|"
-                           r"nikkei|nasdaq|dow jones|s&p ?500|market cap|price chart|trading|exchange rate|forex|"
-                           r"\$[A-Z]{2,10})\b", re.I)
-ADVICE_LINE = "He is just browsing; nothing here is financial advice."
+                          r"coinmarketcap|coingecko|tradingview|solscan|etherscan|investing|morningstar|nasdaq|"
+                          r"kabutan|minkabu|stocktwits|seekingalpha|robinhood|etoro|bitflyer|bitbank|coincheck|"
+                          r"photon-sol|bullx|moonshot|dexlab|geckoterminal|defillama|cryptobubbles)\.\w+|"
+                          r"finance\.yahoo\.\w+", re.I)
+TRADING_PATH = re.compile(r"^/finance(/|$)", re.I)              # google.com/finance: the quote pages only
+# a title that is a price, chart, ticker or trading item, as opposed to a news headline: a market word next to a
+# coin / stock word. "memecoin news", "Nikkei 225 today", "Pokemon trading cards", "soup stock", "Stockholm",
+# "pumpkin" and "dumpling" pass; "Bitcoin price today", "$WIF jumps 20%", "SOL/USDT chart" do not.
+_COIN = (r"crypto\w*|bitcoin|btc|ethereum|eth|solana|sol|dogecoin|doge|pepe|xrp|bnb|shib|memecoins?|altcoins?|"
+         r"coins?|tokens?|stocks?|shares|nikkei|nasdaq|dow jones|s&p ?500|forex|usdt|usdc")
+TRADING_TITLE = re.compile(r"\b(prices?|price (chart|today|prediction|target|action|analysis)|live price|charts?|"
+                           r"candles?|candlesticks?|market cap|trading|traders?|to the moon|airdrop|presale|"
+                           r"whitelist|pump(ed|ing|s)?|dump(ed|ing|s)?|rally|rallies|plunge[sd]?|surge[sd]?|"
+                           r"jumps|soars|tanks|moon(ed|ing)?|buy the dip|long|short|leverage|futures|"
+                           r"[+-]?\d+(\.\d+)?\s?%)(?=\W|$)", re.I)
+COIN_WORD = re.compile(r"\b(" + _COIN + r")\b", re.I)
+TICKER_WORD = re.compile(r"(?<![A-Za-z0-9$])\$[A-Za-z][A-Za-z0-9]{1,10}\b")     # "$WIF" (not "$5", not "A$AP")
+PAIR = re.compile(r"\b[A-Z]{2,6}[/-](USDT?|USDC|SOL|ETH|BTC|JPY|EUR)\b")        # "SOL/USDT", "BTC-USD"
+# a page body that reads like a trading terminal (distinct terms, first 6000 characters)
+TRADING_PAGE = re.compile(r"\b(market cap|24h volume|liquidity|connect wallet|slippage|order book|limit order|"
+                          r"candlestick|price chart|buy/sell|long/short|leverage|spot trading|futures trading|"
+                          r"fully diluted|circulating supply|all[- ]time high|watchlist|portfolio tracker|"
+                          r"pre-?market|after[- ]hours|bid/ask|stop[- ]loss|take[- ]profit)\b", re.I)
+
+
+def trading_host(host):
+    return bool(TRADING_HOST.search((host or "").lower().rstrip(".")))
+
+
+def trading_url(url):
+    """A trading host, or Google Finance's quote pages."""
+    u = urllib.parse.urlsplit(url or "")
+    host = (u.hostname or "").lower().rstrip(".")
+    return trading_host(host) or (host.split(".")[-2:-1] == ["google"] and bool(TRADING_PATH.match(u.path)))
+
+
+def trading_title(text):
+    """A price / chart / ticker / trading title (never on a screen); a neutral market headline is not one."""
+    t = " ".join(str(text or "").split())
+    if PAIR.search(t) or TICKER_WORD.search(t):                 # a pair or a coin ticker is a trading item by itself
+        return True
+    return bool(COIN_WORD.search(t) and TRADING_TITLE.search(t))
 
 
 def is_finance(url, title="", text=""):
-    """A crypto / stock / market page: the screen card adds ADVICE_LINE."""
-    u = urllib.parse.urlsplit(url or "")
-    host = (u.hostname or "").lower()
-    if FINANCE_HOST.search(host) and (not host.split(".")[-2:-1] == ["google"] or u.path.startswith("/finance")):
+    """A trading page: a trading host, a trading title, or a body that reads like a trading terminal (at least 3
+    distinct terminal terms). #89 live: an anime page with in-game "tokens" and "trading" cards is not one."""
+    if trading_url(url) or trading_title(title):
         return True
-    # #89 live: an anime page counted as finance (in-game "tokens", "trading" cards): distinct words, and one of them
-    # in the title unless the text is full of them
-    in_title = {w.lower() for w in FINANCE_WORDS.findall(title or "")}
-    in_text = {w.lower() for w in FINANCE_WORDS.findall((text or "")[:1500])}
-    return bool(in_title) and len(in_title | in_text) >= 3 or len(in_text) >= 5
-
-
-def finance_note(info, url, title="", body=""):
-    """A finance page's card: `finance`, the advice line, and the line appended to the card's why."""
-    if not is_finance(url, title, body) or (info or {}).get("finance"):
-        return info
-    return dict(info, finance=True, advice=ADVICE_LINE, why=f"{info.get('why', '')} · {ADVICE_LINE}".lstrip(" ·"))
+    terms = {m.group(0).lower() for m in TRADING_PAGE.finditer((text or "")[:6000])}
+    return len(terms) >= 3
 
 
 def money_action(label, href=""):
@@ -475,6 +514,16 @@ def video_text_ok(text):
 def card_title_ok(title, host=""):
     """The public card's title: a video's (YouTube / TikTok host) by video_text_ok, any other page's by display_ok."""
     return video_text_ok(title) if is_video_host(host) else display_ok(title)
+
+
+def screen_showable(st):
+    """S2: a screen status the public card and the screenshot route may show: not a finance / trading page, and a
+    title that passes card_title_ok. The live server returns the restarting-style placeholder (device only) and a
+    404 screenshot otherwise."""
+    st = st or {}
+    if st.get("finance") or trading_url(st.get("url") or ""):
+        return False
+    return card_title_ok(str(st.get("title") or ""), str(st.get("host") or ""))
 
 
 def scene_change(prev_jpeg, jpeg):
@@ -564,9 +613,15 @@ def words(text):
     return [w for w in re.findall(r"[a-zA-ZÀ-ÿ]{4,}", (text or "").lower()) if w not in STOP]
 
 
+def content_words(text):
+    """B1: the words a request and a video can share ("cat", "supra"): 3+ letters, no stop words, no filler
+    ("video", "best": search_sources.GENERIC)."""
+    return {w for w in re.findall(r"[a-zA-ZÀ-ÿ0-9]{3,}", (text or "").lower()) if w not in STOP and w not in SS.GENERIC}
+
+
 def host_ok(host):
     """Hostname is public and not on the block list (DNS is checked separately, see Guard.resolves_public)."""
-    if (not host or BAD_HOST.search(HOST_FALSE_HITS.sub("", host))
+    if (not host or BAD_HOST.search(HOST_FALSE_HITS.sub("", host)) or trading_host(host)
             or host.rstrip(".").lower() in ("localhost", "metadata", "metadata.google.internal")):
         return False
     try:                                                    # literal IPs: only public ones
@@ -582,7 +637,7 @@ def url_ok(url):
     except ValueError:
         return False
     return (u.scheme in ("http", "https") and u.port in (None, 80, 443) and not u.username
-            and host_ok(u.hostname or "") and not SKIP_EXT.search(u.path))
+            and host_ok(u.hostname or "") and not SKIP_EXT.search(u.path) and not trading_url(url))
 
 
 def text_ok(title, body, media=False):
@@ -669,6 +724,38 @@ def challenge_title(title, url):
     return (bool(BOT_WALL.search(t)) or bool(GEO_WALL.search(t)) and not GEO_TITLE_ASK.search(t)
             or consent_wall(title, url)
             or bool(t) and t in (host, host.removeprefix("www."), "www." + host))
+
+
+# S9: an error page (a 404 / 500 body with a real title, or a site's own "oops" page) is not something to read: left,
+# not shown. The title is matched part by part ("404 - Not Found | Example"), never as a substring ("Error handling
+# in Rust" is an article); the body only on a short page (ERROR_BODY_MAX_CHARS).
+ERROR_TITLE = re.compile(r"^(?:(?:error|http)\s*)?(?:\d{3}\b\s*[-:|·.]?\s*)?(?:(?:page |article |file )?not found|"
+                         r"error|oops!?|internal server error|page (?:not|cannot|can.?t) be found|something went wrong|"
+                         r"service unavailable|access denied|forbidden|bad gateway|gateway time-?out|"
+                         r"page (?:doesn.?t|does not) exist|this page isn.?t available|unavailable)(?:\s*[.!])?$", re.I)
+ERROR_BODY = re.compile(r"does not have an article with this exact name|"
+                        r"the page you (?:requested|are looking for|were looking for) (?:could not be found|"
+                        r"doesn.?t exist|does not exist|cannot be found|can.?t be found|was not found)|"
+                        r"\b(?:error )?404\b.{0,40}\b(?:not found|page)\b", re.I)
+ERROR_BODY_MAX_CHARS = 6000
+
+
+def error_page(title, body=""):
+    t = " ".join(str(title or "").split()).lower()
+    if any(ERROR_TITLE.fullmatch(p.strip()) for p in re.split(r"\s[-|–—:·]\s|\|", t) if p.strip()):
+        return True
+    b = str(body or "")
+    return len(b.strip()) < ERROR_BODY_MAX_CHARS and bool(ERROR_BODY.search(b))
+
+
+def why_ok(why):
+    """S9: the card's own line ("followed “…” from host"): title_ok without its link rule (the line names hosts)."""
+    import chat
+    from research import BLOCK as TOPIC_BLOCK
+    t = str(why or "")
+    return not (chat.SOL_ADDR.search(t) or chat.ETH_ADDR.search(t) or MONEY_ASK.search(t)
+                or chat.SLUR_RE.search(chat.normalise(t)) or BAD_WORDS.search(t) or TITLE_BAD_HOST.search(t)
+                or TOPIC_BLOCK.search(t) or MONEY_HYPE.search(t) or trading_title(t))
 
 
 def cross_site_frame(req, host):
@@ -1157,6 +1244,19 @@ class Browser:
                 "can_back": len(sc.history) >= 2, "search_box": False, "chain": sc.chain, "max_chain": MAX_CHAIN,
                 "search": sc.info.get("search"), "streak_pull": I.streak_pull(self.variety)}
 
+    def link_ok(self, href, label, page_url, kind=None):
+        """S9: the one guard for a link he may be offered or follow (pick_links and the random link-follow,
+        _pick_link): the URL (url_ok: hosts, trading sites, files), login / sign-up / checkout links, the label
+        (title_ok; a YouTube link's by the video rule), money actions, footer links (unless it is a "next" or
+        comments link), the 7-day novelty rule, the per-site cap and app / messaging walls."""
+        u = urllib.parse.urlsplit(href or "")
+        cur = urllib.parse.urlsplit(page_url or "")
+        yt = is_youtube(u.hostname or "")
+        return not (len(label) < 4 or not url_ok(href) or LOGIN_LINK.search(label) or LOGIN_HREF.search(href)
+                    or not (video_text_ok if yt else title_ok)(label) or money_action(label, href)
+                    or (kind not in ("next", "comments") and NV.footer_link(label, href, page_url))
+                    or not self.fresh(href, label) or not self.host_ok(u.hostname, cur.hostname) or app_wall(href))
+
     def pick_links(self, raw, url, text, sc, search=False):
         """Numbered, guarded links for the eyes. Pagination ("next"), comment threads and (on Wikipedia) external
         sources are kept even when they are small or low on the page, so the brain can follow them (#29)."""
@@ -1173,10 +1273,7 @@ class Browser:
             ext = bool(external) and wiki and not (u.hostname or "").endswith(("wikipedia.org", "wikimedia.org",
                                                                                 "wikidata.org"))
             yt = is_youtube(u.hostname or "")
-            if (len(label) < 4 or not url_ok(href) or LOGIN_LINK.search(label) or LOGIN_HREF.search(href)
-                    or not (video_text_ok if yt else title_ok)(label) or money_action(label, href)
-                    or (kind not in ("next", "comments") and NV.footer_link(label, href, url))
-                    or not self.fresh(href, label) or not self.host_ok(u.hostname, cur.hostname) or app_wall(href)):
+            if not self.link_ok(href, label, url, kind):
                 continue                                        # #89: no footer links, nothing opened this week
             if (sc.site or self._session(href)) and not VO.link_ok(href, label, aria or ""):
                 continue                                        # #60: logged in, an action or a private page
@@ -1315,7 +1412,8 @@ class Browser:
             wished = query_ok(SS.wish(text))                    # "look up ...": the viewer's words, filtered
             if wished:
                 return await self._search(sc, wished, f"{SS.ORIGINS['chat']}: “{text[:60]}”", "chat")
-            q = " ".join(sorted(words(text), key=len, reverse=True)[:3])
+            top = set(sorted(words(text), key=len, reverse=True)[:3])
+            q = " ".join(w for w in words(text) if w in top)    # B3: the longest words, in the viewer's order
             if q:
                 return await self._search(sc, q, f"from chat: “{text[:60]}”", "chat")
             break
@@ -1341,18 +1439,31 @@ class Browser:
                 topic, origin = self.rng.choice(FAMILIAR), "familiar"
             why = why or (SS.ORIGINS[origin] if origin not in ("", "familiar") else f"curious about “{topic[:50]}”")
             return await self._search(sc, topic, why, origin)
-        return await self._seed(sc, "opened a site he likes", hungry=self.hungry)
+        # B4: the front page of a site about what is on his mind (the caption names the topic), by the hour
+        d = interest if isinstance(interest, dict) else {}
+        topic = I.topic_of(SS.interest_text(interest)) or I.pick(
+            self.variety, hour=d.get("hour", I.tokyo_hour()), rng=self.rng, mult=d.get("tastes"),
+            hungry=self.hungry)["topic"]
+        topic = topic if topic in SEED_TOPICS else None
+        return await self._seed(sc, f"opened a site about {topic}" if topic else "opened a site he likes", topic,
+                                hungry=self.hungry, hour=d.get("hour", I.tokyo_hour()))
 
     SEED_GAP_S = 6 * 3600                                      # a seed site's front page at most every 6 hours
+    NIGHT_SEEDS_OFF = ("football",)                            # B4: no sports / news fronts in the middle of the night
 
-    async def _seed(self, sc, why, topic=None, hungry=False, only_topic=False):
+    async def _seed(self, sc, why, topic=None, hungry=False, only_topic=False, hour=None):
         """A seed site's front page (a feed that changes, so not held to the 7-day rule), rotating: the ones opened in
         the last SEED_GAP_S are left out; the topic's own sites first (only them with only_topic: a failed search
-        falls back on a site about it or none); cooking sites only when he is hungry."""
+        falls back on a site about it or none); cooking sites only when he is hungry; sports / news fronts not at
+        night (B4)."""
         now = time.time()
         mine = SEED_TOPICS.get(topic or "", [])
+        h = float(hour) % 24 if hour is not None else None
+        night = h is not None and (h >= 23 or h < 6)
+        off = {u for t in self.NIGHT_SEEDS_OFF for u in SEED_TOPICS[t]} if night else set()
         pool = [u for u in (mine if only_topic else SEEDS + (SEED_TOPICS["food"] if hungry else []))
-                if now - self.seed_t.get(u, 0) > self.SEED_GAP_S and self.host_ok(urllib.parse.urlsplit(u).hostname)]
+                if now - self.seed_t.get(u, 0) > self.SEED_GAP_S and self.host_ok(urllib.parse.urlsplit(u).hostname)
+                and u not in off]
         self.rng.shuffle(pool)
         pool.sort(key=lambda u: u not in mine)
         for u in pool[:3]:
@@ -1379,9 +1490,10 @@ class Browser:
             q = None                                            # #89: follow-ups at most a quarter of searches
         topic = new = None
         if not q or (not force and self.rng.random() < 1 - I.FOLLOW_SHORTS):
-            # #89: most shorts come from topics he has not seen lately (discovery / trending), not his notes
+            # #89: most shorts come from topics he has not seen lately, not his notes; B4: on the phone mostly his own
+            # topics' neighbours (the profile), the discovery pool only PHONE_DISCOVERY of the time
             p = I.pick(self.variety, hour=d.get("hour", I.tokyo_hour()), rng=self.rng, mult=d.get("tastes"),
-                       discover=True, hungry=self.hungry)
+                       discover=True, hungry=self.hungry, pool_share=I.PHONE_DISCOVERY)
             q, origin = query_ok(p["query"]), "interests"
             topic, new = p["topic"], p["new"]
         else:
@@ -1420,16 +1532,20 @@ class Browser:
             return False
         if kind == "shorts" or kind == "youtube":
             if YT.key():
-                # the topic's channels' latest uploads (3 units), else a search (100 units); all through the API
-                if I.topic_of(q or "") in YT.CHANNELS or I.topic_of(q or "") is None and self.rng.random() < 0.5:
-                    cands = await self._yt_uploads(sc, q, short)
-                    self.feed_note = YT.NOTE_UPLOADS if cands else self.feed_note
+                # B1: a search for what he asked for first (100 units); the latest uploads of the topic's channels
+                # (3 units) only as a labelled fallback, and only when the query has a topic with channels
+                cands = await self._yt_search(sc, q, short)
                 if not cands:
-                    cands = await self._yt_search(sc, q, short)
+                    cands = await self._yt_uploads(sc, q, short)
+                    if cands:
+                        self.feed_note = YT.NOTE_UPLOADS
+                        why = f"latest from {cands[0].get('author') or 'a channel he likes'} (nothing on “{q[:40]}”)"
             if not cands:                                       # no key or no quota: nothing new is looked up
-                cands = self._yt_replay(short)
+                cands = self._yt_replay(short, q)               # B1: only earlier finds about the same thing
                 self.feed_note = (YT.NOTE_REPLAY_KEY if YT.key() else YT.NOTE_REPLAY) if cands else (
                     self.feed_note if YT.key() else YT.NOTE_NO_KEY)
+                if cands:
+                    why = "nothing new today; an earlier pick"  # never the request text: it is not what he asked
         elif kind == "tiktok":
             cands = await self._tiktok_found(sc, q)
         if not cands:
@@ -1472,9 +1588,13 @@ class Browser:
             self.yt.spend(q, short, results)
             if results:                                         # only what the embed will play (1 unit)
                 vt = await self._yt_api(sc, YT.videos_url([r["id"] for r in results]))
-                ok = YT.parse_durations(vt) if vt else {}
-                results = [r for r in results if r["id"] in ok]
-                self.yt.cache[self.yt._k(q, short)] = {"t": time.time(), "r": results[:10], "v": 2}
+                if vt:
+                    ok = YT.parse_durations(vt)
+                    results = [r for r in results if r["id"] in ok]
+                    self.yt.cache[self.yt._k(q, short)] = {"t": time.time(), "r": results[:10], "v": 2}
+                else:                                           # B6: a failed check is not "no videos" for 6 h
+                    self.yt.cache_fail(q, short)
+                    results = []
             print(f"browse: YouTube API search ({'shorts' if short else 'videos'}), {len(results)} results, "
                   f"{self.yt.used} units today", flush=True)
         cards = [{"url": r["url"], "title": r["title"], "author": r["channel"], "thumb": r["thumb"], "hashtags": [],
@@ -1513,8 +1633,12 @@ class Browser:
         (YouTube's Terms forbid automated access to its pages): channels.list forHandle -> uploads playlist (kept),
         playlistItems.list -> latest uploads, videos.list -> durations (Shorts: at most SHORT_MAX_S). 3 units, each
         channel's list cached CHANNEL_CACHE_S. -> cards in the official embed player."""
-        handles = sorted((h for h in YT.channels_for(I.topic_of(q or "")) if self.yt.channel_ok(h)),
+        topic = I.topic_of(q or "")
+        if topic not in YT.CHANNELS:                            # B1: no topic, no channel ("Frank Ocean" -> no MrBeast)
+            return []
+        handles = sorted((h for h in YT.channels_for(topic) if self.yt.channel_ok(h)),
                          key=lambda h: (self.yt_used.get(h, 0), self.rng.random()))
+        want = content_words(q)
         for h in handles[:2]:
             pid = self.yt.uploads.get(h)
             if not pid:
@@ -1533,7 +1657,9 @@ class Browser:
                 if not items:
                     continue
                 text = await self._yt_api(sc, YT.videos_url([it["id"] for it in items]))
-                secs = YT.parse_durations(text) if text else {}
+                if not text:                                    # B6: a failed check is not cached as "no uploads"
+                    continue
+                secs = YT.parse_durations(text)
                 items = [dict(it, sec=secs[it["id"]]) for it in items if it["id"] in secs]
                 self.yt.cache[ck] = {"t": time.time(), "r": items, "v": 2}     # v2: playable() filtered
                 print(f"browse: YouTube API uploads of @{h}: {len(items)} videos, {self.yt.used} units today",
@@ -1542,15 +1668,23 @@ class Browser:
             pick = [it for it in items if (it["sec"] <= YT.SHORT_MAX_S) == bool(short)]
             cards = self._yt_cards(pick, short, author=h)
             self.rng.shuffle(cards)
+            cards.sort(key=lambda c: not (want & content_words(c.get("title"))))  # B1: the ones about `q` first
             if cards:
                 self.yt.found(cards)
                 return cards[:6]
         return []
 
-    def _yt_replay(self, short=True):
-        """No key or no quota: no discovery; the videos already found today and not yet shown."""
+    def _yt_replay(self, short=True, q=None):
+        """No key or no quota: no discovery; the videos already found today and not yet shown. B1: only the ones
+        about the same thing as `q` (its profile topic, or a shared content word), so a request for one thing never
+        shows a video about another; nothing fits -> [] and the search moves on."""
         kind = "/shorts/" if short else "watch?v="
-        return [c for c in reversed(self.yt.today) if kind in c["url"] and self._card_ok(c)][:6]
+        topic, want = I.topic_of(q or ""), content_words(q)
+
+        def fits(c):
+            text = f"{c.get('title') or ''} {c.get('author') or ''}"
+            return (topic is not None and I.topic_of(text) == topic) or bool(want & content_words(text))
+        return [c for c in reversed(self.yt.today) if kind in c["url"] and self._card_ok(c) and fits(c)][:6]
 
     async def _tiktok_found(self, sc, q):
         """Public TikTok videos for `q` found through the search engines (site:tiktok.com), described by TikTok's
@@ -1679,8 +1813,9 @@ class Browser:
             text = await sc.page.evaluate(EMBED_ERROR_JS) or ""
         except Exception:
             return None
-        if EMBED_ERROR.search(text):
-            return EMBED_ERROR.search(text).group(0)
+        hits = [m.group(0) for m in EMBED_ERROR.finditer(text)]
+        if hits:                                                # B6: a real player error before "advertisement playing"
+            return next((h for h in hits if "advertisement" not in h.lower()), hits[0])
         if wait and state is None:
             again = await self._play_muted(sc)
             if again is None:
@@ -1840,7 +1975,11 @@ class Browser:
         """One screenshot while watching: the video is muted again, the scene change measured. False if the page
         turned into a bot check, or the embed player into an error (then it is left)."""
         state = await sc.page.evaluate(VIDEO_JS, None)
-        if sc.info and sc.info.get("embed") and await self._embed_error(sc, state, wait=False):
+        err = await self._embed_error(sc, state, wait=False) if sc.info and sc.info.get("embed") else None
+        if err and "advertisement" in err.lower():              # B6: an ad mid-watch is not the video's fault: no
+            sc.watch_until += VIDEO_SHOT_S                      # strike, not left; the watch timer waits for it
+            err = None
+        if err:
             self.yt.refused(sc.info["url"], sc.info.get("channel"))
             sc.watch_until = 0.0
             await self._leave(sc)
@@ -2016,9 +2155,8 @@ class Browser:
         cur = urllib.parse.urlsplit(sc.page.url)
         cand = []
         for href, text, area in links:
-            if (len(text) < 12 or not url_ok(href) or LOGIN_LINK.search(text) or BAD_WORDS.search(text)
-                    or NV.footer_link(text, href, sc.page.url) or not self.fresh(href, text)
-                    or not self.host_ok(urllib.parse.urlsplit(href).hostname, cur.hostname) or app_wall(href)):
+            text = " ".join(str(text or "").split())
+            if len(text) < 12 or not self.link_ok(href, text, sc.page.url):   # S9: the same guard as pick_links
                 continue
             u = urllib.parse.urlsplit(href)
             if (u.netloc, u.path) == (cur.netloc, cur.path):
@@ -2066,7 +2204,7 @@ class Browser:
         page = sc.page
         self.login_redirect = None
         try:
-            await page.goto(url, wait_until="domcontentloaded", timeout=NAV_TIMEOUT_MS, referer=referer)
+            resp = await page.goto(url, wait_until="domcontentloaded", timeout=NAV_TIMEOUT_MS, referer=referer)
         except Exception as e:
             if sc.site and self.login_redirect == sc.site:
                 await self._logout(sc, "sent to log in")
@@ -2076,6 +2214,14 @@ class Browser:
                 print(f"browse: could not open {url[:80]}: {repr(e)[:100]}", flush=True)
                 self.last_skip = "did not load"
                 return await self._leave(sc)
+            resp = None
+        status = getattr(resp, "status", None)
+        if isinstance(status, int) and status >= 400:              # S9: an error page is never shown or logged
+            print(f"browse: skipped {urllib.parse.urlsplit(url).hostname} (HTTP {status})", flush=True)
+            self.last_skip = "error page"
+            if status in (403, 429, 503) and kind != "search":     # refused / rate-limited: the site is left alone
+                self._cool(url, OVERLAY_COOLDOWN_S)
+            return await self._leave(sc)
         return await self._settle(sc, why, kind, title, min_text, shoot, revisit)
 
     async def _settle(self, sc, why, kind, title=None, min_text=80, shoot=True, revisit=False):
@@ -2102,11 +2248,17 @@ class Browser:
         page_title = (await page.title() or "").strip()
         body = await page.evaluate("() => (document.body && document.body.innerText || '').slice(0, 20000)")
         video = is_video_host(urllib.parse.urlsplit(page.url).hostname or "")
+        # S9 guard parity: a loaded page's title passes the same title rule as the links and results that lead to
+        # pages (title_ok; a video page's title is checked by the video rule below), money hype at the top of the
+        # body goes, and a trading page (host, title or a terminal-like body: S2) is never shown
         reason = ("guard" if not text_ok(page_title, body, media=video) else "empty" if len(body.strip()) < min_text
+                  else "error page" if error_page(page_title, body)
                   else "bot wall" if challenge_title(page_title, page.url) or await self._walled(page, body)
                   else "overlay wall" if over or overlay_wall(body) or await self._overlay_walled(page)
                   else "sign-in wall" if LOGIN_HREF.search(urllib.parse.urlsplit(page.url).path + "?")
-                  or await self._login_walled(page, body) else None)
+                  or await self._login_walled(page, body)
+                  else "guard" if (not video and not title_ok(page_title)) or MONEY_HYPE.search(body[:2000])
+                  or is_finance(page.url, "" if video else page_title, body) else None)
         if reason and sc.site:                                         # why a logged-in feed shows nothing
             await self._diag(sc, reason, page_title, body)
         if reason == "sign-in wall" and sc.site:                       # #60: the session no longer works
@@ -2137,12 +2289,14 @@ class Browser:
                 return await self._leave(sc)
             if channel and not video_text_ok(channel):
                 channel = ""
+        why = why.replace("opened “”", f"opened {host.removeprefix('www.')}")
+        if not why_ok(why):                                            # S9: the card's line passes the title rule too
+            why = "browsing"
         sc.info = {"title": (title or page_title or host)[:140], "url": page.url, "host": host.removeprefix("www."),
-                   "why": why.replace("opened “”", f"opened {host.removeprefix('www.')}"), "t": time.time(), "kind": kind,
+                   "why": why, "t": time.time(), "kind": kind,
                    "search_box": kind == "page" and await self._has_search_box(page)}
         if channel:
             sc.info["channel"] = channel[:80]
-        sc.info = finance_note(sc.info, page.url, page_title, body)   # #56: viewing only, and the card says so
         sc.scrolls_left = self.rng.randint(*SCROLLS) if kind == "page" else 0
         if shoot and not await self.show(sc):
             return False

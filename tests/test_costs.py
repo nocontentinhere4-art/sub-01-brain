@@ -36,7 +36,8 @@ def write(path, rows):
 
 @pytest.fixture(autouse=True)
 def default_caps(monkeypatch):
-    for k in ("SUB01_CAP_EYE_USD", "SUB01_CAP_DIARY_USD", "SUB01_CAP_TOTAL_USD", "SUB01_ADMIN_TOKEN", "SITE_PASSWORD"):
+    for k in ("SUB01_CAP_EYE_USD", "SUB01_EYE_USD_PER_DAY", "SUB01_CAP_DIARY_USD", "SUB01_CAP_TOTAL_USD",
+              "SUB01_ADMIN_TOKEN", "SITE_PASSWORD"):
         monkeypatch.delenv(k, raising=False)
 
 
@@ -97,6 +98,19 @@ def test_default_total_covers_every_part():
     c = costs.caps()
     assert c["eyes"] == 1.0 and c["mind"] == 1.0 and c["eye"] == 1.0
     assert c["total"] >= c["eye"] + c["eyes"] + c["mind"] + c["diary"]
+
+
+def test_eye_cap_setting_and_the_total_follow_it(monkeypatch):
+    """SUB01_EYE_USD_PER_DAY is the eye's cap (default 1.00, the older SUB01_CAP_EYE_USD still read); the total's
+    default is the sum of the parts as set, so raising the eye alone never starves the eyes or the mind."""
+    assert costs.caps()["eye"] == 1.0 and costs.caps()["total"] == 3.10
+    monkeypatch.setenv("SUB01_CAP_EYE_USD", "0.5")
+    assert costs.caps()["eye"] == 0.5 and costs.caps()["total"] == pytest.approx(2.60)
+    monkeypatch.setenv("SUB01_EYE_USD_PER_DAY", "2")
+    c = costs.caps()
+    assert c["eye"] == 2.0 and c["total"] == pytest.approx(4.10)
+    monkeypatch.setenv("SUB01_CAP_TOTAL_USD", "3.10")
+    assert costs.caps()["total"] == 3.10                           # set explicitly: what it says
 
 
 def test_cap_env_names_set_the_existing_shares():
@@ -358,6 +372,41 @@ def test_eye_pacing_can_be_turned_off_and_leaves_the_other_caps_alone(tmp_path, 
     monkeypatch.delenv("SUB01_EYE_PACE")
     led = costs.Ledger(tmp_path / "d", clock=lambda: at(2026, 10, 8, 9))
     assert led.pace_allowed("diary") == costs.caps()["diary"] and led.why_not("diary") is None
+
+
+def attended_day(tmp_path, every_s=90, frame_usd=costs.EYE_FRAME_USD):
+    """The live cadence: viewers present all day (08:00-24:00, a frame wanted every `every_s` while awake) and the
+    night's dreams (REM ~ a quarter of 00:00-08:00, a frame every 0.75 x every_s). -> {hour: frames rendered},
+    frames wanted per waking hour."""
+    now = [at(2026, 10, 8, 0, 0)]
+    Path(tmp_path).mkdir(parents=True, exist_ok=True)
+    led = costs.Ledger(tmp_path, clock=lambda: now[0])
+    made, end = {}, at(2026, 10, 9, 0, 0) - 1
+    while now[0] < end:
+        h = datetime.fromtimestamp(now[0], TZ).hour
+        night = h < 8
+        if night and (now[0] // 60) % 4 != 0:                       # REM about a quarter of the night
+            now[0] += 60
+            continue
+        if led.why_not("eye") is None:
+            led.record("eye", "flux+llm", 1, frame_usd, "frame")
+            made[h] = made.get(h, 0) + 1
+        now[0] += every_s * (0.75 if night else 1.0)
+    return made, 3600 / every_s
+
+
+def test_frames_per_attended_hour_at_the_live_cadence(tmp_path, monkeypatch):
+    """At the 90 s cadence with viewers all day the $1.00 cap paces the eye to ~15 frames in every waking hour (one
+    every 4 min: never a frozen afternoon, 38% of the cadence); $2.00 gives 30-40 an hour (~83%). The numbers are
+    what the owner's money buys (measured here: 244 vs 530 of 640 wanted day frames, 81 vs 120 at night)."""
+    made, want = attended_day(tmp_path)
+    day = [made.get(h, 0) for h in range(8, 24)]
+    assert min(day) >= 0.35 * want and all(day)                     # every hour sees frames: ~ one every 4 min
+    assert sum(day) <= 0.5 * 16 * want                              # ...but the cadence itself does not fit in $1.00
+    monkeypatch.setenv("SUB01_EYE_USD_PER_DAY", "2")
+    made2, _ = attended_day(tmp_path / "two")
+    day2 = [made2.get(h, 0) for h in range(8, 24)]
+    assert sum(day2) >= 0.8 * 16 * want and min(day2) >= 0.7 * want  # $2/day: ≥ 80% of the wanted frames, every hour
 
 
 def test_the_night_keeps_enough_frames_for_the_dream_diary(tmp_path):

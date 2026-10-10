@@ -6,9 +6,9 @@ for things he saw, memecoins and stocks for example. No guy like him would spend
 - PROFILE: seed weights per topic (edit them here, in one place) with a few searches each and the words that mark a
   page as being about it. His tastes (#38, tastes.py) move a topic's weight between 0.5x and 1.6x over days; they
   never collapse it to one topic.
-- RHYTHM by Tokyo hour: morning news and the weather, short videos at lunch, his interests in the afternoon, YouTube
-  and games in the evening, Shorts on the phone late at night. The rhythm only tilts the weights and the feed; his
-  boredom and the brain vote still choose.
+- RHYTHM by Tokyo hour: football, tech, music and Tokyo in the morning, short videos at lunch, games and cars in the
+  afternoon, games, football and anime in the evening, Shorts on the phone late at night (there is no news or
+  weather topic). The rhythm only tilts the weights and the feed; his boredom and the brain vote still choose.
 - Variety: no quota is imposed from outside (owner, "NO RESTRICTIONS"). A topic that already filled a large share of
   today's pages weighs less (`saturation`), Wikipedia too, and after 3-4 pages in a row on one topic the leave
   option pulls harder (`streak_pull`, added to the vote's leave pull), so he does not get stuck on one topic.
@@ -80,8 +80,7 @@ RHYTHM = [
     (14, 18, "afternoon", {"games": 1.3, "cars": 1.3, "tech": 1.2, "sneakers": 1.2, "anime": 1.1}, None, 0.5),
     (18, 23, "evening", {"games": 1.6, "football": 1.4, "anime": 1.3, "creators": 1.3, "movies": 1.3}, None, 0.8),
     (23, 30, "late night", {"memes": 1.6, "music": 1.4, "anime": 1.3, "games": 1.2}, "shorts", 0.9),
-    (30, 30, "early", {}, None, 0.0),
-]
+]                                  # (00:00-06:00 counts as late night: rhythm() adds 24 to hours before 6)
 STREAK_FROM = 3                    # pages in a row on one topic before the leave option pulls harder
 SATURATION = 4.0                   # how fast a topic's weight falls with its share of today's pages
 FREE_SHARE = 0.15                  # shares below this cost nothing
@@ -90,28 +89,66 @@ RECENT_S = 2 * 3600                # a topic seen this recently weighs RECENT_W 
 RECENT_W = 0.15
 QUERY_GAP_S = 86400                # a query is not typed again within a day (pages: 7 days, novelty.py)
 FOLLOW_SHORTS = 0.3                # shorts on his own interest / what he saw; the rest discovery (>= 60 % new topics)
+PHONE_DISCOVERY = 0.15             # B4: on the phone the discovery pool only this often; the rest his topics' neighbours
 TRENDING_KEEP = 40
-# discovery: subjects outside his usual topics (one query each, each its own topic "discover:<words>")
-DISCOVERY = ["axolotl facts", "how glass is made", "bonsai for beginners", "deep sea anglerfish", "origami crane",
-             "Antarctica research station life", "how lighthouses work", "volcano eruption footage", "bee dance",
-             "kintsugi repair", "Iceland northern lights", "how vinyl records are made", "street magic tricks",
-             "octopus intelligence", "skateboard tricks", "parkour Tokyo", "calligraphy shodo", "Japanese carpentry joints",
-             "train driver cab view", "how sushi knives are forged", "sumo training morning", "capybara onsen",
-             "tsunami stone markers", "lucid dreaming tips", "speed cubing", "mechanical watch movement",
-             "drone racing", "chess blunders", "how elevators work", "giant squid", "jellyfish aquarium",
-             "glassblowing", "blacksmith forging", "pottery wheel", "aurora timelapse", "storm chasing",
-             "bioluminescent waves", "tardigrades", "mushroom foraging", "beekeeping", "ice cave", "desert night sky",
-             "magnetic slime", "domino toppling", "marble run", "satisfying cleaning", "miniature cooking",
-             "abandoned places Japan", "cherry blossom forecast", "taiko drumming", "kendama tricks", "yo-yo world champion",
-             "beatbox", "a cappella cover", "street piano", "busking Shibuya", "breakdance battle", "jazz drummer solo",
-             "orchestra behind the scenes", "film photography", "polaroid tips", "darkroom printing", "pixel art",
-             "stop motion animation", "claymation", "3D printing fails", "robot dog", "Mars rover", "ISS live",
-             "rocket launch", "solar eclipse", "meteor shower", "black hole image", "cats vs cucumbers",
-             "shiba inu", "red panda", "penguin parade", "sea otters holding hands", "owl cafe", "deer in Nara",
-             "snow monkeys", "how ramen noodles are made", "wagashi sweets", "latte art", "coffee roasting",
-             "matcha ceremony", "fermented foods", "knife sharpening", "fixing old electronics", "restoring rusty tools",
-             "tiny house tour", "capsule hotel tour", "Tokyo apartment tour", "night bus Japan", "ferry Seto Inland Sea",
-             "Okinawa beaches", "Hokkaido snow festival", "Kyoto autumn leaves", "Fuji climbing", "onsen etiquette"]
+# discovery: subjects outside his usual topics (one query each, each its own topic "discover:<words>"), for a
+# 20-year-old (B4: street food, cars, animals, music scenes, game tricks, science shorts; the bonsai / beekeeping /
+# knife-sharpening kind of entry is gone), each with the Tokyo months it fits (None: all year; seasonal entries such
+# as cherry blossoms, snow festivals and fireworks only in season)
+DISCOVERY_SEASONS = [
+    ("axolotl facts", None), ("deep sea anglerfish", None), ("octopus intelligence", None), ("giant squid", None),
+    ("jellyfish aquarium", None), ("tardigrades", None), ("capybara onsen", (10, 11, 12, 1, 2, 3)),
+    ("shiba inu zoomies", None), ("red panda", None), ("penguin parade", None), ("sea otters holding hands", None),
+    ("owl cafe Tokyo", None), ("deer in Nara", None), ("snow monkeys", (12, 1, 2, 3)), ("cats vs cucumbers", None),
+    ("animal fails compilation", None), ("robot dog", None),
+    ("volcano eruption footage", None), ("Antarctica research station life", None), ("storm chasing", (5, 6, 7, 8, 9)),
+    ("bioluminescent waves", None), ("ice cave", (12, 1, 2, 3)), ("desert night sky", None), ("typhoon footage", (8, 9, 10)),
+    ("Iceland northern lights", (9, 10, 11, 12, 1, 2, 3)), ("aurora timelapse", (9, 10, 11, 12, 1, 2, 3)),
+    ("meteor shower", (8, 12)), ("solar eclipse", None), ("black hole image", None), ("Mars rover", None),
+    ("ISS live", None), ("rocket launch", None), ("how big is the universe", None), ("slow motion science", None),
+    ("why the sky is blue", None), ("how elevators work", None), ("how ramen noodles are made", None),
+    ("lucid dreaming tips", None), ("magnetic slime", None), ("domino toppling", None), ("marble run", None),
+    ("satisfying cleaning", None), ("miniature cooking", None),
+    ("street food Tokyo night market", None), ("konbini night snacks", None), ("ramen vending machine", None),
+    ("kakigori shaved ice", (6, 7, 8)), ("yakiimo truck", (10, 11, 12, 1, 2)), ("Tokyo street racing history", None),
+    ("JDM car meet Daikoku", None), ("drift car build", None), ("Formula 1 pit stop record", None),
+    ("e-scooter Tokyo", None), ("train driver cab view", None), ("night bus Japan", None),
+    ("ferry Seto Inland Sea", (4, 5, 6, 7, 8, 9, 10)),
+    ("skateboard tricks", None), ("skateboard Shibuya", None), ("parkour Tokyo", None), ("breakdance battle", None),
+    ("basketball trick shots", None), ("football freestyle skills", None), ("boxing training footage", None),
+    ("sumo training morning", None), ("drone racing", None), ("speed cubing", None), ("kendama tricks", None),
+    ("yo-yo world champion", None), ("chess blunders", None), ("rhythm game pro", None), ("Beat Saber expert", None),
+    ("Tokyo arcade crane games", None), ("Akihabara retro arcade tour", None), ("Elden Ring speedrun tricks", None),
+    ("GTA stunt montage", None), ("Minecraft redstone tricks", None),
+    ("beatbox", None), ("a cappella cover", None), ("street piano", None), ("busking Shibuya", None),
+    ("jazz drummer solo", None), ("orchestra behind the scenes", None), ("Tokyo hip hop scene", None),
+    ("city pop revival", None), ("lo-fi beats study", None), ("taiko drumming", (7, 8)), ("street magic tricks", None),
+    ("pixel art", None), ("stop motion animation", None), ("claymation", None), ("3D printing fails", None),
+    ("abandoned places Japan", None), ("tiny house tour", None), ("capsule hotel tour", None),
+    ("Tokyo apartment tour", None), ("tsunami stone markers", None), ("onsen etiquette", (10, 11, 12, 1, 2, 3)),
+    ("cherry blossom forecast", (2, 3, 4)), ("hanami Inokashira", (3, 4)), ("Hokkaido snow festival", (1, 2)),
+    ("snowboarding Hakuba", (12, 1, 2, 3)), ("Kyoto autumn leaves", (10, 11, 12)), ("Fuji climbing", (7, 8, 9)),
+    ("Okinawa beaches", (5, 6, 7, 8, 9)), ("summer fireworks hanabi", (7, 8)), ("summer festival matsuri", (7, 8)),
+    ("Halloween Shibuya", (10,)), ("Tokyo Game Show", (9,)), ("Comiket", (8, 12)), ("Christmas illuminations Tokyo", (11, 12)),
+    ("hatsumode New Year shrine", (12, 1)), ("Tokyo Auto Salon", (1,)), ("Golden Week travel Japan", (4, 5)),
+]
+DISCOVERY = [q for q, _ in DISCOVERY_SEASONS]
+
+
+def tokyo_month(t=None):
+    from datetime import datetime
+    try:
+        from sleep import TZ
+    except Exception:                                       # pragma: no cover
+        from zoneinfo import ZoneInfo
+        TZ = ZoneInfo("Asia/Tokyo")
+    return datetime.fromtimestamp(time.time() if t is None else t, TZ).month
+
+
+def discovery_pool(month=None):
+    """The discovery queries that fit this Tokyo month (B4: no cherry blossoms in October)."""
+    m = int(month) if month else tokyo_month()
+    return [q for q, months in DISCOVERY_SEASONS if not months or m in months]
 
 
 def rhythm(hour):
@@ -303,10 +340,11 @@ def discovery_topic(q):
     return "discover:" + "-".join(re.findall(r"[a-z0-9]+", str(q).lower())[:6] or ["x"])
 
 
-def pick(variety=None, pref=None, hour=12.0, rng=None, mult=None, discover=False, hungry=False):
+def pick(variety=None, pref=None, hour=12.0, rng=None, mult=None, discover=False, hungry=False, month=None,
+         pool_share=0.5):
     """One search from the profile: {"query", "topic", "from": "interests", "rhythm"}. Queries typed in the last
-    week are left out. discover=True: a topic not seen in the last 2 h, from the profile or from discovery (trending
-    headlines he saw, the DISCOVERY pool); "new": True on the result."""
+    week are left out. discover=True: a topic not seen in the last 2 h, from the profile or (pool_share of the time)
+    from discovery (trending headlines he saw, the DISCOVERY pool of this Tokyo `month`); "new": True on the result."""
     rng = rng or random.Random()
     w = weights(variety, pref, hour, mult, hungry)
     fresh = (lambda q: not variety.query_used(q)) if variety is not None else (lambda q: True)
@@ -314,12 +352,13 @@ def pick(variety=None, pref=None, hour=12.0, rng=None, mult=None, discover=False
     if discover and variety is not None:
         topics = [k for k in topics if not variety.recent(k)]
     out = None
-    if discover and (not topics or rng.random() < 0.5):
+    if discover and (not topics or rng.random() < pool_share):
+        season = discovery_pool(month)
         trend = [t for t in (variety.trending if variety is not None else []) if fresh(t)
                  and not (variety and variety.recent(topic_of(t) or discovery_topic(t)))]
-        pool = [q for q in DISCOVERY if fresh(q) and not (variety and variety.recent(discovery_topic(q)))]
+        pool = [q for q in season if fresh(q) and not (variety and variety.recent(discovery_topic(q)))]
         if not pool and not trend and variety is not None:  # all typed today: the one typed longest ago
-            old = [q for q in DISCOVERY if not variety.recent(discovery_topic(q))]
+            old = [q for q in season if not variety.recent(discovery_topic(q))]
             pool = sorted(old, key=lambda q: variety.queries.get(q.lower(), 0))[:5]
         if trend and (rng.random() < 0.5 or not pool):
             q = rng.choice(trend)

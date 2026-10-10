@@ -58,6 +58,10 @@ STOP = set("the a an and or but if of to in on at for with from by is are was we
            "included located based number often several way became become becomes later early late among within "
            "without throughout through around upon towards area areas form forms type types term terms refers refer "
            "referred "
+           # B3: web-UI and video-title filler, never a keyword or a query ("Elden Ring Official Trailer" -> elden ring)
+           "video videos watch watching official new best live full episode part shorts tiktok youtube page click "
+           "menu home news read view free time top people today really latest trailer teaser reaction reacts vlog "
+           "compilation highlights update updated subscribe channel stream streaming premiere exclusive viral "
            "del della dello dei degli delle nel nella nei negli nelle sul sulla alla alle agli allo come anche "
            "più molto questo questa questi queste quello quella sua suo suoi sue loro essere stato stata tra "
            "dopo prima durante dove quando mentre ogni altri altre altro altra viene sono".split())
@@ -78,12 +82,24 @@ def search(word, lang="en"):
     return [t for t in titles if safe(t)]
 
 
+LINK_PAGES = 3                        # B5: requests per article (pllimit 500 each: the pool is the whole article's links,
+LINK_LIMIT = 500                      # not the alphabetical prefix that one 200-link page gave)
+
+
 def links(title, lang="en"):
-    q = urllib.parse.urlencode({"action": "query", "titles": title, "prop": "links", "plnamespace": 0,
-                                "pllimit": 200, "format": "json"})
-    pages = get(API.format(lang=lang) + "?" + q).get("query", {}).get("pages", {})
-    out = [l["title"] for p in pages.values() for l in p.get("links", [])]
-    return [t for t in out if safe(t) and not re.match(r"^(List of|Index of|Outline of|\d{3,4}\b)", t)]
+    out, cont = [], {}
+    for _ in range(LINK_PAGES):
+        q = urllib.parse.urlencode({"action": "query", "titles": title, "prop": "links", "plnamespace": 0,
+                                    "pllimit": LINK_LIMIT, "format": "json", **cont})
+        d = get(API.format(lang=lang) + "?" + q)
+        pages = d.get("query", {}).get("pages", {})
+        out += [l["title"] for p in pages.values() for l in p.get("links", [])]
+        cont = {k: v for k, v in (d.get("continue") or {}).items() if k in ("plcontinue", "continue")}
+        if not cont.get("plcontinue"):
+            break
+    # no lists / indexes, no years and numbers ("1,000,000,000", "1917"), no titles starting with punctuation
+    return [t for t in dict.fromkeys(out)
+            if safe(t) and not re.match(r"^(List of|Index of|Outline of|\d|[,.;:'\"(\[-])", t)]
 
 
 def summary(title, lang="en"):

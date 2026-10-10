@@ -32,7 +32,7 @@ import time
 from pathlib import Path
 
 from brain_sim import GROUPS
-from browse import (BAD_HOST, BAD_WORDS, LOGIN_HREF, LOGIN_LINK, money_action, title_ok, url_ok, video_text_ok,
+from browse import (BAD_HOST, BAD_WORDS, MONEY_HYPE, LOGIN_HREF, LOGIN_LINK, money_action, title_ok, url_ok, video_text_ok,
                     words)
 from chat import blocked as chat_blocked, networks_for
 from research import BLOCK as TOPIC_BLOCK
@@ -321,7 +321,7 @@ def query_ok(q):
     if not 2 <= len(q) <= 60 or len(q.split()) > 6 or site_only(q):
         return None
     if (chat_blocked(q) or BAD_WORDS.search(q) or BAD_HOST.search(q) or TOPIC_BLOCK.search(q) or "/" in q
-            or BUY_SELL.search(q) or SHOP_WORDS.search(q)):
+            or BUY_SELL.search(q) or SHOP_WORDS.search(q) or MONEY_HYPE.search(q)):
         return None
     return q
 

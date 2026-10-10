@@ -35,7 +35,7 @@
 </style>
 </head>
 <body>
-<header><h1>SUB-01</h1><div class="sub">the simulated world · <span id="stage">…</span> · <a href="/" style="color:inherit">life</a> · <a href="/brain" style="color:inherit">brain</a> · <a href="/diary" style="color:inherit">dream diary</a></div></header>
+<header><h1>SUB-01</h1><div class="sub">the simulated world · <span id="stage">…</span> · <a href="/" style="color:inherit">room</a> · <a href="/brain" style="color:inherit">brain</a> · <a href="/diary" style="color:inherit">dream diary</a> · <a href="https://city.subzerone.live/" style="color:inherit" target="_blank" rel="noopener">city</a></div></header>
 <main>
   <div>
     <div id="view"><img id="a" alt=""><img id="b" alt=""><div id="thought"></div></div>
@@ -59,7 +59,7 @@ function show(f){
   const w = f.why || {}, bits = [];
   if (w.messages && w.messages.length) bits.push("from chat: " + w.messages.slice(-2).map(x => `“${x.slice(0, 60)}”`).join(", "));
   if (w.replayed && w.replayed.length) bits.push("dreaming of: " + w.replayed.slice(-2).map(x => `“${x.slice(0, 60)}”`).join(", "));
-  if (w.mood) bits.push(`market ${w.mood.market}`);
+  // (no market line: the coin's trades are a stimulus inside the model, never a word on the page)
   document.getElementById("why").textContent = bits.join(" · ");
 }
 async function refresh(){

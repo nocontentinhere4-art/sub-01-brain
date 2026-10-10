@@ -145,9 +145,9 @@ code around it do.</p>
     <span class="src">source: <code>docs/twin/sleep.md</code></span></li>
   <li><strong>Reads and browses.</strong> It follows a chain of Wikipedia articles and browses the open web.
     The only thing it ever types is a filtered search query into a site's own search box; it never logs in, signs
-    up, posts or buys anything, and a guard blocks unsafe sites. It may look at crypto and stock pages, read-only: it
-    never connects a wallet or clicks buy, sell or swap, and the screen says "nothing here is financial advice".
-    What it reads becomes a stimulus to the model.</li>
+    up, posts or buys anything, and a guard blocks unsafe sites. Exchanges, trading, chart and token-launch sites are
+    refused outright, never shown read-only; it never connects a wallet or clicks buy, sell or swap. Financial news may
+    be read as news, like any other. What it reads becomes a stimulus to the model.</li>
   <li><strong>An AI reads and remembers for him; his brain model chooses.</strong> A language model (Claude Haiku)
     writes a short note on each page he reads and keeps the notes as a searchable memory that fades with time. Each
     Tokyo morning it proposes two or three day plans, and the brain model votes among them the way it votes among
@@ -258,9 +258,10 @@ results in <code>docs/spiking/gpu_reading/</code>).</p>
 <section id="coin">
 <h2><b>7</b>The coin</h2>
 <div class="box">
-  <p>The site shows a coin's public trades only as stimuli for the model. Nothing on this site is financial
-  advice. There are no promises, no price talk and no calls to buy. The project never holds or moves anyone's
-  funds, and it never asks for a wallet.</p>
+  <p>A coin's public trades reach the model only as a stimulus (a nudge to its simulated dopamine and noradrenaline);
+  they are never shown: no chart, no trade feed, no amounts, no prices, on any screen of his or any page of this site.
+  Nothing on this site is financial advice. There are no promises, no price talk and no calls to buy. The project
+  never holds or moves anyone's funds, and it never asks for a wallet.</p>
 </div>
 </section>
 

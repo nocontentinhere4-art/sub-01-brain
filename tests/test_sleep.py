@@ -17,8 +17,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
+import pytest
 
 import chat
+from sleep import day_of
 import sleep
 from sleep import TZ, Clock, Memory, SleepEngine, Store, WAKE_THRESHOLD
 
@@ -91,6 +93,33 @@ def test_rem_grows_and_nrem_deepest_early():
     assert deep[0] > deep[3], deep
 
 
+def test_the_alarm_gets_him_up_and_keeps_him_up():
+    e = asleep_engine()
+    e.H += 1.2                                                   # some sleep pressure: left alone he sleeps past 08:00
+    _, ev = run(e, loc(2, "00:05"), loc(2, "10:30"), step=60)
+    ups = [x for x in ev if x["type"] == "wake" and "(alarm)" in x["text"]]
+    assert len(ups) == 1 and ups[0]["at"] <= loc(2, "08:02"), [sleep.hhmm(x["at"]) + " " + x["text"] for x in ev if x["type"] in ("sleep", "wake")]
+    assert not e.asleep and e.last_night is not None and e.alarm_day == day_of(loc(2, "09:00"))
+    _, ev2 = run(e, loc(2, "10:30"), loc(2, "11:30"), step=60)
+    assert not any("(alarm)" in x["text"] for x in ev2 if x["type"] == "wake")   # once a day
+
+
+def test_short_of_sleep_he_sleeps_in():
+    e = asleep_engine()
+    e.debt = 6.0                                                 # six hours owed (a night kept awake before)
+    _, ev = run(e, loc(2, "00:05"), loc(2, "08:30"), step=60)
+    assert e.asleep and e.debt > sleep.ALARM_DEBT_H
+    assert not any("(alarm)" in x["text"] for x in ev if x["type"] == "wake")   # he sleeps in
+
+
+def test_get_up_now_by_the_owner():
+    e = asleep_engine(at="04:50")
+    ev = e.get_up(loc(2, "04:50"), "owner")
+    assert ev["type"] == "wake" and "(owner)" in ev["text"] and not e.asleep
+    stages, _ = run(e, loc(2, "04:50"), loc(2, "06:00"), step=60)
+    assert all(s == "AWAKE" for _, s in stages)                  # up before dawn and he stays up
+
+
 def test_wakes_in_the_morning_and_writes_timeline():
     e = asleep_engine()
     _, ev = run(e, loc(2, "00:05"), loc(2, "08:10"), step=60)
@@ -147,6 +176,67 @@ def test_messages_at_night_wake_it_then_it_sleeps_again():
     assert cause.endswith("messages") and int(cause.split()[0]) >= 3, cause
     _, ev = run(e, t0 + 300, t0 + 3600, step=30)      # quiet period -> back to sleep
     assert e.asleep and any(x["type"] == "sleep" for x in ev)
+
+
+def test_a_chat_wake_holds_him_up_45_min():
+    """Woken by messages he stays up AWAKE_HOLD_S (the get_up pin): no sleep event within 45 min of the wake, in any
+    of the probed mornings; a single message at 06:30 still does not wake him (the circuit decides that)."""
+    for hm, n in (("07:00", 1), ("06:00", 2), ("06:30", 2), ("05:30", 3), ("04:30", 3), ("02:00", 8)):
+        e = asleep_engine(at=hm)
+        t0 = loc(2, hm)
+        _, ev = run(e, t0, t0 + 2 * 3600, step=10, stimuli=[(t0 + 20 * i, "message", 0) for i in range(n)])
+        wakes = [x for x in ev if x["type"] == "wake"]
+        assert wakes and "message" in wakes[0]["text"], (hm, n, ev)
+        w = wakes[0]["at"]
+        assert not any(x["type"] == "sleep" and x["at"] < w + sleep.AWAKE_HOLD_S for x in ev), (hm, n)
+        assert e.up_until >= w + sleep.AWAKE_HOLD_S - 10
+    e = asleep_engine(at="06:30")
+    _, ev = run(e, loc(2, "06:30"), loc(2, "07:15"), step=10, stimuli=[(loc(2, "06:30") + 5, "message", 0)])
+    assert not any(x["type"] == "wake" for x in ev)
+
+
+def test_naps_are_their_own_records():
+    """A nap (sleep starting between WAKE_HOUR and EVENING_HOUR) gets a record of its own ("<day>-nap-<HHMM>",
+    kind "nap"): the night's onset and the previous night's woke_up stay what they were (2026-10-09: a 13:00 nap
+    became the night's onset and the diary said 13:00-07:55)."""
+    e = SleepEngine(loc(1, "08:00"), rng=random.Random(0))
+    e.debt = 12.0                                                # very short of sleep: a nap in the day
+    _, ev = run(e, loc(1, "08:00"), loc(1, "22:00"), step=60)
+    sleeps = [x for x in ev if x["type"] == "sleep"]
+    assert sleeps and sleep.WAKE_HOUR <= sleep.local(sleeps[0]["at"]).hour < sleep.EVENING_HOUR
+    nap = e.last_night
+    assert nap["kind"] == "nap" and nap["date"].startswith("2026-10-01-nap-") and nap["woke_up"] and e.night is None
+    _, ev = run(e, loc(1, "22:00"), loc(2, "09:00"), step=60)
+    onset = [x for x in ev if x["type"] == "sleep"][0]["text"].rsplit(" ", 1)[-1]        # "fell asleep at HH:MM"
+    night = e.last_night
+    assert night["kind"] == "night" and night["date"] == "2026-10-01" and night["sleep_onset"].endswith(onset)
+    assert night["sleep_onset"] != nap["sleep_onset"]            # two records, two onsets
+    # a morning nap does not touch the closed night
+    woke = night["woke_up"]
+    e.debt = 12.0
+    _, ev = run(e, loc(2, "09:00"), loc(2, "12:00"), step=60)
+    nap2 = e.night or e.last_night                               # (still napping at noon, or up again)
+    assert any(x["type"] == "sleep" for x in ev) and nap2["kind"] == "nap"
+    assert night["woke_up"] == woke and nap2["date"].startswith("2026-10-02-nap-")
+    with tempfile.TemporaryDirectory() as d:
+        Store(d).save(e, Memory())
+        names = sorted(p.name for p in (Path(d) / "nights").iterdir())
+        assert f"{nap2['date']}.json" in names                   # the nap's own file, the night's untouched
+        e2 = SleepEngine.from_dict(Store(d).load()[0])
+        assert (e2.night or e2.last_night)["kind"] == "nap"
+
+
+def test_a_nap_running_into_the_evening_becomes_the_night():
+    e = SleepEngine(loc(1, "12:00"), rng=random.Random(0))
+    e.update(loc(1, "19:00"))
+    e.debt = 12.0                                                # gone to bed at 19:00, very short of sleep
+    e.V_v, e.V_m = 5.0, -5.0
+    e.fall_asleep(loc(1, "19:00"))
+    assert e.asleep and e.night["kind"] == "nap"
+    run(e, loc(1, "19:00"), loc(1, "20:05"), step=60)
+    assert e.asleep
+    assert e.night is not None and e.night["kind"] == "night" and e.night["date"] == "2026-10-01"
+    assert e.night.get("nap", "").startswith("2026-10-01-nap-")
 
 
 def test_large_trade_wakes_it():
@@ -578,6 +668,68 @@ def test_rem_replays_recorded_in_night_file():
         assert night["replays"][0]["text"] == "hello from tonight"
         flat = json.dumps(night)
         assert "ip" not in night and "127.0.0.1" not in flat
+
+
+def night_with_replays(date, texts, received="2026-10-01T20:00"):
+    return {"date": date, "kind": "night", "sleep_onset": f"{date}T23:50", "woke_up": None, "timeline": [],
+            "wakeups": [], "sleep_debt": {"start": 0, "end": None},
+            "replays": [{"t": f"{date}T03:00", "text": x, "emotion": "neutral", "networks": [], "received": received,
+                         "received_stage": "AWAKE", "source": "chat"} for x in texts]}
+
+
+def test_replay_habituation_spans_nights_and_never_repeats_a_line():
+    """One line replayed all night (2026-10-09): never twice in a row while there is anything else, and a line replayed
+    on the last nights starts the night already worn (PAST_HABIT per earlier replay, over PAST_NIGHTS nights)."""
+    e = asleep_engine()
+    mem = Memory()
+    for i, text in enumerate(("gm", "ciao sub", "buonanotte")):
+        mem.add(loc(1, "20:00") + i, text, "AWAKE", {"language": 6}, "neutral", ["language"])
+    picks, t = [], loc(2, "00:05")
+    while t < loc(2, "08:30"):
+        for ev in e.update(t):
+            if ev["type"] == "replay":
+                m = mem.pick(t, e.night_start(), replayed=e.replay_counts(), avoid=e.last_replay_key())
+                e.record_replay(t, m)
+                picks.append(m["text"])
+        t += 30
+    assert len(picks) >= 10
+    assert not any(a == b for a, b in zip(picks, picks[1:]))      # never the same line twice in a row
+    assert max(picks.count(x) for x in set(picks)) <= 0.5 * len(picks) + 1
+    # the night closed: its counts are kept for the next nights' habituation
+    assert e.last_night is not None and len(e.past_nights) == 1 and e.past_nights[0]["date"] == "2026-10-01"
+    worn = e.replay_counts()
+    assert worn[Memory.key(mem.items[0])] == pytest.approx(sleep.PAST_HABIT * picks.count("gm"))
+    # with "gm" replayed 9 times on the earlier nights, a fresh night prefers the other lines
+    e.past_nights = [{"date": "2026-10-01", "counts": {Memory.key(mem.items[0]): 9}}]
+    rng = random.Random(3)
+    fresh = [mem.pick(loc(3, "02:00"), None, rng, replayed=e.replay_counts())["text"] for _ in range(600)]
+    assert fresh.count("gm") < 0.5 * fresh.count("ciao sub")
+    # one candidate only: avoid= does not leave him with nothing
+    one = Memory()
+    one.add(loc(1, "20:00"), "solo", "AWAKE", {}, "neutral", [])
+    assert one.pick(loc(2, "02:00"), None, rng, avoid=Memory.key(one.items[0]))["text"] == "solo"
+
+
+def test_past_nights_loaded_from_the_night_files():
+    """A state saved before habituation spanned nights: the last PAST_NIGHTS closed nights' replays come from
+    nights/*.json (naps and the open night left out); saved with the state afterwards."""
+    with tempfile.TemporaryDirectory() as d:
+        st = Store(d)
+        for date, texts in (("2026-09-27", ["old"]), ("2026-09-28", ["gm", "gm"]), ("2026-09-29", ["gm"]),
+                            ("2026-09-30", ["ciao"])):
+            st._write(st.root / "nights" / f"{date}.json", night_with_replays(date, texts))
+        st._write(st.root / "nights" / "2026-09-30-nap-1300.json",
+                  dict(night_with_replays("2026-09-30-nap-1300", ["nap"]), kind="nap"))
+        e = asleep_engine()
+        d0 = e.to_dict()
+        del d0["past_nights"]
+        st._write(st.root / "state.json", {"engine": d0, "memory": []})
+        saved, _ = st.load()
+        e2 = SleepEngine.from_dict(saved)
+        assert [p["date"] for p in e2.past_nights] == ["2026-09-28", "2026-09-29", "2026-09-30"]
+        assert e2.replay_counts()[sleep.replay_key("2026-10-01T20:00", "gm")] == pytest.approx(3 * sleep.PAST_HABIT)
+        st.save(e2, Memory())
+        assert "past_nights" in st.load()[0]
 
 
 def test_state_persists_across_restart():

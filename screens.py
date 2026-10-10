@@ -14,8 +14,9 @@ DopamineBursts: when a new short starts, a phasic dopamine-like burst whose size
 - expectation: a running mean of (novelty + interest) over recent clips (a Rescorla-Wagner value), relaxing back to
   EXPECT0 over RELAX_S while nothing new plays (a new scroll session surprises again);
 habituating over a scroll session (clips less than SESSION_GAP_S apart): x 1 / (1 + HABITUATION x (n - 1)), the
-"doomscrolling" curve. Other videos give half the burst, pages a quarter; nothing new playing gives nothing. It is a
-simulated dopamine-like reward signal in the model (it drives the reward regions and the DA level), not a feeling.
+"doomscrolling" curve. Other videos give half the burst, pages a quarter; nothing new playing gives nothing; a
+results page or a finance / trading page (S2) gives nothing either. It is a simulated dopamine-like reward signal in
+the model (it drives the reward regions and the DA level), not a feeling.
 """
 import math
 import re
@@ -199,7 +200,7 @@ class DopamineBursts:
     def on_new(self, kind, topic, interest=0.0):
         """A new clip / page started. kind: screens kind; topic: its topic (str or None); interest: tastes'
         prediction (-1..1). Returns the burst (size >= 0) or None for nothing new."""
-        if kind is None or kind == "search":
+        if kind is None or kind in ("search", "finance"):   # S2: a trading page is never a reward
             return None
         t = self.clock()
         if self.last_any is not None:                       # the expectation relaxes while nothing new plays

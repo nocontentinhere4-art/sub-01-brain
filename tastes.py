@@ -35,6 +35,11 @@ The interface is three methods, kept small so the spiking brain (feature/spiking
 dopamine-modulated synapses later:  topics(option, title) -> [str],  predict(topics) -> float in [-1, 1],
 learn(topics, response) -> delta. Nothing here is enjoyment: it is a running average of simulated activity.
 
+In the brain vote (predict(topics, vote=True)) a topic counts by n / (n + VOTE_SHRINK_N) of its value, n its stays:
+a topic needs ~8 stays before it moves his choices (one lucky stay used to swing the vote), and the network topics
+(net:*) are left out of the vote until a null test shows they predict choice; learning (the prediction error) keeps
+the full values, as the Kalman model needs.
+
 History (for /tastes.html): on the first save of each Tokyo day the top HISTORY_TOP topics (by |preference|) are
 appended as one line to `tastes_history.jsonl` next to the state file; the file keeps the last HISTORY_DAYS lines.
 top() returns the last HISTORY_SHOWN of them as "history", so /api/tastes carries it with no server change.
@@ -46,11 +51,14 @@ import os
 import time
 from pathlib import Path
 
+from brain_vote import VALUE as GROUP_VALUE   # what the vote values in a response: the stay is measured the same way
 from research import keywords
 from sleep import TZ
 from state_io import append_jsonl, load_json, read_jsonl, save_json
 
 ALPHA = 0.2                   # the old fixed rate; legacy topics start where a lone stay has this gain
+VOTE_SHRINK_N = 8             # in the vote a topic's value counts n / (n + this), n its stays (see the docstring)
+N_LEGACY = 8                  # stays assumed for a topic from a state file without counts (half weight in the vote)
 PRIOR_VAR = 0.25              # spread of a topic's value before any stay (sd 0.5 on the -1..1 scale)
 NOISE_VAR = 0.1               # variance of one stay's response around the mean of its topics' values
 LEGACY_VAR = NOISE_VAR * ALPHA / (1 - ALPHA)
@@ -79,6 +87,8 @@ class Tastes:
         self.pref, self.seen, self.last = d.get("pref", {}), d.get("seen", {}), d.get("last", self.last)
         var = d.get("var") if isinstance(d.get("var"), dict) else {}
         self.var = {t: float(var.get(t, LEGACY_VAR)) for t in set(self.pref) | set(self.seen)}   # old files: none
+        n = d.get("n") if isinstance(d.get("n"), dict) else {}
+        self.n = {t: int(n.get(t, N_LEGACY)) for t in self.var}            # stays per topic (old files: N_LEGACY)
         self.day_log = [x for x in d.get("day_log", []) if isinstance(x, dict) and isinstance(x.get("topics"), list)
                         and x["topics"] and isinstance(x.get("response"), (int, float))]
         self.last_replay = d.get("last_replay")
@@ -93,8 +103,13 @@ class Tastes:
         out += [f"kw:{w}" for w in keywords(option.get("label", ""), title or "", n=5)]
         return out
 
-    def predict(self, topics):
-        vals = [self.pref[t] for t in topics if t in self.pref]
+    def predict(self, topics, vote=False):
+        """The mean preference of the known topics (-1..1). vote=True: as the brain vote uses it, without the net:*
+        topics and each value shrunk by n / (n + VOTE_SHRINK_N), so a topic seen once barely counts."""
+        if vote:
+            topics = [t for t in topics if not str(t).startswith("net:")]
+        vals = [self.pref[t] * (self.n.get(t, N_LEGACY) / (self.n.get(t, N_LEGACY) + VOTE_SHRINK_N) if vote else 1.0)
+                for t in topics if t in self.pref]
         return sum(vals) / len(vals) if vals else 0.0
 
     def alpha(self, topic):
@@ -136,9 +151,11 @@ class Tastes:
             if count:
                 self.var[t] = post[t]
                 self.seen[t] = now
+                self.n[t] = self.n.get(t, 0) + 1
             else:                                         # a replay is not new evidence: the uncertainty stays
                 self.var.setdefault(t, PRIOR_VAR)
                 self.seen.setdefault(t, now)
+                self.n.setdefault(t, 0)
         return delta
 
     def replay(self, n=None, rate=None):
@@ -173,6 +190,7 @@ class Tastes:
                 self.pref.pop(t, None)
                 self.seen.pop(t, None)
                 self.var.pop(t, None)
+                self.n.pop(t, None)
 
     # --- housekeeping ------------------------------------------------------------------------------------------------
     def decay(self):
@@ -186,6 +204,7 @@ class Tastes:
                     self.pref.pop(t)
                     self.seen.pop(t, None)
                     self.var.pop(t, None)
+                    self.n.pop(t, None)
             for t in self.var:                            # forgetting: a long-unseen topic is uncertain again
                 self.var[t] = k * k * self.var[t] + (1 - k * k) * PRIOR_VAR
 
@@ -193,7 +212,7 @@ class Tastes:
         if not self.path:
             return
         save_json(self.path, {"pref": self.pref, "seen": self.seen, "var": {t: round(v, 6) for t, v in self.var.items()},
-                               "last": self.last, "day_log": self.day_log, "last_replay": self.last_replay})
+                               "n": self.n, "last": self.last, "day_log": self.day_log, "last_replay": self.last_replay})
         try:
             self.snapshot()
         except OSError as e:                              # history is a nice-to-have: never break learning
@@ -273,7 +292,9 @@ class PageWatch:
 
     @staticmethod
     def measure(rel):
-        return rel.get("reward", 1.0) + 0.6 * rel.get("attention", 1.0) - 0.8 * rel.get("fear", 1.0)
+        """The stay's response, weighted as the vote weights a response (brain_vote.VALUE: reward, attention, memory,
+        language, default-mode, minus fear), so the tastes learn what the vote values."""
+        return sum(w * rel.get(g, 1.0) for g, w in GROUP_VALUE.items())
 
     def start(self, topics, t):
         self.cur = {"topics": list(topics), "t0": t, "sum": 0.0, "n": 0}

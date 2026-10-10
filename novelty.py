@@ -23,7 +23,7 @@ REVISIT_S = 7 * 86400
 KEEP = 4000
 FOLLOW_MAX = 0.25
 FOLLOW_WINDOW = 20
-SEEN_ORIGINS = ("video", "walk", "eye", "screen", "follow_up")
+SEEN_ORIGINS = ("video", "walk", "eye", "screen", "follow_up", "reading")   # B3: what he read counts as "seen" too
 
 ID_QUERY = ("v", "id", "p", "q", "search", "search_query", "query", "s", "list")
 YT_ID = re.compile(r"(?:youtube(?:-nocookie)?\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/)|youtu\.be/)([\w-]{6,20})", re.I)
@@ -39,7 +39,10 @@ FOOTER_HREF = re.compile(r"/(about|about-us|contact|contact-us|privacy|privacy-p
                          r"licen[cs]es?|copyright|cookies?|cookie-policy|imprint|impressum|careers|jobs|advertis\w*|"
                          r"help|faq|sitemap|accessibility|feedback|press)(/|\.|\?|$)|creativecommons\.org/(licenses|"
                          r"publicdomain)|/wiki/(Help|Wikipedia|Special|Talk|Portal|File|Category|Template)[:_]", re.I)
-VIDEO_WORDS = re.compile(r"\b(tiktoks?|tik tok|shorts?|reels?|videos?|clips?|vlogs?|yt)\b", re.I)
+# B2: words that ask for videos. Plural "shorts" and "youtube shorts" only (a "short history of tea" is an article),
+# "video(s)" unless it is "video game(s)", no bare "reel(s)" / "clip(s)" (film reels, paper clips).
+VIDEO_WORDS = re.compile(r"\b(tik ?toks?|youtube shorts|shorts|videos?(?!\s+games?\b)|vlogs?|yt)\b", re.I)
+VIDEO_FILLER = re.compile(r"\b(watch(ing)?|see|show me|some|a few|a|an|the|of|on|about)\b", re.I)
 
 
 def url_key(url):
@@ -95,7 +98,8 @@ def video_query(q):
     """A search that asks for videos: -> the query without its video words ("" if nothing is left), else None."""
     if not VIDEO_WORDS.search(q or ""):
         return None
-    return " ".join(VIDEO_WORDS.sub(" ", q).split())
+    rest = VIDEO_WORDS.sub(" ", q)
+    return " ".join(VIDEO_FILLER.sub(" ", rest).split())        # "watch a tiktok dance" -> "dance"
 
 
 class Visited:

@@ -95,10 +95,17 @@ DEBT_MAX_RESTART_H = 12.0      # sleep debt is capped at this on a restart (a ba
 REPAIRS = ("2026-10-02-trades",)   # one-time state repairs, applied once to a saved state (see from_dict)
 REPAIR_DEBT_H = 2.0            # the 2026-10-02 repair: the debt the fake trades built is reset to at most this
 AROUSAL_NATURAL = 0.3  # a wake-up with less arousal than this counts as natural (no external cause)
+AWAKE_HOLD_S = 45 * 60 # woken by messages he stays up this long (pinned awake like get_up: up_until), then the circuit decides
 BIG_TRADE_USD = 5000
 REPLAY_MEAN_S = 4 * 60 # mean interval between REM replays
+PAST_NIGHTS = 3        # replay habituation carries over this many closed nights...
+PAST_HABIT = 0.5       # ...each earlier replay of a line counting this much of one of tonight's (weight / (1 + n))
 TAU_DEPTH = 10 * 60.0  # s, NREM depth index follows its target with this lag
 MORNING_HOUR, WAKE_HOUR, EVENING_HOUR = 5, 8, 20   # natural wake from 05:00 closes the night; so does 08:00 awake
+ALARM_HOUR = int(os.environ.get("SUB01_WAKE_HOUR", WAKE_HOUR))   # still asleep at this hour: he gets up (an alarm)
+ALARM_WINDOW_H = 4                                 # ... any time until ALARM_HOUR + 4 (a server that was off at 08:00)
+ALARM_DEBT_H = 2.0                                 # ... unless he is short of sleep by more than this: then he sleeps in
+UP_STATE = None                                    # (V_m, V_v) of the rested cycle's awake branch, read once (see up_state)
 TRANSITION_S = 30.0          # exponential glide time constant (sim s) of the stage parameters: ~95 % after 90 s
 TRANSITION_REAL_S = 1.0      # ...but never faster than this in real seconds (high --time-scale)
 STEP_S = 5.0                 # max integration substep (s); the populations have tau = 10 s
@@ -307,9 +314,13 @@ class Memory:
             w = [x * k if r else x for x, r in zip(w, is_taught)]
         return w
 
-    def pick(self, t, night_start, rng=random, replayed=None):
-        """Weighted by recency, emotion, source and 'arrived tonight'; `replayed` = {key: count} tonight."""
+    def pick(self, t, night_start, rng=random, replayed=None, avoid=None):
+        """Weighted by recency, emotion, source and 'arrived tonight'; `replayed` = {key: count} (tonight's, plus
+        the engine's share of the last nights', see SleepEngine.replay_counts). `avoid` = the key replayed just
+        before: never twice in a row while there is anything else to replay (2026-10-09: one line, half the night)."""
         cand = [m for m in self.items if m["t"] <= t]
+        if avoid is not None and len(cand) > 1:
+            cand = [m for m in cand if self.key(m) != avoid] or cand
         if not cand:
             return None
         return rng.choices(cand, weights=self.weights(cand, t, night_start, replayed or {}))[0]
@@ -365,6 +376,17 @@ def expected_replays():
     return _EXPECTED_REPLAYS
 
 
+def up_state():
+    """(V_m, V_v) of the rested reference cycle at ALARM_HOUR + 1 of some day: the awake branch of the flip-flop."""
+    global UP_STATE
+    if UP_STATE is None:
+        ref = Reference.get()
+        tod = (ALARM_HOUR + 1) * 3600.0
+        st = ref.states[int(tod / 60) % 1440]
+        UP_STATE = (st[0], st[1])
+    return UP_STATE
+
+
 def day_of(t):
     """The waking day t belongs to, named like the night that follows it (08:00 -> 08:00 next morning)."""
     return (local(t) - timedelta(hours=WAKE_HOUR)).date().isoformat()
@@ -398,7 +420,10 @@ class SleepEngine:
         self.arousal_log = []                          # recent [t, amount, kind, usd]
         self.last_stim = -1e18
         self.night = None                              # current night record (see open_night)
-        self.last_night = None                         # summary of the previous closed night
+        self.alarm_day = None                          # the day the alarm last got him up (once a day)
+        self.up_until = -1e18                          # got up early: the circuit is pinned awake until then, see get_up
+        self.last_night = None                         # summary of the previous closed night (or nap, kind "nap")
+        self.past_nights = []                          # [{date, counts: {replay key: n}}] of the last PAST_NIGHTS closed nights
         self.next_replay = None
         self.repairs = list(REPAIRS)                   # a fresh engine needs none of the one-time repairs
         if self.asleep:
@@ -515,6 +540,9 @@ class SleepEngine:
                 ts = t0 + i * h
                 self.arousal *= math.exp(-h * (slow if self.asleep else 1.0) / AROUSAL_TAU_S)
                 self.C = step_circuit(s, h, (ts + off) % 86400.0, self.arousal_drive())
+                if ts < self.up_until and s[1] - s[0] > -SWITCH_MV:          # got up early and drifting back to bed (see
+                    s[0], s[1] = up_state()                                    # get_up): the awake branch, H rising at its
+                                                                               # normal rate; an aroused wake is left alone
                 self.V_m, self.V_v, self.H, self.V_on, self.V_off, self.rem_p = s
                 self.t = ts
                 self._classify(ts, ev)
@@ -532,6 +560,16 @@ class SleepEngine:
             self.open_night(t)
         if self.night is not None and not self.asleep and WAKE_HOUR <= local(t).hour < EVENING_HOUR:
             self.close_night(t)
+        # a nap he is still in at EVENING_HOUR is the night (gone to bed early, debt): the record becomes the night's
+        if self.asleep and self.night is not None and self.night.get("kind") == "nap" and not self.nap_hour(t):
+            self.night.update(kind="night", nap=self.night["date"], date=night_date(t))
+        # an alarm: still asleep at ALARM_HOUR he gets up (2026-10-09 he slept to 13:00 - viewers saw a bed all morning)
+        # (a night's sleep of 3 h or more, not a recovery nap after a night kept awake by messages; and not when he is
+        # really short of sleep, debt over ALARM_DEBT_H: cut short every morning that debt never repays - tried: he
+        # napped at 11 and 14 for days - so he sleeps in, as the model always did, and the alarm rules the normal days)
+        if self.asleep and ALARM_HOUR <= local(t).hour < ALARM_HOUR + ALARM_WINDOW_H and self.alarm_day != day_of(t) \
+                and self.onset is not None and t - self.onset >= 3 * 3600 and self.debt < ALARM_DEBT_H:
+            ev.append(self.get_up(t, "alarm"))
 
         if self.stage == "REM":
             if self.next_replay is None:
@@ -557,8 +595,9 @@ class SleepEngine:
         elif self.asleep and d < -SWITCH_MV:
             if self.arousal < AROUSAL_NATURAL:
                 ev.append(self.wake(t, f"woke up at {hhmm(t)}", natural=True))
-            else:
-                ev.append(self.wake(t, f"woken at {hhmm(t)} by {self.cause(t)}"))
+            else:                                      # woken by messages: up for AWAKE_HOLD_S (the same pin as get_up;
+                ev.append(self.wake(t, f"woken at {hhmm(t)} by {self.cause(t)}"))   # a strong sleep drive still wins)
+                self.up_until = max(self.up_until, t + AWAKE_HOLD_S)
         if self.asleep:
             r = self.V_on - self.V_off
             if not self.rem and r > SWITCH_MV:
@@ -586,14 +625,23 @@ class SleepEngine:
     def _night_done(self, t):
         return self.last_night is not None and self.last_night["date"] == night_date(t)
 
+    @staticmethod
+    def nap_hour(t):
+        """Sleep starting in the day (WAKE_HOUR to EVENING_HOUR) is a nap, not the night."""
+        return WAKE_HOUR <= local(t).hour < EVENING_HOUR
+
     def open_night(self, t):
-        if self._night_done(t):                # e.g. an evening nap that already ended: continue that record
+        if self.nap_hour(t):                   # a nap: its own record (2026-10-09: a 13:00 nap became the night's onset,
+            date = f"{local(t).date().isoformat()}-nap-{local(t).strftime('%H%M')}"   # the night's diary said 13:00-07:55)
+        elif self._night_done(t):              # e.g. an evening nap that already ended: continue that record
             self.night = self.last_night
             self.night["woke_up"] = None
             return
-        self.night = {"date": night_date(t), "timezone": TZ_NAME, "sleep_onset": None, "woke_up": None,
-                      "timeline": [], "wakeups": [], "sleep_debt": {"start": round(self.debt, 2), "end": None},
-                      "replays": []}
+        else:
+            date = night_date(t)
+        self.night = {"date": date, "kind": "nap" if self.nap_hour(t) else "night", "timezone": TZ_NAME,
+                      "sleep_onset": None, "woke_up": None, "timeline": [], "wakeups": [],
+                      "sleep_debt": {"start": round(self.debt, 2), "end": None}, "replays": []}
         self.k_base = 0
 
     def fall_asleep(self, t):
@@ -605,6 +653,25 @@ class SleepEngine:
         self.asleep, self.onset, self.rem, self.stage = True, t, False, "NREM"
         n["timeline"].append({"t": stamp(t), "stage": "NREM"})
         return {"type": "sleep", "text": f"fell asleep at {hhmm(t)}"}
+
+    def get_up(self, t, why="alarm"):
+        """Get him out of bed now: the circuit is set to the rested cycle's state for this time of day (the flip-flop
+        would otherwise put him straight back to sleep); sleep pressure (H) is kept, so a short night ends the day
+        early. No arousal is held to keep him up (held arousal drove H up like a night of chat: debt +8 h in 2 h);
+        before dawn the circuit may take him back to bed. why: "alarm" (once a day, see update) or "owner" (POST
+        /api/wake)."""
+        v_m, v_v, h_ref, v_on, v_off, rem_p = Reference.get().at(t)
+        self.V_m, self.V_v, self.V_on, self.V_off, self.rem_p = v_m, v_v, v_on, v_off, rem_p
+        if why == "owner":                                        # the owner's call: as rested as the cycle is at this hour
+            self.H = min(self.H, h_ref)
+        # before the day's own drive (from about ALARM_HOUR) the circuit would take him straight back to bed (3 min, in
+        # the tests): pinned on the awake branch until then; H still rises at an awake day's normal rate
+        d = local(t)
+        self.up_until = d.replace(hour=ALARM_HOUR, minute=30, second=0, microsecond=0).timestamp() if d.hour < ALARM_HOUR else t
+        if self.V_v - self.V_m > -SWITCH_MV:                      # the rested cycle sleeps at this hour too: force awake
+            self.V_m, self.V_v = max(self.V_m, self.V_v + 2 * SWITCH_MV), self.V_v
+        self.alarm_day = day_of(t)
+        return self.wake(t, f"got up at {hhmm(t)} ({why})", natural=why == "alarm")
 
     def wake(self, t, text, natural=False):
         self.asleep, self.rem, self.stage, self.depth = False, False, "AWAKE", 0.0
@@ -627,6 +694,11 @@ class SleepEngine:
         slept = n["sleep_onset"] is not None and self.last_wake is not None and not self.asleep
         n["woke_up"] = stamp(self.last_wake if slept else t)
         n["sleep_debt"]["end"] = round(self.debt, 2)
+        n["closed_t"] = t
+        if n.get("kind", "night") == "night" and n["replays"]:       # what it replayed: habituation for the next nights
+            self.past_nights = [p for p in self.past_nights if p["date"] != n["date"]]
+            self.past_nights.append({"date": n["date"], "counts": self.replay_counts(n)})
+            del self.past_nights[:-PAST_NIGHTS]
         self.last_night = n
         self.night = None
 
@@ -665,12 +737,30 @@ class SleepEngine:
                                       "networks": m["networks"], "received": stamp(m["t"]),
                                       "received_stage": m["stage"], "source": m.get("source", "chat")})
 
-    def replay_counts(self):
+    @staticmethod
+    def _counts(night):
         counts = {}
-        for r in (self.night or {}).get("replays", []):
+        for r in (night or {}).get("replays", []):
             k = replay_key(r["received"], r["text"])
             counts[k] = counts.get(k, 0) + 1
         return counts
+
+    def replay_counts(self, night=None):
+        """{replay key: habituation} for Memory.pick: tonight's replays, each counting 1, plus PAST_HABIT per replay
+        of the same line in the last PAST_NIGHTS closed nights (a line replayed every night fades over the week).
+        With `night` given: that record's plain counts."""
+        if night is not None:
+            return self._counts(night)
+        counts = self._counts(self.night)
+        for p in self.past_nights:
+            for k, n in p.get("counts", {}).items():
+                counts[k] = counts.get(k, 0) + PAST_HABIT * n
+        return counts
+
+    def last_replay_key(self):
+        """Key of the line replayed last tonight (never replayed twice in a row: Memory.pick avoid=), else None."""
+        reps = (self.night or {}).get("replays") or []
+        return replay_key(reps[-1]["received"], reps[-1]["text"]) if reps else None
 
     def night_start(self):
         """Sim epoch of tonight's first sleep onset (None if not in a night)."""
@@ -690,7 +780,8 @@ class SleepEngine:
 
     # --- persistence ---------------------------------------------------------------
     STATE_KEYS = ("t", "asleep", "rem", "stage", "depth", "onset", "k_base", "awake_since", "last_wake", "arousal",
-                  "arousal_log", "last_stim", "night", "last_night", "params", "C", "repairs") + CIRCUIT
+                  "arousal_log", "last_stim", "night", "last_night", "params", "C", "repairs", "alarm_day", "up_until",
+                  "past_nights") + CIRCUIT
 
     def to_dict(self):
         return {k: getattr(self, k) for k in self.STATE_KEYS} | {"debt": round(self.debt, 3)}
@@ -707,6 +798,7 @@ class SleepEngine:
             e._sync_branch()
         if "repairs" not in d:
             e.repairs = []
+        e.past_nights = [p for p in (e.past_nights or []) if isinstance(p, dict) and "counts" in p][-PAST_NIGHTS:]
         broken = (float(d.get("arousal") or 0.0) > AROUSAL_MAX or e.debt > DEBT_MAX_RESTART_H
                   or any("trade" in str(w.get("cause", "")) for w in ((e.night or {}).get("wakeups") or [])))
         # a restart never carries a runaway input over: arousal at most the wake threshold, a short cause log,
@@ -749,7 +841,22 @@ class Store:
         d = load_json(self.root / "state.json")       # missing or torn (kept aside): start fresh, never crash
         if not d or "engine" not in d or "memory" not in d:
             return None, None
+        if "past_nights" not in d["engine"]:          # a state saved before replay habituation spanned nights: from the files
+            d["engine"]["past_nights"] = self.past_nights(exclude=(d["engine"].get("night") or {}).get("date"))
         return d["engine"], d["memory"]
+
+    def past_nights(self, exclude=None, n=PAST_NIGHTS):
+        """[{date, counts}] of the last `n` closed nights (naps apart) in nights/, oldest first (SleepEngine.past_nights)."""
+        out = []
+        for p in sorted((self.root / "nights").glob("*-*-*.json"), reverse=True):
+            night = load_json(p)
+            if (not night or night.get("kind", "night") != "night" or night.get("date") == exclude
+                    or not night.get("replays")):
+                continue
+            out.append({"date": night.get("date", p.stem), "counts": SleepEngine._counts(night)})
+            if len(out) >= n:
+                break
+        return out[::-1]
 
     def save(self, engine, memory):
         self._write(self.root / "state.json", {"engine": engine.to_dict(), "memory": memory.items})

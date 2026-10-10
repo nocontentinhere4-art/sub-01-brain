@@ -8,15 +8,26 @@
 // already in room/mh_mx/. A slot without either is left out (idle_b: none of the wired clips fits the chair).
 //
 // The reactions come only from what the page already receives from the server (live_server.py), nothing else:
-//   chess  (#17)  the opponent moved and it is his turn -> he looks at the board (attend); check on him -> a gesture;
-//                 the game over: won -> react_win, lost -> react_lose, a draw -> a gesture. While the opponent thinks
-//                 he waits in the chair (boy_mh's wanted(): the idle slots, not the mouse).
+//   chess  (#17)  the opponent moved and it is his turn -> he looks at the board (attend); check on him -> gesture_f (a
+//                 hand to his chin); the game over: won -> react_win, lost -> react_lose, a draw -> gesture_e (a neck
+//                 stretch). The end of a game has its own cool-down key ("end": none), so it always plays even right
+//                 after another reaction. While the opponent thinks he waits in the chair (boy_mh's wanted(): the idle
+//                 slots, not the mouse).
 //   decision (#55) his brain picked a page or a video on the monitor -> he looks at it (attend)
-//   dopamine (#89) the burst a new clip or page gives (size: novelty + predicted interest - expectation) -> a gesture
-//                 from 0.45, react_up from 0.9 (only shorts reach it: video and pages are scaled to 0.5 / 0.25); react_up
-//                 stays seated (a laugh, a smile at the screen): only a won game gets him up (react_win)
+//   dopamine (#89) the burst a new clip or page gives (size: novelty + predicted interest - expectation) -> gesture_d (a
+//                 look around) from 0.45, react_up from 1.2 (only a strong short reaches it: video and pages are scaled
+//                 to 0.5 / 0.25); react_up stays seated (a laugh, a smile at the screen): only a won game gets him up (react_win)
 //   chat   a viewer's message reaches him -> he looks at the monitor (attend)
-// Trades are left out by design (nothing financial). Nothing is invented: no event, no reaction.
+//   glance (preview/interactive) viewers' reactions spiked (the server: at most once every 2 minutes) -> room/glance.js
+//                 turns his head toward the camera once, and the spike's dominant reaction picks his answer (GLANCE):
+//                 a wave -> a calm seated loop and a short wave of his right hand (boy_mh.js wave()); a heart or a laugh ->
+//                 react_up (a smile); surprise -> gesture_d (a look around); applause or sparkle -> react_win (happy);
+//                 none named (an older server) -> attend. A glance is never dropped for a cool-down: when its answer may
+//                 not play yet he looks up instead (attend), or, when that look just played, the answer waits (within
+//                 KEEP) for the first moment it may. Like every event: only while he sits watching (never typing, never
+//                 on the mouse for a chess move) and only within KEEP seconds, else dropped
+// A named slot whose clip did not load plays one of its kind instead ({slot, kind}); nothing named is ever skipped for want
+// of a file. Trades are left out by design (nothing financial). Nothing is invented: no event, no reaction.
 
 export const SLOTS = {
   //            kind      stand-in (room/mh_mx/)              once: plays through; span: [s, s] a window of a long take;
@@ -42,30 +53,39 @@ export const DIR = "room/desk_states";                       // (the named GLBs,
 // how long a looping slot holds (s), and how often each kind comes up between events, by what he is doing
 export const DWELL = {idle: [7, 15], attend: [6, 12]};
 export const MIX = {watch: {attend: 0.55, idle: 0.37, gesture: 0.08}, wait: {idle: 0.65, attend: 0.25, gesture: 0.10}};
-export const COOL = {gesture: 25, react: 150};               // (s) at least between two gestures, two reactions
+export const COOL = {gesture: 25, react: 90};                // (s) at least between two gestures, two reactions ("end", a game's
+                                                             // result, is not in it: never held back)
 export const KEEP = 4;                                       // (s) an event not played by then is dropped (he was busy)
-export const DA = {gesture: 0.45, react: 0.9};
+export const DA = {gesture: 0.45, react: 1.2};
 
-// one page message -> what it calls for ({slot} or {kind}), or null. prev: the last chess message seen (its turn, plies)
+// a spike of viewers' reactions (the glance message's emoji) -> his answer
+export const GLANCE = {"👋": {slot: "attend", wave: true}, "❤️": {slot: "react_up"}, "😂": {slot: "react_up"},
+  "😮": {slot: "gesture_d"}, "👏": {slot: "react_win"}, "✨": {slot: "react_win"}};
+
+// one page message -> what it calls for ({slot} and/or {kind}; cool: the cool-down key when not the slot's kind), or null.
+// prev: the last chess message seen (its turn, plies)
 export function reactionFor(m, prev) {
   if (!m || typeof m !== "object") return null;
   if (m.type === "chess") {
     if (m.finished || (m.result && m.result !== "unfinished")) {
       if (prev && prev.done === `${m.plies}|${m.result}`) return null;                     // (the end is broadcast twice)
-      return m.result === "won" ? {slot: "react_win"} : m.result === "lost" ? {slot: "react_lose"} : m.result === "draw" ? {kind: "gesture"} : null;
+      return m.result === "won" ? {slot: "react_win", cool: "end"} : m.result === "lost" ? {slot: "react_lose", cool: "end"}
+        : m.result === "draw" ? {slot: "gesture_e", kind: "gesture", cool: "end"} : null;
     }
     const moved = prev && typeof m.plies === "number" && m.plies > (prev.plies || 0);
-    if (moved && m.turn === "his") return m.check ? {kind: "gesture"} : {slot: "attend"};
+    if (moved && m.turn === "his") return m.check ? {slot: "gesture_f", kind: "gesture"} : {slot: "attend"};
     return null;
   }
   if (m.type === "decision") return {slot: "attend"};
   if (m.type === "chat") return m.text ? {slot: "attend"} : null;
+  if (m.type === "glance") return GLANCE[m.emoji] ? {...GLANCE[m.emoji]} : {slot: "attend"};
   if (m.type === "dopamine") {
     const s = +m.size; if (!(s > 0)) return null;
-    return s >= DA.react ? {slot: "react_up"} : s >= DA.gesture ? {kind: "gesture"} : null;
+    return s >= DA.react ? {slot: "react_up"} : s >= DA.gesture ? {slot: "gesture_d", kind: "gesture"} : null;
   }
   return null;                                               // (trades, ticks, music, ...: no reaction)
 }
+const kindOf = e => e.kind || (e.slot && SLOTS[e.slot] ? SLOTS[e.slot].kind : null);
 
 // the picker: have = the slot names that loaded, clipOf(name) = the clip a slot plays (two slots on one stand-in count as
 // one: never the same clip twice in a row), durOf(name) = its length (s), rng() in [0, 1)
@@ -102,16 +122,22 @@ export function createPicker({have, clipOf, durOf, rng = Math.random}) {
     },
     // what to play next; mode: "watch" (a video, a page) or "wait" (the opponent's turn); null: nothing allowed now
     next(T, mode = "watch") {
-      const rank = e => { const k = e.slot ? SLOTS[e.slot] && SLOTS[e.slot].kind : e.kind; return k === "react" ? 0 : k === "gesture" ? 1 : 2; };
+      const rank = e => { const k = kindOf(e); return k === "react" ? 0 : k === "gesture" ? 1 : 2; };
       S.queue = S.queue.filter(e => T - e.T <= KEEP).sort((a, b) => rank(a) - rank(b) || b.T - a.T);   // (a reaction before a look)
+      const held = [];                                       // glances whose answer may not play yet: kept (within KEEP)
       while (S.queue.length) {                               // an event first, if its kind is allowed now
         const e = S.queue.shift();
-        const name = e.slot && have.includes(e.slot) ? e.slot : e.kind ? pickOf(e.kind) : null;
-        if (!name) continue; const k = SLOTS[name].kind;
-        if (!allowed(k, T) || (k !== "react" && !fresh(name))) continue;
-        S.queue.length = 0;                                  // (the rest came with it: one answer to them)
-        return {...plan(name, T), why: e.src};
+        let name = e.slot && have.includes(e.slot) ? e.slot : pickOf(kindOf(e));   // (its clip missing: one of its kind)
+        if (!name) continue; let k = SLOTS[name].kind;
+        if (!allowed(e.cool || k, T) || (k !== "react" && !fresh(name))) {
+          if (e.src !== "glance") continue;                  // (a second reaction too soon: dropped, as before)
+          if (have.includes("attend") && fresh("attend")) { name = "attend"; k = "attend"; }   // viewers' spike: at least a look up
+          else { held.push(e); continue; }                   // (that look just played: the answer waits for its first chance)
+        }
+        S.queue.length = 0;                                  // (the rest came with it, the held ones too: one answer to them)
+        return {...plan(name, T), why: e.src, ...(e.wave ? {wave: true} : {})};
       }
+      S.queue = held;
       const w = MIX[mode] || MIX.watch, kinds = Object.keys(w).filter(k => of(k).some(fresh) && allowed(k, T));
       if (!kinds.length) return null;
       let u = rng() * kinds.reduce((s, k) => s + w[k], 0), kind = kinds[kinds.length - 1];

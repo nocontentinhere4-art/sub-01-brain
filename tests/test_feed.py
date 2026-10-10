@@ -23,9 +23,9 @@ LIFE = {"place": "bed", "activity": "phone", "hunger": 0.4,
 NEURO = {"DA": 1.0, "5HT": 0.9, "NE": 1.1, "ACh": 1.2}
 
 
-def tick(i, trades=(), events=()):
+def tick(i, events=()):
     return {"type": "tick", "i": i, "act": [0.1] * 214, "wave": {"a": 1.0}, "groups": {"a": 0.1}, "slow": None,
-            "trades": list(trades), "events": list(events), "life": LIFE, "neuro": NEURO, "sleep": {"stage": "AWAKE"}}
+            "events": list(events), "life": LIFE, "neuro": NEURO, "sleep": {"stage": "AWAKE"}}
 
 
 def run(feed, msgs):
@@ -39,17 +39,14 @@ def test_default_is_unchanged():
         assert f.take(m, data) is data
 
 
-def test_rate_downsamples_and_carries_trades_and_events():
+def test_rate_downsamples_and_carries_events():
     f = Feed.from_query({"rate": "5"})
     assert f.every == round(1 / (TICK * 5))
-    msgs = [tick(i, trades=[{"kind": "buy", "usd": i}] if i % 3 == 0 else [],
-                 events=[{"type": "wake", "i": i}] if i == 6 else []) for i in range(12)]
+    msgs = [tick(i, events=[{"type": "replay", "i": i}] if i % 3 == 0 else []) for i in range(12)]
     out = run(f, msgs)
     sent = [o for o in out if o is not None]
     assert [o["i"] for o in sent] == [0, 4, 8]                      # first at once, then every 4th
-    got = [t["usd"] for o in sent for t in o["trades"]]
-    assert got == [0, 3, 6]                                          # nothing lost up to the last sent tick
-    assert [e["i"] for o in sent for e in o["events"]] == [6]
+    assert [e["i"] for o in sent for e in o["events"]] == [0, 3, 6]  # nothing lost up to the last sent tick
     assert sent[1]["act"] == msgs[4]["act"]                          # not lite: the brain arrays stay
 
 
@@ -62,9 +59,9 @@ def test_non_ticks_always_pass_through():
 
 def test_lite_drops_brain_arrays_only():
     f = Feed.from_query({"lite": "1"})
-    o = run(f, [tick(0, trades=[{"kind": "sell", "usd": 9}])])[0]
+    o = run(f, [tick(0, events=[{"type": "replay", "i": 9}])])[0]
     assert "act" not in o and "wave" not in o and "groups" not in o and "slow" not in o
-    assert o["life"] == LIFE and o["sleep"]["stage"] == "AWAKE" and o["trades"][0]["usd"] == 9
+    assert o["life"] == LIFE and o["sleep"]["stage"] == "AWAKE" and o["events"][0]["i"] == 9
 
 
 def test_bad_rates_fall_back_to_every_tick():
@@ -74,13 +71,12 @@ def test_bad_rates_fall_back_to_every_tick():
 
 
 def test_lite_keeps_what_the_room_shows():
-    """The room's cards need life (with the body's vitals), the neuromodulators, sleep, trades and events."""
+    """The room's cards need life (with the body's vitals), the neuromodulators, sleep and events."""
     f = Feed.from_query({"rate": "5", "lite": "1"})
-    msgs = [tick(i, trades=[{"kind": "buy", "usd": i}], events=[{"type": "replay", "i": i}]) for i in range(5)]
+    msgs = [tick(i, events=[{"type": "replay", "i": i}]) for i in range(5)]
     sent = [o for o in run(f, msgs) if o is not None]
     last = sent[-1]
     assert last["life"]["vitals"] == LIFE["vitals"] and last["neuro"] == NEURO and last["sleep"]["stage"] == "AWAKE"
-    assert [t["usd"] for o in sent for t in o["trades"]] == [0, 1, 2, 3, 4]
     assert [e["i"] for o in sent for e in o["events"]] == [0, 1, 2, 3, 4]
 
 
@@ -96,9 +92,21 @@ def test_tiny_rate_does_not_buffer_without_bound():
     f = Feed.from_query({"rate": "1e-9", "lite": "1"})
     sent = 0
     for i in range(10 * f.every):
-        sent += run(f, [tick(i, trades=[{"kind": "buy", "usd": 1}])])[0] is not None
-        assert len(f.trades) < f.every                                # flushed at least once a second
+        sent += run(f, [tick(i, events=[{"type": "replay", "i": i}])])[0] is not None
+        assert len(f.events) < f.every                                # flushed at least once a second
     assert sent == 10
+
+
+def test_no_trade_tape_in_any_feed_variant():
+    """S1: the coin's trades are a stimulus only. A tick never carries trades, buy / sell counts or the coin's name,
+    and the brain page's field list does not ask for them (no trade words can reach a page)."""
+    import inspect
+    assert not {"trades", "stats", "pool"} & set(live_server.BRAIN_KEEP)
+    tick_src = inspect.getsource(Live.run_brain)
+    assert '"trades"' not in tick_src and '"stats"' not in tick_src and '"pool"' not in tick_src
+    for q in ({}, {"rate": "5"}, {"lite": "1"}, {"rate": "10", "q": "1"}, {"rate": "5", "lite": "1"}):
+        o = json.loads(Feed.from_query(q).take(big_tick(0), json.dumps(big_tick(0))))
+        assert not {"trades", "stats", "pool"} & set(o), q           # nor does a feed variant add an empty tape
 
 
 
@@ -138,11 +146,11 @@ def join(live, query, held=0):
     return ws
 
 
-def big_tick(i, trades=()):
+def big_tick(i):
     """Shaped like a real --demo tick (214 regions, the reading card, the slow layer's label)."""
     return {"type": "tick", "act": [round(0.05 + 4.5 * ((i + k) % 37) / 37, 3) for k in range(214)],
             "wave": {g: 0.1 for g in "abcdefghijkl"}, "groups": {g: 0.5 for g in "abcdefghijkl"}, "sync": 0.31,
-            "stats": {"buys": 3, "sells": 1, "usd": 120.0}, "trades": list(trades), "pool": "demo", "events": [],
+            "events": [],
             "sleep": {"stage": "AWAKE", "clock": "11:53", "tz": "Tokyo", "date": "Fri 02 Oct", "debt": 0.0,
                       "tired": 0.0, "depth": 0.0, "gain": 1.0, "arousal": 0.0, "woken_tonight": 0, "H": 12.71,
                       "C": 0.635, "V_m": 0.75, "V_v": -9.9, "V_on": -19.35, "V_off": 1.99, "rem_p": 0.001,
@@ -217,7 +225,7 @@ def test_quantised_act_round_trip():
 def test_brain_feed_is_small_and_keeps_what_the_brain_page_draws():
     f = Feed.from_query({"rate": "10", "q": "1"})
     assert f.every == 2 and f.q and not f.lite
-    m = big_tick(3, trades=[{"kind": "buy", "usd": 12.0, "tx": "abc", "who": "x"}])
+    m = big_tick(3)
     m["events"] = [{"type": "replay", "t": "01:00", "text": "hello", "networks": ["default"], "received": "12:00"}]
     text = f.take(m, json.dumps(m))
     assert len(json.dumps(m)) > 3000 and len(text) < 1500, len(text)
@@ -227,7 +235,7 @@ def test_brain_feed_is_small_and_keeps_what_the_brain_page_draws():
     assert o["life"] == {"doing": "reading at the computer", "walking": False}
     assert o["sleep"]["stage"] == "AWAKE" and o["sleep"]["clock"] == "11:53" and "burst" in o["sleep"]
     assert o["slow"] == {"label": m["slow"]["label"]} and o["sync"] == 0.31
-    assert o["trades"][0]["usd"] == 12.0 and o["events"][0]["text"] == "hello"
+    assert o["events"][0]["text"] == "hello"
     assert f.take(m, "x") is None                                         # 10/s: every other tick
     assert Feed.from_query({"lite": "1", "q": "1"}).q is False            # lite wins: no brain at all
 
@@ -278,7 +286,10 @@ def test_a_failed_send_drops_the_client():
 
 
 async def _open(client, ip):
-    ws = await client.ws_connect("/ws?rate=5&lite=1", headers={"X-Forwarded-For": f"{ip}, 10.0.0.1"})
+    # the trusted proxy appends the connecting address LAST; what comes before it is whatever the client put in its own
+    # header (here a spoofed 10.0.0.1), which must not become the key (it did, when [0] was taken: one client could
+    # pick a fresh key per connection and walk past every per-address limit)
+    ws = await client.ws_connect("/ws?rate=5&lite=1", headers={"X-Forwarded-For": f"10.0.0.1, {ip}"})
     first = await ws.receive_json(timeout=5)
     return ws, first["type"]
 
@@ -317,6 +328,22 @@ def test_caps_total_and_per_ip():
             assert live.ws_per_ip == {} and live.clients == set() and live.variants == {}
 
     asyncio.run(main())
+
+
+def test_client_key_is_the_proxys_entry_not_the_clients():
+    """--trust-proxy: the key is the rightmost X-Forwarded-For entry (the hop the proxy appended), so a leading spoofed
+    entry changes nothing; X-Real-IP serves when the proxy sets that instead; without the flag the headers are ignored."""
+    req = lambda **h: SimpleNamespace(remote="127.0.0.1", headers=h)
+    live = bare_live(trust_proxy=True)
+    assert live.client_ip(req(**{"X-Forwarded-For": "1.1.1.1"})) == "1.1.1.1"
+    assert live.client_ip(req(**{"X-Forwarded-For": "9.9.9.9, 1.1.1.1"})) == "1.1.1.1"       # spoofed first entry: same key
+    assert live.client_ip(req(**{"X-Forwarded-For": "9.9.9.9 , 8.8.8.8,1.1.1.1 "})) == "1.1.1.1"
+    assert live.client_ip(req(**{"X-Real-IP": "2.2.2.2"})) == "2.2.2.2"
+    assert live.client_ip(req(**{"X-Forwarded-For": "1.1.1.1", "X-Real-IP": "2.2.2.2"})) == "1.1.1.1"
+    assert live.client_ip(req(**{"X-Forwarded-For": " , "})) == "127.0.0.1"                 # an empty header: the socket's
+    assert live.client_ip(req()) == "127.0.0.1"
+    off = bare_live(trust_proxy=False)
+    assert off.client_ip(req(**{"X-Forwarded-For": "1.1.1.1", "X-Real-IP": "2.2.2.2"})) == "127.0.0.1"
 
 
 def test_without_trust_proxy_the_header_is_ignored():

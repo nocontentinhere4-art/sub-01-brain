@@ -373,7 +373,8 @@ def test_a_shops_words_are_not_interests(q):
     ("anime movie — MyAnimeList", "anime movie"), ("Demon Slayer — MyAnimeList", "Demon Slayer"),
     ("Demon Slayer | MyAnimeList.net", "Demon Slayer"), ("Frieren: Beyond Journey's End - MyAnimeList.net", "Frieren: Beyond Journey's End"),
     ("Inokashira Park - Wikipedia", "Inokashira Park"), ("Spirited Away ｜ YouTube", "Spirited Away"),
-    ("Spider-Man", "Spider-Man"), ("A - B", "A - B"), ("studio ghibli", "studio ghibli"), ("Mark Rober", "Mark Rober"),
+    ("Spider-Man", "Spider-Man"), ("Atlas - Bakery", "Atlas - Bakery"), ("studio ghibli", "studio ghibli"),
+    ("Mark Rober", "Mark Rober"),
     ("myanimelist anime", None), ("MyAnimeList", None), ("YouTube video", None), ("Wikipedia — the free encyclopedia", None)])
 def test_a_page_titles_site_name_is_not_part_of_the_query(q, want):
     from eyes import query_ok

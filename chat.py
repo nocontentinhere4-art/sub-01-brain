@@ -9,6 +9,7 @@ import time
 import unicodedata
 from collections import deque
 
+from lexicon import HYPE, money_talk
 from state_io import load_json, save_json
 
 MAX_LEN = 280
@@ -38,12 +39,15 @@ MEDIA_MONEY = re.compile(r"\b(send|give|pay|tip|donate|lend|transfer|spare)\b.{0
 # small built-in list of slurs and insults (matched on a normalised, de-leeted copy of the text). Chat messages,
 # nicknames and viewer wishes are checked against all of them. Song and video titles (media=True) are real songs and
 # videos and are shown as they are (owner, 2026-10-07: "don't censor anything"): only the self-harm prompts still
-# refuse one (MEDIA_RE); the guard's adult words, self-harm and money rules apply to them elsewhere.
-SELF_HARM = ("kys", "kill yourself")
+# refuse one (MEDIA_RE); the guard's adult words, self-harm and money rules apply to them elsewhere. Spaced-out
+# letters ("k y s", "n i g g e r") are joined by normalise() before the match.
+SELF_HARM = ("kys", "kill yourself", "hang yourself", "neck yourself", "end yourself", "cut yourself", "off yourself",
+             "go die", "drink bleach")
 HATE_SLURS = ("nigger", "nigga", "faggot", "fag", "kike", "spic", "chink", "gook", "wetback", "tranny", "retard",
               "dyke", "cunt", "whore", "slut")
 INSULTS = ("bitch", "bastard", "idiot", "moron", "imbecile", "stupid", "dumbass", "loser", "asshole", "dickhead",
-           "motherfucker", "fuck you", "fuck off", "stfu", "shut up", "piece of shit", "worthless", "pathetic", "ugly")
+           "motherfucker", "fuck you", "fuck yourself", "fuck u", "fuck off", "stfu", "shut up", "piece of shit",
+           "worthless", "pathetic", "ugly")
 SLURS = HATE_SLURS + SELF_HARM + INSULTS
 _slur_re = lambda words: re.compile(r"\b(" + "|".join(re.escape(w) for w in words) + r")(s|es|ed|ing|y|ic)?\b")  # noqa: E731
 SLUR_RE = _slur_re(SLURS)
@@ -124,19 +128,36 @@ def fold(text):
 
 
 def normalise(text):
-    t = fold(text).lower().translate(LEET)
+    """Lower case, accents folded, leet undone ("sh!t"; a "!" closing a word is just dropped: "kys!"), punctuation and
+    digits dropped, a letter repeated 3+ times twice; a run of 3+ single letters is one word ("k y s" -> "kys",
+    "n i g g e r" -> "nigger")."""
+    t = fold(re.sub(r"!+(?=\s|$)", "", text)).lower().translate(LEET)
     t = re.sub(r"[^a-z\s]", "", t)
-    return re.sub(r"(.)\1{2,}", r"\1\1", re.sub(r"\s+", " ", t)).strip()
+    t = re.sub(r"(.)\1{2,}", r"\1\1", re.sub(r"\s+", " ", t)).strip()
+    return re.sub(r"\b(?:[a-z] ){2,}[a-z]\b", lambda m: m.group().replace(" ", ""), t)
 
 
 def dedupe_key(text):
     return re.sub(r"[\W_]+", "", unicodedata.normalize("NFKC", text).lower())
 
 
+# the chat is on everyone's screen: trading/"get rich" pushes (lexicon.HYPE, re-exported here), buy advice and coin
+# pushes (lexicon.BUY_ADVICE, BUY_PRESSURE: "should I buy sol", "buy this coin now") and adult requests are dropped
+# (never stored or shown), like the pages he may read (browse.MONEY_HYPE) - seen live 2026-10-09: "take a look on pump
+# fun, and learn how to trade like a pro", "when you wake up, look on fomo", "watch porno". A bare coin name
+# ("bitcoin", "memecoin") is refused in a message, a nickname or a taught word (message_blocked) but not here: blocked()
+# is also the search filter's core (eyes.query_ok) and "memecoin news" stays a readable search (owner). Song and video
+# titles (media=True) refuse HYPE and BUY_ADVICE only ("Get Rich or Die Tryin'", not "Price Tag"). HYPE itself is
+# lexicon.HYPE, imported above: the one list every filter shares.
+ADULT = re.compile(r"\b(porn\w*|xxx|nsfw|nudes?|naked|sex|sexual|hentai|onlyfans|strip(per|tease)?|blowjob|dick pics?|"
+                   r"cum|horny|boobs?|tits|pussy|cock)\b", re.I)
+
+
 def blocked(text, media=False):
     """Reason string if the message must be dropped, else None. media=True: a song or video title, shown as it is:
     no slur check, only self-harm prompts (MEDIA_RE) and calls to violence against a group (incitement); tickers only as coins
-    (MEDIA_TICKER: not "$uicideboy$"), no phone rule (it reads year ranges, "2000 - 2010"), and money only as a request (MEDIA_MONEY)."""
+    (MEDIA_TICKER: not "$uicideboy$"), no phone rule (it reads year ranges, "2000 - 2010"), money only as a request (MEDIA_MONEY),
+    and of the money lexicon only trading promotion and buy advice (lexicon.money_talk without BUY_PRESSURE)."""
     if URL.search(text):
         return "links are not allowed"
     if SOL_ADDR.search(text) or ETH_ADDR.search(text):
@@ -149,7 +170,17 @@ def blocked(text, media=False):
         return "no requests for money"
     if (MEDIA_RE if media else SLUR_RE).search(normalise(text)) or media and incitement(text):
         return "insults are not allowed"
+    if money_talk(text, chat=not media) or money_talk(normalise(text), chat=not media):     # (also de-leeted)
+        return "no trading or get-rich talk"
+    if not media and ADULT.search(normalise(text)):
+        return "keep it clean"
     return None
+
+
+def message_blocked(text):
+    """blocked() for what viewers put on everyone's screen (a message, a nickname, a taught word): a bare coin name
+    (lexicon.COIN_NAMES) is refused too."""
+    return blocked(text) or ("no trading or get-rich talk" if money_talk(text, names=True) else None)
 
 
 # --- message -> stimulus rule table ----------------------------------------------------
@@ -279,7 +310,7 @@ def check(text, key, limiter, dedupe):
     text = (text or "").strip()
     if not text:
         return False, "empty"
-    reason = blocked(text)
+    reason = message_blocked(text)
     if reason:
         return False, reason
     if len(text) > MAX_LEN:
@@ -304,7 +335,7 @@ def clean_nick(nick):
         return "", None
     if len(nick) > NICK_MAX:
         return "", f"nickname: max {NICK_MAX} characters"
-    reason = blocked(nick)
+    reason = message_blocked(nick)
     return ("", "nickname: " + reason) if reason else (nick, None)
 
 
@@ -346,7 +377,7 @@ def check_teach(text, nick, key, limits, day, taught_today):
     text = re.sub(r"\s+", " ", (text or "")).strip()
     if not text:
         return False, "empty", "", ""
-    reason = blocked(text)
+    reason = message_blocked(text)
     if reason:
         return False, reason, "", ""
     if len(text.split()) > TEACH_MAX_WORDS:

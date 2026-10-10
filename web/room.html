@@ -31,10 +31,22 @@
   #live { width:7px; height:7px; border-radius:50%; background:#3a3a46; display:inline-block; transition:background .4s; }
   #live.on { background:#39f5a0; box-shadow:0 0 8px #39f5a0; animation:breathe 2.6s ease-in-out infinite; }
   @keyframes breathe { 50% { box-shadow:0 0 3px #39f5a0; } }
-  #story { margin-top:12px; font-size:27px; line-height:1.28; letter-spacing:-.01em; text-shadow:0 2px 24px #000, 0 1px 3px rgba(0,0,0,.8); min-height:1.3em; }
+  #story { margin-top:12px; font-size:21px; line-height:1.28; letter-spacing:-.01em; text-shadow:0 2px 24px #000, 0 1px 3px rgba(0,0,0,.8); min-height:1.3em; }
   #story.in { animation:storyin .7s ease-out; }
   @keyframes storyin { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
   #story em { font-style:normal; color:var(--st); }
+  /* the one line that is always on the first screen, before any tick: what he is (S10). Never hidden, never moved off */
+  #fiction { margin-top:6px; font-size:11.5px; color:#d8d8e2; line-height:1.45; text-shadow:0 1px 8px #000, 0 0 3px #000, 0 0 1px #000; max-width:60ch; }   /* (readable over the white wall) */
+  #fiction a { color:#b9b9c6; text-decoration:underline dotted; } #fiction a:hover { color:var(--fg); } #fiction .short { display:none; }
+  /* the coin's contract address (owner, 2026-10-11): the official one, to copy; no chart, no market link, no "buy" */
+  #ca { margin-top:7px; display:flex; align-items:center; gap:8px; font-size:11.5px; color:#d8d8e2; max-width:60ch; pointer-events:auto; text-shadow:0 1px 8px #000, 0 0 3px #000; }
+  #ca .k { color:var(--dim); letter-spacing:.14em; font-size:10.5px; flex:none; }
+  #ca .addr { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; user-select:all; }
+  #ca button { flex:none; background:rgba(10,10,14,.7); color:var(--fg); border:1px solid #2a2a36; border-radius:4px; font:inherit; font-size:10.5px; padding:2px 7px; cursor:pointer; }
+  #ca button:hover { border-color:var(--or); color:var(--or); } #ca button.ok { border-color:#39f5a0; color:#39f5a0; }
+  /* the night line under the story while he sleeps: when he fell asleep, what was replayed (R3) */
+  #night { margin-top:6px; font-size:12px; color:#9fb4ff; line-height:1.5; text-shadow:0 1px 8px #000; max-width:60ch; }
+  #night[hidden] { display:none; }
   #why { margin-top:9px; font-size:12px; color:var(--dim); text-shadow:0 1px 8px #000; max-width:52ch; line-height:1.5; }
   #cam { margin-top:12px; background:rgba(10,10,16,.62); color:var(--dim); border:1px solid var(--line); border-radius:6px;
     font:inherit; font-size:11px; padding:6px 10px; cursor:pointer; backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
@@ -128,7 +140,20 @@
   #brainpip:hover { border-color:rgba(255,255,255,.22); }
   #brainpip iframe { width:100%; height:100%; border:0; pointer-events:none; }
   #brainpip span { position:absolute; left:10px; bottom:8px; font-size:10px; letter-spacing:.08em; color:#c6c6d4; text-shadow:0 1px 4px #000; }
+  #brainpip.still { background:radial-gradient(circle at 50% 45%, rgba(255,140,60,.28), rgba(10,10,14,.9) 70%); }
   #brainpip span::before { content:"◉ "; color:var(--st); }
+  /* the city popout (owner, 2026-10-11): a preview of city.subzerone.live with its live dot; the click opens the city in
+     its own window (the city refuses to be framed by other sites, so no iframe) */
+  #citypip { position:relative; flex:none; width:min(260px, 24vw); aspect-ratio:16/10; border:1px solid var(--line); border-radius:12px;
+    overflow:hidden; background:#0d0e13; display:block; text-decoration:none; box-shadow:0 10px 30px -14px rgba(0,0,0,.9); transition:border-color .25s, transform .25s; }
+  #citypip:hover { border-color:var(--or); transform:translateY(-1px); }
+  #citypip img { display:block; width:100%; height:100%; object-fit:cover; filter:saturate(.9); }
+  #citypip span { position:absolute; left:0; right:0; bottom:0; padding:18px 10px 8px; font-size:10px; letter-spacing:.08em; color:#e4e4ee; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    background:linear-gradient(transparent, rgba(5,5,7,.85)); text-shadow:0 1px 4px #000; }
+  #citypip b { font-weight:normal; color:#c6c6d4; }
+  #city-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#3a3a46; margin-right:6px; vertical-align:1px; transition:background .4s; }
+  #citypip.up #city-dot { background:#39f5a0; box-shadow:0 0 8px #39f5a0; animation:breathe 2.6s ease-in-out infinite; }
+  #citypip.up b { color:#39f5a0; }
   #honest a { color:var(--dim); white-space:nowrap; } #honest a:hover { color:var(--fg); }
   /* one line on desktop: the text is cut with an ellipsis, the /about link stays visible; hover or focus shows it all */
   #honest { display:flex; gap:8px; align-items:baseline; max-width:min(92ch, 100%); }
@@ -158,6 +183,28 @@
   #chat button { background:var(--fg); color:#0a0a0a; border:0; padding:0 16px; font:inherit; font-size:13px; border-radius:8px; cursor:pointer; }
   #chat button:hover { background:#fff; }
   #note { font-size:10px; color:var(--faint); margin-top:5px; min-height:1.2em; }
+  /* viewers (preview/interactive): the reactions bar and the viewer count in the dock, reactions floating up over the room */
+  #rx { display:flex; align-items:center; gap:4px; margin-bottom:6px; }
+  #rx button { flex:1 1 0; min-width:0; height:34px; font-size:17px; line-height:1; background:var(--card); border:1px solid var(--line); border-radius:8px;
+    cursor:pointer; backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); transition:transform .12s, border-color .2s; padding:0; }
+  #rx button:active { transform:scale(.9); } #rx button:hover { border-color:rgba(255,255,255,.25); }
+  #rx button.off { opacity:.45; }
+  #viewers { flex:none; font-size:10.5px; color:var(--dim); padding:0 4px 0 6px; white-space:nowrap; text-shadow:0 1px 6px #000; }
+  #viewers::before { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:#39f5a0; margin-right:5px; vertical-align:1px; }
+  #rxfloat { position:fixed; inset:0; pointer-events:none; z-index:4; overflow:hidden; }
+  #rxfloat span { position:absolute; bottom:18%; font-size:26px; will-change:transform, opacity; animation:rxup var(--d, 3s) ease-out forwards;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+  @keyframes rxup { 0% { transform:translate(0, 0) scale(.6); opacity:0; } 12% { opacity:1; transform:translate(0, -6vh) scale(1); }
+    100% { transform:translate(var(--dx, 0px), -52vh) scale(1.05); opacity:0; } }
+  /* the vote on what he does next */
+  #votecard .opt { position:relative; display:flex; justify-content:space-between; gap:8px; align-items:center; width:100%; margin-top:6px;
+    background:var(--card2); color:var(--fg); border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:9px 10px; font:inherit;
+    font-size:12.5px; text-align:left; cursor:pointer; overflow:hidden; }
+  #votecard .opt .bar { position:absolute; left:0; top:0; bottom:0; background:rgba(255,154,60,.16); transition:width .4s; pointer-events:none; }
+  #votecard .opt span { position:relative; } #votecard .opt .n { color:var(--dim); font-size:11.5px; white-space:nowrap; }
+  #votecard .opt.mine { border-color:rgba(255,154,60,.7); } #votecard .opt.mine .n::before { content:"your vote · "; color:var(--st); }
+  #votecard .opt:disabled { cursor:default; }
+  #votecard .s.err { color:#ff8a8a; }
   #note.err { color:#ff8a8a; }
   #away { position:fixed; left:50%; top:52%; transform:translate(-50%,-50%); font-size:13px; color:#d8d8e2; background:rgba(8,8,11,.6);
     border:1px solid var(--line); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass);
@@ -176,11 +223,25 @@
     body { position:relative; }        /* body is the scroller: the scene and the header scroll away with the cards */
     #scene { position:absolute; inset:auto; top:0; left:0; right:0; height:62vh; }
     #vignette { position:absolute; inset:auto; top:0; left:0; right:0; height:62vh; }
-    #top { position:absolute; left:16px; top:14px; max-width:calc(100vw - 32px); } #story { font-size:19px; }
-    #brand h1 { font-size:16px; } #state { margin-top:14px; } #why { max-width:none; }
+    #top { position:absolute; left:0; right:0; top:0; max-width:none; padding:12px 16px 18px;
+      background:linear-gradient(rgba(4,4,6,.82), rgba(4,4,6,.55) 70%, rgba(4,4,6,0)); }   /* phones: the header reads over any part of the room */
+    #story { font-size:15px; line-height:1.3; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    #state { font-size:11px; gap:8px; } #why { font-size:11px; margin-top:5px; color:#b9b9c6; }
+    /* phones: one short line at the foot of the room instead of in the header's flow - the header's height is the band
+       the camera gives up (hudBand), and two more lines there put his head out of a 360 px frame */
+    #fiction { position:absolute; left:16px; right:16px; top:calc(62vh - 124px); margin:0; font-size:10.5px; max-width:none;   /* (clear of the reactions bar and the connection pill) */
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #fiction .long { display:none; } #fiction .short { display:inline; } #night { font-size:11px; margin-top:5px; }
+    #cam { display:none; }
+    #note { font-size:9.5px; }
+    #brand h1 { font-size:15px; } #state { margin-top:10px; } #why { max-width:none; }
     #side { position:static; width:auto; max-height:none; margin:62vh 16px 0; }
     #corner { position:static; display:block; }
     #brainpip { display:block; width:auto; margin:12px 16px 0; }
+    /* phones: the corner column is hidden; the city card moves (room.js, on load) to just above the tabs as one strip */
+    #citypip { display:flex; align-items:center; gap:10px; width:auto; height:54px; aspect-ratio:auto; margin:0 12px 10px; border-radius:10px; }
+    #citypip img { width:104px; height:100%; flex:none; }
+    #citypip span { position:static; padding:0 10px 0 0; background:none; font-size:11px; }
     #honest .tx { white-space:normal; } #honest { display:block; }
     #honest { padding:12px 16px calc(22px + var(--dockh, 74px)); max-width:none; background:none; border-radius:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
     /* phones: the dock is a bar of its own, opaque, across the bottom: the cards scroll under it cleanly instead of their
@@ -192,9 +253,131 @@
     #feed .ln { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
       padding:0 9px; border-top:5px solid transparent; border-bottom:5px solid transparent; box-shadow:0 0 0 1px var(--line); }
     #feed .ln.his { border-top-color:transparent; border-bottom-color:transparent; box-shadow:0 0 0 1px rgba(255,154,60,.35); }   /* clipped at two lines: no padding for a third to show in */
-    #plan { max-width:none; font-size:11px; padding:5px 8px; } #plan .r { display:none; }
-    #away { top:31vh; width:calc(100vw - 48px); }
+    #plan { max-width:none; font-size:10.5px; padding:4px 8px; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2;
+      -webkit-box-orient:vertical; overflow:hidden; } #plan .r { display:none; }
+    #away { top:36vh; width:calc(100vw - 64px); font-size:11.5px; padding:8px 10px; }
+    #rxfloat { position:absolute; inset:auto; top:0; left:0; right:0; height:62vh; }
+    #rx button { height:32px; font-size:16px; }
   }
+
+  /* ===== preview/interactive: the simplified room page. The room is the hero; a minimal header; one tabbed panel
+     (Vote · Chat · Teach · More); a reactions pill; a round brain thumbnail. One card style, one radius (12 px). ===== */
+  :root { --r:12px; --panel:340px; --gap:20px; }
+  #top { left:var(--gap); top:var(--gap); max-width:min(560px, calc(100vw - var(--panel) - 3 * var(--gap))); }
+  #brand h1 { font-size:16px; padding:3px 8px 2px; }
+  #brand nav { font-size:12px; }
+  #brand nav a { padding:10px 7px; }
+  #state { margin-top:12px; font-size:12px; gap:10px; }
+  #chip { font-size:10.5px; }
+  #story { margin-top:8px; font-size:18px; line-height:1.35; }
+  #tools { display:flex; gap:8px; margin-top:10px; pointer-events:auto; }
+  #tools button, #cam { margin:0; min-height:32px; font:inherit; font-size:11px; color:var(--dim); background:rgba(10,10,16,.62);
+    border:1px solid var(--line); border-radius:var(--r); padding:6px 12px; cursor:pointer; backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); }
+  #tools button:hover { color:var(--fg); border-color:rgba(255,255,255,.22); }
+  #todaybtn[aria-expanded="true"] { color:var(--fg); border-color:rgba(255,154,60,.5); }
+  #today { position:absolute; left:0; top:100%; margin-top:8px; width:min(440px, calc(100vw - 2 * var(--gap))); pointer-events:auto;
+    background:var(--card2); border:1px solid var(--line); border-radius:var(--r); padding:12px 14px; backdrop-filter:var(--glass);
+    -webkit-backdrop-filter:var(--glass); }
+  #today[hidden] { display:none; }
+  #today #why { margin:0; max-width:none; text-shadow:none; }
+  #today #plan { margin-top:8px; background:none; border:0; border-left:2px solid var(--st); border-radius:0; padding:2px 0 2px 10px; text-shadow:none; }
+
+  /* the panel: one glass card, tabs on top, the open tab's content scrolls inside it */
+  #side { right:var(--gap); top:var(--gap); width:var(--panel); gap:0; padding:0; max-height:calc(100vh - 2 * var(--gap)); overflow:hidden;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); }
+  #tabs { display:flex; gap:4px; padding:6px; border-bottom:1px solid var(--line); flex:none; }
+  #tabs button { flex:1; min-height:44px; font:inherit; font-size:12px; color:var(--dim); background:none; border:0; border-radius:8px; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+  #tabs button:hover { color:var(--fg); }
+  #tabs button.on { color:var(--fg); background:rgba(255,255,255,.07); }
+  #tab-left { font-size:10.5px; color:var(--st); }
+  #tab-dot { width:6px; height:6px; border-radius:50%; background:var(--st); display:inline-block; }
+  #tab-dot[hidden] { display:none; }
+  .pane { display:none; overflow-y:auto; scrollbar-width:thin; padding:16px; flex:1; min-height:0; }
+  .pane.on { display:block; }
+  #side .card { background:none; border:0; border-radius:0; padding:0; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  #side .card + .card { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+  .pane[data-pane="more"] > * { margin-top:0 !important; padding-top:0 !important; border-top:0 !important; }
+  .pane[data-pane="more"] > :not([hidden]) ~ :not([hidden]) { margin-top:18px !important; padding-top:16px !important;
+    border-top:1px solid var(--line) !important; }   /* (a divider only between sections that are shown) */
+  .card .k { font-size:10.5px; letter-spacing:.14em; margin-bottom:12px; }
+  .card .m { font-size:13px; } .card .t { font-size:14px; }
+  #votecard:not([hidden]) + .empty { display:none; }
+  .empty { color:var(--dim); font-size:13px; }
+  #votecard .opt { min-height:52px; font-size:13px; margin-top:8px; border-radius:var(--r); padding:12px 14px; }
+  #votecard .opt .bar { background:rgba(255,154,60,.18); }
+  /* More: collapsible sections (tap the label) */
+  .pane[data-pane="more"] .card > .k { cursor:pointer; user-select:none; margin-bottom:0; min-height:24px; }
+  .pane[data-pane="more"] .card > .k { justify-content:flex-start; }
+  .pane[data-pane="more"] .card > .k > :nth-child(2) { margin-left:auto; text-align:right; }
+  .pane[data-pane="more"] .card > .k::after { content:"▾"; color:var(--faint); padding-left:10px; }
+  .pane[data-pane="more"] .card > .k > :only-child { margin-right:auto; }
+  .pane[data-pane="more"] .card.shut > .k::after { content:"▸"; }
+  .pane[data-pane="more"] .card > .k + * { margin-top:12px; }
+  .pane[data-pane="more"] .card.shut > :not(.k) { display:none; }
+  #honest { display:block; background:none; padding:0; backdrop-filter:none; -webkit-backdrop-filter:none; text-shadow:none; font-size:10.5px; max-width:none; }
+  #honest .tx { white-space:normal; }
+  /* chat */
+  #dock { position:static; width:auto; }
+  #feed { max-height:none; margin-bottom:12px; }
+  #feed[hidden] { display:block; } #feed[hidden]::before { content:"No messages yet."; color:var(--dim); font-size:13px; }
+  #chat input, #chat button { min-height:44px; border-radius:var(--r); }
+  #teachcard input, #teachcard button { min-height:44px; border-radius:var(--r); font-size:13px; }
+  #teachcard .row { gap:8px; } #teachcard form { gap:8px; }
+  /* reactions: one pill at the bottom centre of the room */
+  #rxpill { position:fixed; left:calc((100vw - var(--panel) - var(--gap)) / 2); bottom:var(--gap); transform:translateX(-50%); z-index:6;
+    background:rgba(10,10,16,.72); border:1px solid var(--line); border-radius:999px; padding:4px 6px 4px 4px;
+    backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); }
+  #rx { margin:0; gap:2px; }
+  #rx button { flex:none; width:44px; height:44px; border:0; background:none; border-radius:50%; font-size:20px; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  #rx button:hover { background:rgba(255,255,255,.08); }
+  #viewers { padding:0 10px 0 8px; font-size:11px; }
+  /* the brain: a small round thumbnail, bottom-left */
+  #corner { left:var(--gap); bottom:var(--gap); right:auto; }
+  #brainpip { width:72px; height:72px; aspect-ratio:auto; border-radius:50%; box-shadow:none; }
+  #brainpip iframe { width:300px; height:225px; transform:translate(-114px, -76px) scale(.5); transform-origin:center; }
+  #brainpip span { display:none; }
+  #citypip { width:min(250px, 22vw); }
+  /* the dream frame while he sleeps (R3): the eye's newest image over the room, above the brain thumbnail; a link to /world */
+  #dream { position:fixed; left:var(--gap); bottom:calc(var(--gap) + 84px); width:min(220px, 24vw); z-index:5; display:block; text-decoration:none;
+    color:#c6c6d4; font-size:10.5px; line-height:1.4; background:rgba(8,8,11,.6); border:1px solid var(--line); border-radius:var(--r); padding:6px;
+    backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); }
+  #dream[hidden] { display:none; }
+  #dream img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; background:#0d0e13; }
+  #dream span { display:block; margin-top:5px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  #dream b { font-weight:normal; color:#c26bff; }
+
+  @media (max-width: 900px) {
+    #scene, #vignette, #rxfloat { height:56vh; }
+    #dream { position:absolute; left:auto; right:12px; bottom:auto; top:calc(56vh - 132px); width:140px; padding:4px; font-size:9.5px; }
+    #top { padding:12px 16px 18px; max-width:none; }
+    #story { font-size:15px; margin-top:6px; }
+    #tools { margin-top:8px; } #cam { display:none; }
+    #today { width:calc(100vw - 32px); }
+    #side { position:static; width:auto; max-height:none; margin:56vh 0 0; padding-top:26px; border:0; border-radius:var(--r) var(--r) 0 0; overflow:visible;
+      background:var(--bg); backdrop-filter:none; -webkit-backdrop-filter:none; }
+    #tabs { position:sticky; top:0; z-index:3; margin:0 12px; padding:10px 0; background:var(--bg); border-bottom:0; }
+    #tabs { gap:0; } #tabs button { border:1px solid var(--line); border-radius:0; background:var(--card2); }
+    #tabs button:first-child { border-radius:var(--r) 0 0 var(--r); } #tabs button:last-child { border-radius:0 var(--r) var(--r) 0; }
+    #tabs button + button { border-left:0; }
+    #tabs button.on { background:rgba(255,255,255,.1); }
+    .pane { padding:8px 16px 32px; overflow:visible; }
+    #corner { display:none; }
+    #citypip { width:auto; }           /* (the desktop width rule above comes later than the phone block) */
+    #honest { padding:0; }
+    #dock { position:static; padding:0; background:none; border:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
+    #feed .ln:not(:last-child) { display:block; } #feed .ln { display:block; padding:5px 9px; border:1px solid var(--line); box-shadow:none; }
+    #feed .ln.his { border-color:rgba(255,154,60,.35); border-left:2px solid var(--st); box-shadow:none; }
+    #feed .ln.his .re { display:block; }
+    #chat { position:fixed; left:0; right:0; bottom:0; z-index:7; padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:rgba(8,8,11,.94); border-top:1px solid var(--line); backdrop-filter:var(--glass); -webkit-backdrop-filter:var(--glass); }
+    body:not([data-tab="chat"]) #chat { display:none; }
+    body[data-tab="chat"] .pane[data-pane="chat"] { padding-bottom:96px; }
+    #rxpill { position:absolute; left:50%; top:calc(56vh - 30px); bottom:auto; max-width:calc(100vw - 24px); }
+    #rx button { width:40px; height:44px; font-size:18px; }
+    #viewers { font-size:10.5px; padding:0 8px 0 4px; }
+  }
+  @media (max-width: 380px) { #rx button { width:34px; font-size:17px; } #viewers { font-size:10px; padding:0 6px 0 2px; } #rxpill { padding:3px 4px 3px 3px; } }
 </style>
 </head>
 <body>
@@ -202,15 +385,59 @@
 <div id="boot"><div><div class="w">SUB<b>-</b>01</div><div id="boot-t">loading his room in Kichijōji…</div><div class="bar"><i id="boot-bar"></i></div></div></div>
 <div id="away"></div>
 <div id="top">
-  <div id="brand"><h1>SUB-01</h1><nav><a class="on" href="/">room</a><a href="/brain">brain</a><a href="/diary">diary</a><a href="/world.html">sees</a></nav></div>
+  <div id="brand"><h1>SUB-01</h1><nav><a class="on" href="/">room</a><a href="/brain">brain</a><a href="/diary">diary</a><a href="/world.html">sees</a><a href="https://city.subzerone.live/" class="city" target="_blank" rel="noopener">city</a></nav></div>
   <div id="state"><span id="live"></span><span id="chip">…</span><span id="clock"></span><span id="where"></span></div>
   <div id="story">connecting…</div>
+  <div id="fiction"><span class="long">A fictional character in a simulated life, driven by a model of brain activity. Not a person, not conscious. <a href="/about.html">about</a></span><span class="short">A simulated character. Not a person, not conscious. <a href="/about.html">about</a></span></div>
+  <div id="ca" hidden><span class="k">CA</span><span class="addr" id="ca-addr"></span><button id="ca-copy" type="button" title="copy the contract address">copy</button></div>
+  <div id="night" hidden></div>
+  <div id="tools"><button id="todaybtn" type="button" aria-expanded="false" aria-controls="today">today ▾</button>
+<button id="cam" class="on" title="follow what he is looking at, or move the camera freely">camera: follows him</button></div>
+  <div id="today" hidden>
   <div id="why"></div>
   <div id="plan" hidden><span id="p-text"></span><span class="r" id="p-reason"></span><span class="rs" id="p-rest" hidden>Resting: today's AI budget is used up; back tomorrow.</span></div>
-  <button id="cam" class="on" title="follow what he is looking at, or move the camera freely">camera: follows him</button>
+  </div>
 </div>
 
 <div id="side">
+  <nav id="tabs" role="tablist" aria-label="panels">
+    <button type="button" role="tab" data-tab="vote" class="on" aria-selected="true">Vote <span id="tab-left"></span></button>
+    <button type="button" role="tab" data-tab="chat">Chat <i id="tab-dot" hidden></i></button>
+    <button type="button" role="tab" data-tab="teach">Teach</button>
+    <button type="button" role="tab" data-tab="more">More</button>
+  </nav>
+  <section class="pane on" data-pane="vote" role="tabpanel">
+  <div class="card" id="votecard" hidden>
+    <div class="k"><span>What next? · viewers vote</span><span id="v-left"></span></div>
+    <div id="v-opts"></div>
+    <div class="s" id="v-note">one vote per viewer per round</div>
+    <div class="s" id="v-last" hidden></div>
+    <div class="s">When the round ends, the most-voted option goes to his activity model as a strong nudge. Needs such as
+      food and sleep still come first; if he is asleep, it waits until he wakes. A tie goes to the option listed first.</div>
+  </div>
+  <div class="card empty">The first round opens in a moment.</div>
+  </section>
+  <section class="pane" data-pane="chat" role="tabpanel">
+<div id="dock">
+  <div id="feed" hidden aria-live="polite"></div>
+  <form id="chat"><input id="msg" placeholder="say something to his brain…" autocomplete="off" maxlength="200"><button>send</button></form>
+  <div id="note">words can make him curious, hungry or restless · no links, addresses or tickers</div>
+  </section>
+  <section class="pane" data-pane="teach" role="tabpanel">
+  <div class="card" id="teachcard">
+    <div class="k"><span>Teach him something</span><span id="tc-left"></span></div>
+    <form id="tc-form">
+      <input id="tc-text" placeholder="a word or a short phrase (max 6 words)" autocomplete="off" maxlength="80">
+      <div class="row"><input id="tc-nick" placeholder="nickname" autocomplete="off" maxlength="16"><button>teach</button></div>
+    </form>
+    <div class="s" id="tc-note">nickname optional · one per viewer per day · no links, addresses or tickers</div>
+    <div class="h">Taught today</div>
+    <div id="tc-today"><div class="it"><span class="w">nothing yet today</span></div></div>
+    <div id="tc-yday" hidden><div class="h" id="tc-yk">Remembered from yesterday</div><div id="tc-ylist"></div></div>
+    <div class="s" id="tc-honest"></div>
+  </div>
+  </section>
+  <section class="pane" data-pane="more" role="tabpanel">
   <div class="card" id="screencard" hidden>
     <div class="k"><span id="s-k">On his screen</span><a id="s-link" href="#" target="_blank" rel="noopener noreferrer">open ↗</a></div>
     <div class="frame"><img id="s-img" alt="what is on his screen"></div>
@@ -243,38 +470,30 @@
     <div class="s" id="mem-how"></div>
     <div class="s">Recall by a simulated spiking network from a partial cue; a model, not a mind.</div>
   </div>
-  <div class="card" id="teachcard">
-    <div class="k"><span>Teach him something</span><span id="tc-left"></span></div>
-    <form id="tc-form">
-      <input id="tc-text" placeholder="a word or a short phrase (max 6 words)" autocomplete="off" maxlength="80">
-      <div class="row"><input id="tc-nick" placeholder="nickname" autocomplete="off" maxlength="16"><button>teach</button></div>
-    </form>
-    <div class="s" id="tc-note">nickname optional · one per viewer per day · no links, addresses or tickers</div>
-    <div class="h">Taught today</div>
-    <div id="tc-today"><div class="it"><span class="w">nothing yet today</span></div></div>
-    <div id="tc-yday" hidden><div class="h" id="tc-yk">Remembered from yesterday</div><div id="tc-ylist"></div></div>
-    <div class="s" id="tc-honest"></div>
+  <div class="card" id="needs">
+    <div class="k"><span>Body</span><span id="n-food"></span></div>
+    <div class="m" id="n-text"></div>
   </div>
   <div class="card" id="mapcard">
     <div class="k"><span id="m-k">Kichijōji, Tokyo</span><span id="m-st"></span></div>
     <div id="map"></div>
   </div>
-  <div class="card" id="needs">
-    <div class="k"><span>Body</span><span id="n-food"></span></div>
-    <div class="m" id="n-text"></div>
-  </div>
+  <div id="honest" tabindex="0" title="A fictional character living a simulated life, driven by a model of brain activity built from public MRI data. An AI reads each page for him and describes what he could do next; his brain model reacts to each option and chooses."><span class="tx">A fictional character living a simulated life, driven by a model of brain activity built from public MRI data.
+    An AI reads each page for him and describes what he could do next; his brain model reacts to each option and chooses.</span>
+    <span class="ln"><span class="cap" id="mind-cap"></span> <a href="/about.html">More on /about.</a></span></div>
+  
+  </section>
 </div>
 
 <div id="corner">
-<a id="brainpip" href="/brain" title="open the brain"><iframe src="/brain?mini" tabindex="-1" loading="lazy"></iframe><span>his brain, live · real fibres</span></a>
-<div id="honest" tabindex="0" title="A fictional character living a simulated life, driven by a model of brain activity built from public MRI data. An AI reads each page for him and describes what he could do next; his brain model reacts to each option and chooses."><span class="tx">A fictional character living a simulated life, driven by a model of brain activity built from public MRI data.
-  An AI reads each page for him and describes what he could do next; his brain model reacts to each option and chooses.</span>
-  <span class="ln"><span class="cap" id="mind-cap"></span> <a href="/about.html">More on /about.</a></span></div>
+<a id="citypip" class="city" href="https://city.subzerone.live/" target="_blank" rel="noopener" title="open the city in its own window"><img src="/room/city_preview.jpg" alt="the city: SUB-01's neighbourhood in Tokyo" loading="lazy" decoding="async"><span><i id="city-dot"></i>the city · <b id="city-st">…</b></span></a>
+<a id="brainpip" href="/brain" title="open the brain"><iframe data-src="/brain?mini" tabindex="-1" loading="lazy"></iframe><span>his brain, live · real fibres</span></a>
 </div>
-<div id="dock">
-  <div id="feed" hidden aria-live="polite"></div>
-  <form id="chat"><input id="msg" placeholder="say something to his brain…" autocomplete="off" maxlength="200"><button>send</button></form>
-  <div id="note">words can make him curious, hungry or restless · no links, addresses or tickers</div>
+<a id="dream" href="/world.html" hidden title="an image an AI renders from the brain model's state while it sleeps; a model, not a mind"><img id="dream-img" alt=""><span id="dream-t"></span></a>
+<div id="rxpill">
+  <div id="rx" role="group" aria-label="react"><span id="viewers" title="people with the room open now">–</span></div>
+</div>
+<div id="rxfloat" aria-hidden="true"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -288,6 +507,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { createGlance } from "./room/glance.js";
+import { createGlanceCam } from "./room/glance_cam.js";   // (the camera turns to him while he answers viewers)
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from "three-mesh-bvh";
 // (bounding-volume trees for the room's meshes: the camera's collision casts rays into them every frame)
@@ -310,22 +531,39 @@ const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t
 
 // ---------- renderer, scene, camera ----------
 const host = $("scene");
-const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:"high-performance"});
-const DPR_MAX = Math.min(1.5, devicePixelRatio), DPR_MIN = Math.min(DPR_MAX, devicePixelRatio > 1 ? 1 : 0.75);   // adaptive, see adapt()
+// a weak computer (a viewer, 2026-10-09: "it makes my computer want to crash and my browser freeze"): little memory,
+// few cores or a software/integrated GPU get a lighter room - no antialias, no shadows, no live brain beside it even with ?brainlive.
+// ?lite forces it, ?full turns it off, headless checks always draw the full room; adapt() lightens it later if frames stay slow
+const QS = new URLSearchParams(location.search);
+const GPU = (() => { try { const g = document.createElement("canvas").getContext("webgl"), x = g && g.getExtension("WEBGL_debug_renderer_info");
+  const r = x ? String(g.getParameter(x.UNMASKED_RENDERER_WEBGL)) : ""; const l = g && g.getExtension("WEBGL_lose_context"); if (l) l.loseContext();
+  return r; } catch (e) { return ""; } })();
+const LITE = QS.has("lite") || (!QS.has("full") && !navigator.webdriver && ((navigator.deviceMemory || 8) <= 4 || (navigator.hardwareConcurrency || 8) <= 4 ||
+  /SwiftShader|llvmpipe|softpipe|Software|Microsoft Basic Render|Mali-4|Adreno \(TM\) [2-5]\d\d|Intel.*(HD Graphics [2-5]\d{3}|HD Graphics$|GMA)/i.test(GPU)));
+window.LITE = LITE;
+const renderer = new THREE.WebGLRenderer({antialias:!LITE, powerPreference:"high-performance"});
+// 1x pixels for everyone (a 1.5x room on a retina Mac drew 2.25x the pixels and ran the fans), adaptive below that, see adapt()
+const DPR_MAX = Math.min(1, devicePixelRatio), DPR_MIN = Math.min(DPR_MAX, devicePixelRatio > 1 ? 1 : 0.75);
+const FRAME_MS = 1000 / 30;                                 // the room is drawn at most 30 times a second, see frame()
 let dpr = DPR_MAX;
 renderer.setPixelRatio(dpr);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;          // shadow maps are redrawn only when needed, see shadows()
+renderer.shadowMap.enabled = !LITE;
+renderer.shadowMap.type = THREE.PCFShadowMap;              // (not the soft variant: 4x the taps) redrawn only when needed, see shadows()
 renderer.setClearColor(0x08080b);
+// nothing is drawn below the floor: the room GLB carries a stray dark rod 1.8 m under it (room_static_8, metal_dark,
+// 172 vertices at y -1.83 along x 2.2) that a viewer saw as a black line under the room from an outside angle
+renderer.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, 1, 0), 0.05)];
 host.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.35;
 const camera = new THREE.PerspectiveCamera(30, 1, 0.02, 200);
+const GLANCE = createGlance(THREE), GCAM = createGlanceCam(THREE);                   // he glances toward the camera when viewers' reactions spike
+if (DEBUG) window.GLANCE = GLANCE;
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.enablePan = false;
 controls.minPolarAngle = 0.35; controls.maxPolarAngle = 1.35; controls.minDistance = 0.4; controls.maxDistance = 12;
@@ -338,7 +576,7 @@ addEventListener("resize", resize); resize();
 // ---------- lights (driven by the Tokyo clock and by what he is doing) ----------
 const hemi = new THREE.HemisphereLight(0xfff1dd, 0x1a1a24, 0.6); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffe2c0, 1.0);        // daylight / moonlight through the window
-sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
+sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
 Object.assign(sun.shadow.camera, {left:-3, right:3, top:3, bottom:-3, near:0.5, far:20});
 sun.shadow.autoUpdate = false; sun.shadow.needsUpdate = true;
 scene.add(sun, sun.target);
@@ -385,7 +623,7 @@ const SURF = {
 const PLACE2ANCHOR = {bed:"bedside", desk:"desk", table:"desk", window:"window", door_in:"door", door_out:"door"};
 const ACT = {                                        // activity -> [anchor, clip]
   sleep:["bedlie","sleep"], phone:["bedside","phone_sit"], order_food:["bedside","phone_sit"], research:["desk","sit"],
-  chart:["desk","sit"], eat:["desk","dine"], window:["sill","lean"],   // dine: seated, the food in his hands (alive())
+  eat:["desk","dine"], window:["sill","lean"],       // dine: seated, the food in his hands (alive())
   get_delivery:["deskside","deliver"],               // to the door, open it, take the bag, close it, carry it to the desk (#63)
   chat:["desk","sit"],                               // answering chat at the computer (the mind layer, #33/#46)
   watch_video:["desk","sit"], play_chess:["desk","sit"],   // (seated at the desk too: missing here, they fell back on standing there, and each switch to them
@@ -400,8 +638,43 @@ const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const progress = {};
 function showProgress(){ const v = Object.values(progress), l = v.reduce((a, p) => a + p[0], 0), t = v.reduce((a, p) => a + p[1], 0);
   const bar = $("boot-bar"); if (t && bar) bar.style.width = `${Math.round(100 * l / t)}%`; }
-function load(url){ return new Promise((ok, fail) => loader.load(url, ok,
+// textures over TEX_MAX are drawn down before they reach the GPU (iOS Safari closes the tab past
+// a few hundred MB; the character's two 4096 maps alone were ~256 MB, the room ~170 MB)
+const TOUCH = matchMedia("(pointer: coarse)").matches || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const TEX_MAX = TOUCH || LITE ? 1024 : 2048;   // desktops too: 4096 maps were ~425 MB of GPU memory
+// the room and its props never need more than 1024 on any screen (the floor's colour, the room's baked occlusion, the
+// second prop batch's atlas and the door sneakers' occlusion came at 2048: 35 textures at 2048² on the owner's Mac);
+// only the character keeps TEX_MAX
+const ROOM_TEX_MAX = Math.min(TEX_MAX, 1024), CHAR_GLB = /\/(char_\w+|boy)\.glb$/;
+function shrinkTextures(gltf, max = TEX_MAX){
+  if (!isFinite(max)) return gltf;
+  const done = new Set();
+  gltf.scene.traverse(o => { if (!o.material) return;
+    for (const m of [].concat(o.material)) for (const k in m) { const t = m[k];
+      if (!t || !t.isTexture || done.has(t) || !t.image) continue; done.add(t);
+      const im = t.image, w = im.width || 0, h = im.height || 0;
+      if (Math.max(w, h) <= max) continue;
+      const f = max / Math.max(w, h), c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(w * f)); c.height = Math.max(1, Math.round(h * f));
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      if (im.close) im.close();                         // (an ImageBitmap: free the full-size copy now)
+      t.image = c; t.needsUpdate = true; window.texShrunk = (window.texShrunk || 0) + 1; } });   // (?debug: how many)
+  return gltf;
+}
+function load(url){ return new Promise((ok, fail) => loader.load(url, g => ok(shrinkTextures(g, CHAR_GLB.test(url) ? TEX_MAX : ROOM_TEX_MAX)),
   e => { progress[url] = [e.loaded, e.total || e.loaded]; showProgress(); }, fail)); }
+// the live brain beside the room is a second 3D page (17 MB of fibres, its own WebGL loop): two GL pages in one tab
+// overheated a Mac, so by default everyone gets a still, styled link to /brain instead; ?brainlive starts the embed
+// (not on a weak computer), and adapt() still drops it when frames stay slow
+function brainPip(after){
+  const f = document.querySelector("#brainpip iframe"); if (!f) return;
+  if (LITE || !QS.has("brainlive")) { brainOff(); return; }
+  setTimeout(() => { if (!LITE && f.isConnected && !f.src) f.src = f.dataset.src; }, after);
+}
+function brainOff(){
+  const a = $("brainpip"), f = a && a.querySelector("iframe"); if (!f) return;
+  f.remove(); a.classList.add("still");
+}
 function bootError(e){
   console.error(e); $("boot").classList.add("err");
   $("boot-t").innerHTML = `the room did not load (${esc(e && e.message || "network error")}).<br><button onclick="location.reload()">try again</button>`;
@@ -438,7 +711,7 @@ load(OLD_ROOM ? "room/room.glb" : "room/room_clean.glb").then(g => {
       for (const k of ["map", "normalMap", "roughnessMap"]) if (m[k]) m[k].anisotropy = Math.min(8, aniso);
     });
   }
-  $("boot").classList.add("off"); setTimeout(() => $("boot").remove(), 800); buildSurfaces();
+  $("boot").classList.add("off"); setTimeout(() => $("boot").remove(), 800); buildSurfaces(); brainPip(4000);
 }).catch(bootError);
 function mergeBoxes(list){           // axis-aligned boxes [[x0,x1],[y0,y1],[z0,z1]] -> one geometry
   const pos = [], idx = [];
@@ -669,7 +942,7 @@ const CHAR_Q = new URLSearchParams(location.search).get("char"), CHAR_V5 = CHAR_
 // ?char=mixamo&anim=sova (preview/desk-states): the seated states at the desk (room/desk_states.js), fed the messages the
 // page already receives that they react to (chess, a decision, a dopamine burst, a viewer's chat); off by default
 const DESK_EV = CHAR_MX && new URLSearchParams(location.search).get("anim") !== "mixamo" ? [] : null;   // (?char=mixamo: the Sova desk states by default, &anim=mixamo without them; not on v5, whose clips they do not fit)
-const deskEv = m => { if (DESK_EV && m && ["chess", "decision", "dopamine", "chat"].includes(m.type)) { DESK_EV.push(m); if (DESK_EV.length > 32) DESK_EV.shift(); } };
+const deskEv = m => { if (DESK_EV && m && ["chess", "decision", "dopamine", "chat", "glance"].includes(m.type)) { DESK_EV.push(m); if (DESK_EV.length > 32) DESK_EV.shift(); } };
 if (DEBUG && DESK_EV) window.__deskEv = deskEv;     // (?debug: the visual checks hand it messages as the socket would)
 let V5 = null;                                        // (char_v5.js / char_mixamo.js and the body's clip conversion)
 (CHAR_V5 ? Promise.all([CHAR_MX ? load("room/char_mixamo.glb") : load("room/char_v5.glb"), import(CHAR_MX ? "./room/char_mixamo.js" : "./room/char_v5.js")])
@@ -690,7 +963,7 @@ let V5 = null;                                        // (char_v5.js / char_mixa
   : load("room/boy.glb")).then(g => {
   boy = g.scene; scene.add(boy);                     // rigged in metres (1.72 m); the room is ~1 unit per metre
   boy.traverse(o => {
-    if (o.isMesh) { o.frustumCulled = false; o.castShadow = true; o.receiveShadow = true;
+    if (o.isMesh) { o.frustumCulled = false; o.castShadow = !/_inside$/.test(o.name); o.receiveShadow = true;   // (the inside copies cast none: 425k skinned triangles less per shadow pass)
       const m = o.material; m.emissive.setRGB(0, 0, 0); m.emissiveIntensity = 0;   // was self-lit: let the room light him
       m.roughness = 0.78; m.envMapIntensity = 0.5; }
     if (o.isBone) bones[o.name] = o;
@@ -698,10 +971,17 @@ let V5 = null;                                        // (char_v5.js / char_mixa
     if (o.isBone && o.name === "Head") head = o;
   });
   mixer = new THREE.AnimationMixer(boy);
+  // every action is made here: a clip's tracks for nodes this body has not are dropped first (pruneTracks)
+  mixer.clipAction = function(clip, root, blend){ pruneTracks(clip, root || boy); return THREE.AnimationMixer.prototype.clipAction.call(this, clip, root, blend); };
   addClips("sit", g.animations);
   scene.add(phone); makeProps(); tripoBottle();
   if (slidesInit()) { SLIDES.parked.visible = true;                 // its shader is built now, not when he first goes to bed
     renderer.compileAsync(SLIDES.parked, camera, scene).catch(() => {}).finally(() => { SLIDES.parked.visible = SLIDES.off; }); }
+  // the first rig's clips (boy_*.glb, and #76's boy_moves.glb after them) are that rig's: on the Mixamo character they
+  // cannot play (other bones; room/boy_mh.js takes every slot from room/mh_mx/ once he is in, and its interim actions did
+  // nothing useful), so they are not fetched (0.84 MB, and up to 60 s of waiting on them before boy_mh.js could start) and
+  // #76 counts as done at once; v5 and ?char=old load them as before
+  if (V5 && V5.mx) { movesOn = true; return; }
   Promise.all(Object.entries({sleep:"boy_sleep", eat:"boy_eat", hold:"boy_text", idle:"boy_idle", door:"boy_door", walk:"boy_walk"})
     .map(([name, file]) => load(`room/${file}.glb`).then(a => addClips(name, a.animations)).catch(() => {}))).then(loadMoves);
 }).catch(bootError);
@@ -733,6 +1013,18 @@ function loadMoves(){
   }).catch(() => {});
 }
 const clips = {};
+// A clip's tracks for nodes the rig has not, removed in place (the clip keeps its name, duration and identity: an action
+// already made of it stays its action; a clip left with no track still plays, as a no-op). The lookup is the one three.js's
+// PropertyBinding does, so exactly the tracks it would warn about ("No target node found for track") and then ignore go:
+// the old rig's clips (boy_*.glb, boy_moves.glb and the stills made of them) key "headfront", the MakeHuman head's front,
+// which the Mixamo skeleton has not. ?debug: one line per pruned clip
+function pruneTracks(clip, root){
+  if (!clip || !clip.tracks || !root) return clip;
+  const PB = THREE.PropertyBinding, gone = [];
+  clip.tracks = clip.tracks.filter(tr => PB.findNode(root, PB.parseTrackName(tr.name).nodeName) ? true : (gone.push(tr.name), false));
+  if (gone.length && DEBUG) console.debug(`clip ${clip.name}: ${gone.length} track(s) dropped, no such node on this body: ${[...new Set(gone.map(n => n.slice(0, n.lastIndexOf("."))))].join(", ")}`);
+  return clip;
+}
 // "hold" is a static upper-body pose (right arm, neck, head) taken from a texting animation on the same rig: it replaces
 // those bones of the sitting / standing idle clips; the left arm keeps the idle pose (resting on his knee / hanging)
 function addClips(name, list){
@@ -848,6 +1140,13 @@ load("room/hand_phone.glb").then(g => {
   s.mesh.geometry.dispose(); s.mesh.geometry = new THREE.PlaneGeometry(w * 0.84, h * 0.93); s.aspect = 0.84 * w / (0.93 * h); s.mesh.position.z = d / 2 + 0.0006;
   phoneGlass();                                        // the canvas follows the glass's new aspect
 }).catch(() => {});
+// the gripping prop hand stands in for his own hand only while holdPhone() poses the arm; when a clip holds the phone in
+// his own hand (the bed layer: phone.userData.byClip) the prop goes and the phone's own body shows - with both, he had
+// three hands (2026-10-10)
+function propHand(on){
+  if (!HAND.mesh || HAND.mesh.visible === on) return;
+  HAND.mesh.visible = on; phone.children[0].visible = !on;
+}
 // holding the phone in his right hand: the phone sits in front of his chest facing his eyes; the right arm starts from
 // the "hold" pose and a two-bone IK puts the wrist where the gripping HAND needs it. Until that model has loaded
 // (or if it fails), his own hand is turned so that the phone lies on the palm
@@ -919,6 +1218,7 @@ function wristOnPhone(){
 const RAMP = ["RightArm", "RightForeArm", "RightHand"], _q0 = RAMP.map(() => new THREE.Quaternion()), _up = new THREE.Vector3();
 // w: 0..1, how far the arm and head have gone from the clip's pose to the grip (it ramps up when he picks the phone up)
 function holdPhone(w){
+  if (phone.userData.byClip) return;                    // (a clip that holds the phone itself: room/boy_mh.js's bed layer; see propHand)
   const B = bones, G = GRIP, t = T; if (!B.RightArm || !B.LeftArm || !head) return;
   const lying = (current && current === actions.phone_lie) || TU.y < 0.5;   // (the torso, so a clip change mid-ramp keeps it right)
   touch(B.RightArm, B.RightForeArm, B.RightHand, head);
@@ -969,18 +1269,19 @@ let screenOn = null;               // "desk" | "phone" | null (from the server)
 let phoneWanted = false;           // the activity has the phone in his hand (he may also take it out for a look: peek)
 let chatting = false;              // at the desk answering chat: the monitor shows the chat window
 let lastStatus = {};               // device -> status
-let trades = [];                   // recent trade flow, for the chart view
+// (no trade feed reaches this page: the coin's trades are a stimulus inside the model only, never a picture on a screen)
 function showScreen(st){
   if (!st) return;
   if (st.restarting) { lastStatus[st.device] = st; if (screenOn === st.device) panel(st); return; }
   lastStatus[st.device] = st;
   const target = st.device === "desk" ? monitor : phone.userData.screen;
-  if (!target || target.id === st.id) return;
+  if (!target || target.id === st.id || target.failed === st.id) return;   // (failed: a 404'd shot is not asked for again)
   target.id = st.id;
   const url = `/api/screen/${st.device}.jpg?id=${st.id}`;
   const img = new Image(); img.decoding = "async";
   img.onload = () => { const t = screenTexture(img); fitTop(t, target.aspect); target.set(t);
     if (screenOn === st.device) { $("s-img").src = url; } };
+  img.onerror = () => { if (target.id === st.id) { target.failed = st.id; target.id = null; } };   // the glass stays as it was; screens() darkens it
   img.src = url;
   if (screenOn === st.device) panel(st);
 }
@@ -1024,9 +1325,9 @@ function panel(st){
   $("s-k").textContent = st.device === "phone" ? "On his phone" : "On his computer";
   $("s-link").hidden = false; $("s-foot").textContent = PAGE_FOOT;
   card.querySelector(".frame").hidden = !!st.restarting;
-  if (st.restarting) {
-    $("s-title").innerHTML = `<div class="restarting">browser restarting…</div>`; $("s-url").textContent = "";
-    $("s-why").textContent = "the screen's browser runs apart from the brain; the brain model keeps running"; $("s-opts").hidden = true;
+  if (st.restarting) {               // (an in-world line: what the page's machinery is doing is not his story)
+    $("s-title").innerHTML = `<div class="restarting">the next page is loading…</div>`; $("s-url").textContent = "";
+    $("s-why").textContent = ""; $("s-opts").hidden = true;
     return;
   }
   const dec = st.decision;
@@ -1098,45 +1399,23 @@ function chessTex(){
 function onChess(m){ chessGame = m; panelKey = null; deskEv({type: "chess", ...m}); }
 fetch("/api/chess").then(r => r.ok ? r.json() : null).then(d => { if (d && d.playing && d.game && !chessGame) onChess(d.game); }).catch(() => {});
 
-// views drawn here (no browser needed): the market chart at the desk, the food app on the phone
-const cv = document.createElement("canvas"); cv.width = 1024; cv.height = 600; const cx = cv.getContext("2d");
+// views drawn here (no browser needed): the food app on the phone, the article while the browser is down, a page loading.
+// (The trading terminal that was drawn here is gone for good: no chart, trade counts or amounts are ever on a screen.)
 const pv = document.createElement("canvas"); pv.width = 390; pv.height = 844; const px = pv.getContext("2d");
-let cvTex = null, pvTex = null;
-function drawChart(){
-  // a trading terminal: dark panel, grid, a time axis, buys up / sells down; no prices, no calls to action
-  const W = cv.width, H = cv.height, L = 60, R = W - 24, T = 92, B = H - 56, y0 = (T + B) / 2, now = Date.now() / 1000;
-  cx.fillStyle = "#0a0c11"; cx.fillRect(0, 0, W, H);
-  cx.fillStyle = "#11141b"; cx.fillRect(0, 0, W, 56);
-  cx.fillStyle = "#e6e8ef"; cx.font = "bold 22px monospace"; cx.fillText("TRADE FLOW", 24, 36);
-  cx.fillStyle = "#6f7488"; cx.font = "17px monospace"; cx.fillText("live · last 5 minutes · buys up, sells down", 190, 36);
-  const buys = trades.filter(t => t.kind === "buy").length, sells = trades.length - buys;
-  cx.textAlign = "right"; cx.fillStyle = "#39f5a0"; cx.fillText(`${buys} buys`, R - 110, 36); cx.fillStyle = "#ff5a6e"; cx.fillText(`${sells} sells`, R, 36); cx.textAlign = "left";
-  cx.strokeStyle = "#171a23"; cx.lineWidth = 1;
-  for (let i = 0; i <= 6; i++) { const y = T + (B - T) * i / 6; cx.beginPath(); cx.moveTo(L, y); cx.lineTo(R, y); cx.stroke(); }
-  cx.fillStyle = "#4b5064"; cx.font = "14px monospace"; cx.textAlign = "right";
-  for (let i = 0; i <= 5; i++) { const x = L + (R - L) * i / 5; cx.beginPath(); cx.moveTo(x, T); cx.lineTo(x, B); cx.stroke();
-    cx.fillText(`-${5 - i}m`, x + 14, B + 22); }
-  cx.textAlign = "left";
-  cx.strokeStyle = "#2a2f3f"; cx.beginPath(); cx.moveTo(L, y0); cx.lineTo(R, y0); cx.stroke();
-  for (const t of trades) { const x = L + (R - L) * (1 - (now - t.t) / 300); if (x < L) continue;
-    const h = Math.min((B - T) / 2 - 4, 10 + 26 * Math.log10(1 + t.usd)), buy = t.kind === "buy";
-    const g = cx.createLinearGradient(0, buy ? y0 - h : y0, 0, buy ? y0 : y0 + h);
-    g.addColorStop(0, buy ? "#39f5a0" : "#ff5a6e88"); g.addColorStop(1, buy ? "#39f5a088" : "#ff5a6e");
-    cx.fillStyle = g; cx.fillRect(x - 3, buy ? y0 - h : y0, 6, h); }
-  cx.fillStyle = "#39f5a0"; cx.fillRect(L - 46, T, 3, (B - T) / 2 - 2); cx.fillStyle = "#ff5a6e"; cx.fillRect(L - 46, y0 + 2, 3, (B - T) / 2 - 2);
-  cx.fillStyle = "#4b5064"; cx.font = "13px monospace"; cx.fillText("bar height = log(usd) · public trade feed · a picture of activity, not advice", 24, H - 16);
-  if (!cvTex) { cvTex = screenTexture(cv); fitTop(cvTex, SURF.monitor.w / SURF.monitor.h); } cvTex.needsUpdate = true; return cvTex;
-}
-let chartAt = 0, chartDirty = true, foodKey = null;
-function chartTex(){                 // redraw when trades arrive, else twice a second (the bars scroll ~3 px/s)
-  const now = performance.now();
-  if (!cvTex || chartDirty || now - chartAt > 500) { chartDirty = false; chartAt = now; drawChart(); }
-  return cvTex;
-}
+let pvTex = null, foodKey = null, loadTex = null;
 function foodTex(c){                 // redraw only when the order changes
   const k = c ? `${c.status}|${c.eta_min}|${c.dish}` : `|${lastLife && lastLife.order}`;
   if (!pvTex || k !== foodKey) { foodKey = k; drawFood(c); }
   return pvTex;
+}
+function loadingTex(){               // the monitor while the browser brings the next page up: a blank page and a thin bar, not the old page
+  if (loadTex) return loadTex;
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 600; const g = c.getContext("2d");
+  g.fillStyle = "#f4f5f7"; g.fillRect(0, 0, c.width, c.height); g.fillStyle = "#e3e5ea"; g.fillRect(0, 0, c.width, 64);
+  g.fillStyle = "#fff"; g.beginPath(); g.roundRect(120, 17, 784, 30, 15); g.fill();
+  g.fillStyle = "#6f7488"; g.fillRect(0, 64, 380, 4);
+  g.fillStyle = "#9aa0ad"; g.font = "22px sans-serif"; g.fillText("loading…", 440, 320);
+  loadTex = screenTexture(c); fitTop(loadTex, SURF.monitor.w / SURF.monitor.h); return loadTex;
 }
 function drawReading(r){
   // the article he is reading, laid out like the real page: sidebar, title in serif, infobox placeholder, two-column body
@@ -1280,7 +1559,12 @@ function renderPlan(){
   put("p-reason", "hidden", !(steps.length && p.reason));
   put("p-rest", "hidden", !mindResting);
 }
+// a hidden tab polls nothing: a load that comes due while it is hidden (its interval, a socket message, the vote's clock)
+// is noted and runs once when the tab is seen again (the cards are up to date as it comes back, and not a byte sooner)
+const DUE = new Set(), unseen = f => document.hidden ? (DUE.add(f), true) : false;
+document.addEventListener("visibilitychange", () => { if (!document.hidden) for (const f of [...DUE]) { DUE.delete(f); f(); } });
 function loadMind(){
+  if (unseen(loadMind)) return;
   fetch("/api/mind").then(r => r.ok ? r.json() : null).then(d => {
     if (!d) return;
     const on = !!d.on;
@@ -1310,7 +1594,7 @@ const v1 = new THREE.Vector3(), v2 = new THREE.Vector3(), v3 = new THREE.Vector3
 // the aspect and the header's height; the monitor shot waits until he is at the desk. Wider canvases keep the old goals.
 const OV_DIR = OVERVIEW.pos.clone().sub(OVERVIEW.target).normalize();
 const OV_UP = UP.clone().addScaledVector(OV_DIR, -UP.dot(OV_DIR)).normalize();     // the overview camera's up
-const FRAME_R = 1.05;                                // the sphere round his hips: his height lying, his feet standing
+const FRAME_R = 1.08;                                // the sphere round his hips: his height lying, his feet standing
 let hudAt = -1e9, hudTop = 1;
 // only the body that is drawn, once it is ready (set by the rig layer below: the v5 / MakeHuman layer takes over a while
 // after load, and until then the old rig's hips can sit ~100 m up), and only hips inside the room; else the overview
@@ -1324,6 +1608,7 @@ function hudBand(){                                  // the header's bottom, as 
   return hudTop = c.height > 0 ? clamp(1 - 2 * Math.max(0, t.bottom - c.top) / c.height, 0.2, 1) : 1;
 }
 // how far up to move a camera d metres from its target so the target sits in the middle of the band under the header
+const DESK_SLIDE = 0.85;                              // (phones, the monitor shot: how far towards his head)
 const bandShift = d => -(hudBand() - 1) / 2 * Math.tan(camera.fov * Math.PI / 360) * d;
 function frameHim(){
   const ty = Math.tan(camera.fov * Math.PI / 360), half = (hudBand() + 1) / 2;   // the free band's half height (NDC)
@@ -1331,16 +1616,20 @@ function frameHim(){
   bones.Hips.getWorldPosition(v1).addScaledVector(OV_UP, bandShift(d));       // (his hips at the band's middle)
   camGoal.target.copy(v1); camGoal.pos.copy(v1).addScaledVector(OV_DIR, d);
 }
+const _cgN = new THREE.Vector3();                      // (scratch: the monitor shot's facing; no allocation per frame)
 function updateCameraGoal(){
   const nar = narrow();
-  if ((screenOn === "desk" || chatting) && monitor && !(nar && at !== "desk" && !(step && step.to === "desk"))) {
-    const m = SURF.monitor, n = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0, 1, 0), m.ry);
+  if ((screenOn === "desk" || chatting) && monitor && !(nar && (at !== "desk" || step))) {   // (phones: the monitor shot once he is seated; until then he is framed)
+    const m = SURF.monitor, n = _cgN.set(0, 0, 1).applyAxisAngle(UP, m.ry);
     camGoal.target.set(...m.c);
-    camGoal.pos.set(...m.c).addScaledVector(n, 1.9).add(v1.set(0.55, 0.45, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), m.ry));
+    camGoal.pos.set(...m.c).addScaledVector(n, 1.9).add(v1.set(0.55, 0.45, 0).applyAxisAngle(UP, m.ry));
     if (nar) { const off = bandShift(camGoal.pos.distanceTo(camGoal.target));     // (phones: the same shot, slid under the header)
       v1.subVectors(camGoal.target, camGoal.pos).normalize(); v2.copy(UP).addScaledVector(v1, -UP.dot(v1)).normalize();
-      camGoal.target.addScaledVector(v2, off); camGoal.pos.addScaledVector(v2, off); }
-  } else if (screenOn === "phone" && phone.visible && head) {
+      camGoal.target.addScaledVector(v2, off); camGoal.pos.addScaledVector(v2, off);
+      // (and slid sideways halfway to his head: the shot over his shoulder left it off the narrow canvas's edge)
+      if (head) { v3.crossVectors(v1, UP).normalize(); (bones.headfront || head).getWorldPosition(v4); const o = v4.sub(camGoal.target).dot(v3) * DESK_SLIDE;
+        camGoal.target.addScaledVector(v3, o); camGoal.pos.addScaledVector(v3, o); } }
+  } else if (screenOn === "phone" && phone.visible && head && !phone.userData.byClip) {   // (a phone the bed layer's clip holds: framed as lying, not this shot)
     // above his right shoulder, looking down past his cheek onto the screen: phone, hands and face in frame
     phone.getWorldPosition(v1); (bones.headfront || head).getWorldPosition(v2);
     const ry = boy.rotation.y; v3.set(Math.sin(ry), 0, Math.cos(ry)); v4.crossVectors(v3, UP);   // facing, his right
@@ -1421,14 +1710,31 @@ function armClear(){
   let best = dist;
   for (const [sx, sy] of [[0, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
     _kb.copy(c).addScaledVector(_kr, sx * w).addScaledVector(_ku, sy * h); _ka.subVectors(_kb, t); const L = _ka.length(); _ka.normalize();
-    CAMR.ray.set(_kb.copy(t).addScaledVector(_ka, START), _ka); CAMR.ray.far = Math.max(0, L - START); CAMR.ray.firstHitOnly = false;
+    // close in, only the nearest hit is read (the loop breaks on it): the tree answers that alone; far out, the walls
+    // and the floor are skipped, so every hit is needed in order
+    CAMR.ray.set(_kb.copy(t).addScaledVector(_ka, START), _ka); CAMR.ray.far = Math.max(0, L - START); CAMR.ray.firstHitOnly = !far;
     for (const hit of CAMR.ray.intersectObjects(M, false)) { if (far && onShell(hit)) continue; best = Math.min(best, hit.distance + START - ARM); break; } }
   if (best < dist) c.copy(t).addScaledVector(_kd, Math.max(0.05, best));
 }
 const _kc = new THREE.Vector3(), _kq = new THREE.Vector3(), _kL = new THREE.Line3();
+// the last run: where it left the camera and its target, and where he was. With a still camera over a seated boy the
+// five raycasts and the capsule pass gave the same answer every frame (~1 ms a frame of the owner's overheating Mac):
+// while the camera, its target, his root and his hips all stayed within a millimetre of that, and nothing else changed
+// (his visibility, his clip, his capsules arriving, the room's solids refreshing), the camera is still where the last
+// run left it and the run is skipped. The reference is not moved on a skip: a slow drift adds up and runs it.
+const KC = {c:new THREE.Vector3(), t:new THREE.Vector3(), b:new THREE.Vector3(), h:new THREE.Vector3(), ry:NaN, vis:null, clip:null, at:-1, segs:null, ran:0, skipped:0};
+const _kh = new THREE.Vector3(), MM2 = 1e-6;          // (a millimetre, squared)
 function keepClear(){
   if (DEBUG && window.NOCLEAR) return;                 // (?debug: the camera as it would be without this)
+  camRoom();                                           // (the solids' 2 s refresh keeps its cadence: a refresh forces a run)
+  const c = camera.position, t = controls.target, vis = !!(boy && boy.visible);
+  const hip = vis && bones.Hips ? bones.Hips.getWorldPosition(_kh) : _kh.set(0, 0, 0);
+  if (CAMR.at === KC.at && CAMB.segs === KC.segs && vis === KC.vis && current === KC.clip
+    && c.distanceToSquared(KC.c) < MM2 && t.distanceToSquared(KC.t) < MM2
+    && (!vis || (boy.position.distanceToSquared(KC.b) < MM2 && Math.abs(boy.rotation.y - KC.ry) < 1e-3 && hip.distanceToSquared(KC.h) < MM2))) { KC.skipped++; return; }
   keepBody(); armClear(); keepBody();                  // (out of him, then nothing between it and its target, then out of him again)
+  KC.c.copy(c); KC.t.copy(t); KC.at = CAMR.at; KC.segs = CAMB.segs; KC.vis = vis; KC.clip = current; KC.ran++;
+  if (vis) { KC.b.copy(boy.position); KC.ry = boy.rotation.y; KC.h.copy(hip); }
 }
 function keepBody(){
   const S = boy && boy.visible ? camBody() : null; if (!S) return;
@@ -2066,7 +2372,8 @@ const MOUSE = new THREE.Vector3(-0.735, 0.985, -0.965);   // G10d's mouse (MOUSE
 let musicNow = null, musicEmbed = "";
 const SPOTIFY_EMBED = /^https:\/\/open\.spotify\.com\/embed\/track\/[A-Za-z0-9]{22}(\?[\w=&]*)?$/;
 function renderMusic(){
-  const m = musicNow; $("musiccard").hidden = !m; if (!m) return;
+  const m = musicNow; $("musiccard").hidden = !m;
+  if (!m) { if (musicEmbed) { musicEmbed = ""; $("mu-embed").removeAttribute("src"); } return; }   // (R2: a stopped track's player goes too, so nothing keeps playing)
   $("mu-k").textContent = m.mode === "background" ? "in the background" : "headphones on";
   $("mu-t").textContent = m.title || ""; $("mu-a").textContent = [m.artist, m.genre_label].filter(Boolean).join(" · ");
   const art = $("mu-art"), ok = /^https:\/\//.test(m.art || ""); art.hidden = !ok; if (ok && art.src !== m.art) art.src = m.art;
@@ -2697,7 +3004,14 @@ function coverShape(){                                 // the duvet over him, th
   const {nx, nz, nt, pos, nor, uv, ZM0, ZM1, BED, LOFT, THICK, DROP, DR} = COV;
   // pulled up from where it lay folded to just under his shoulders; on his side, back off his raised shoulder
   const up = bones.neck.getWorldPosition(_l1).x + 0.17 + 0.10 * Math.abs(ROLL.a) / ROLL.ang;
-  const hem = Math.min(COV.XFOOT - 0.06, COV.XFOOT + (up - COV.XFOOT) * DUV.w);   // drawn up from the foot of the bed over him
+  // he is longer than the mattress: the cloth stays up until past all of him (one straight line, so the end hangs as one
+  // straight curtain, not in strands), then the rest of it hangs down to a straight hem
+  let end = 0.04;                                                     // (the foot end of the mattress), or past his toes' tips
+  for (const n of ["LeftToeBase", "RightToeBase", "LeftFoot", "RightFoot"]) end = Math.max(end, bones[n].getWorldPosition(_l2).x + (/Toe/.test(n) ? 0.09 : 0.16));
+  // drawn up from the foot of the bed over him; never back past the edge it hangs from (fading back to the foot, DUV.w -> 0
+  // as he gets up, the hem passed his feet: end < hem made iEnd negative, H[iEnd * nz + j] read undefined and every vertex
+  // came out NaN). Drawn back that far, all of it hangs from that edge
+  const hem = Math.min(COV.XFOOT - 0.06, COV.XFOOT + (up - COV.XFOOT) * DUV.w, end);
   const len = COV.XFOOT - hem, newUV = Math.abs(hem - COV.lastHem) > 1e-4;
   COV.hem = hem; COV.lastHem = hem; COV.len = len;
   const B = COV.body, H = COV.h, T = COV.tmp;
@@ -2724,11 +3038,7 @@ function coverShape(){                                 // the duvet over him, th
       }
       B[i * nz + j] = h; H[i * nz + j] = h + LOFT;
     } }
-  // he is longer than the mattress: the cloth stays up until past all of him (one straight line, so the end hangs as one
-  // straight curtain, not in strands), then the rest of it hangs down to a straight hem
-  let end = 0.04;                                                     // (the foot end of the mattress), or past his toes' tips
-  for (const n of ["LeftToeBase", "RightToeBase", "LeftFoot", "RightFoot"]) end = Math.max(end, bones[n].getWorldPosition(_l2).x + (/Toe/.test(n) ? 0.09 : 0.16));
-  const iEnd = Math.min(nx - 3, Math.ceil((end - hem) / len * (nx - 1)));
+  const iEnd = Math.min(nx - 3, Math.ceil((end - hem) / len * (nx - 1)));          // (>= 0: hem <= end, above)
   // 2. cloth, not shrink wrap: smooth the surface (it bridges between his limbs), but never below him
   if (V5) coverDrape(iEnd, len / (nx - 1)); else
   for (let pass = 0; pass < 3; pass++) {
@@ -2989,26 +3299,30 @@ function endMeal(){                                     // the empty container s
 let trash = null;                                       // the empty dish he will put in the bin
 
 function screens(life, st){
-  const atDesk = !life.path && ["research","chart","watch_video","play_chess"].includes(life.activity) && st === "AWAKE";
+  const atDesk = !life.path && ["research","watch_video","play_chess"].includes(life.activity) && st === "AWAKE";
   const onPhone = !life.path && ["phone","order_food"].includes(life.activity) && st === "AWAKE" && visible;
   phoneWanted = onPhone && !!hand;
   chatting = !life.path && life.activity === "chat" && st === "AWAKE" && visible;
   chessOn = atDesk && life.activity === "play_chess" && !!chessGame;
   screenOn = ["research","watch_video"].includes(life.activity) && atDesk ? "desk" : life.activity === "phone" && onPhone ? "phone" : null;
   if (life.screen) showScreen(life.screen);
+  const deskSt = lastStatus.desk, deskLive = screenOn === "desk" && deskSt && !deskSt.restarting;   // a page is really on it
   // desk monitor
   if (monitor) {
     if (chatting) { monitor.id = null; const t = chatTex(); if (monitor.tex !== t || monitor.mesh.material !== monitor.on) monitor.set(t); }
-    else if (life.activity === "chart" && atDesk) { monitor.id = null; const t = chartTex(); if (monitor.tex !== t || monitor.mesh.material !== monitor.on) monitor.set(t); }
     else if (chessOn) { monitor.id = null; const t = chessTex(); if (monitor.tex !== t || monitor.mesh.material !== monitor.on) monitor.set(t); }
-    else if (screenOn === "desk" && lastStatus.desk) { if (monitor.mesh.material === offMat && monitor.tex) monitor.mesh.material = monitor.on; }
-    else if (atDesk && life.activity === "research" && life.reading) {            // no browser: the article he is reading
+    else if (deskLive) { if (monitor.mesh.material === offMat && monitor.tex) monitor.mesh.material = monitor.on; }
+    else if (atDesk && life.activity === "research" && life.reading) {            // no browser, or its page still loading: the article he is reading
       if (monitor.id !== "wiki:" + life.reading.title) { monitor.set(drawReading(life.reading)); monitor.id = "wiki:" + life.reading.title; } }
+    else if (screenOn === "desk" && deskSt && deskSt.restarting) {                 // the browser is bringing the next page up: never the old page frozen
+      if (monitor.id !== "loading") { monitor.set(loadingTex()); monitor.id = "loading"; } }
     else if (st !== "AWAKE" || !visible) monitor.off();
   }
-  // phone
-  const ps = phone.userData.screen;
-  if (life.activity === "order_food" && onPhone) { ps.id = null; const t = foodTex(life.courier); if (ps.tex !== t || ps.mesh.material !== ps.on) ps.set(t); }
+  // phone: the delivery app while he orders; otherwise only a page that is really on it now, else dark glass
+  // (#R2: no stale picture: the food app after the order, or the last page when the browser is down or a shot 404'd)
+  const ps = phone.userData.screen, psc = life.screen && life.screen.device === "phone" && !life.screen.restarting ? life.screen : null;
+  if (life.activity === "order_food" && onPhone) { ps.id = null; const t = foodTex(life.courier); if (ps.tex !== t || ps.mesh.material !== ps.on) ps.set(t); ps.id = "food"; }
+  else if (ps.tex && (ps.id === "food" || (life.activity === "phone" && (!psc || ps.failed === psc.id)))) ps.off();
   panel(chessOn ? null : screenOn ? lastStatus[screenOn] : null);
 }
 
@@ -3048,6 +3362,7 @@ const MEM_LABEL = {"after sleep": "tested after its compressed sleep, the same e
 const memWhen = d => d.label === "next day"
   ? `tested ${d.days_since > 1 ? d.days_since + " days" : "a day"} later, at the next session, after forgetting` : MEM_LABEL[d.label] || "";
 function loadMemory(){
+  if (unseen(loadMemory)) return;
   fetch("/api/memory").then(r => r.ok ? r.json() : null).then(d => {
     const items = d && d.items ? d.items.filter(x => x.source === "reading") : [];
     $("memcard").hidden = !items.length;
@@ -3078,6 +3393,7 @@ function taughtRow(it, gpu){
 }
 let taughtAt = 0;
 function loadTaught(){
+  if (unseen(loadTaught)) return;
   taughtAt = performance.now();
   fetch("/api/taught").then(r => r.ok ? r.json() : null).then(d => {
     if (!d) return;
@@ -3098,6 +3414,111 @@ $("tc-form").addEventListener("submit", ev => {
   sock.send(JSON.stringify({type:"teach", text, nick}));
 });
 
+// ---------- viewers: the vote on what he does next, the viewer count, reactions (preview/interactive) ----------
+let RX = [], vote = null, voteMine = null, voteEnds = 0, voteLast = null;
+function onAudienceHello(a){
+  RX = a.reactions || [];
+  const bar = $("rx"); bar.querySelectorAll("button").forEach(b => b.remove());
+  RX.forEach((e, k) => { const b = document.createElement("button"); b.type = "button"; b.textContent = e; b.title = "react";
+    b.addEventListener("click", () => react(k)); bar.insertBefore(b, $("viewers")); });
+  viewersText(a.viewers);
+  if (a.vote) { voteLast = a.vote.last; setRound(a.vote.round); if (a.vote.waiting) voteNote(`viewers voted “${a.vote.waiting.label}” · waiting until he is awake`); }
+}
+function viewersText(n){ if (typeof n === "number") put("viewers", "textContent", `${n} watching`); }
+function setRound(r){
+  vote = r; voteMine = r && typeof r.mine === "number" ? r.mine : null;
+  voteEnds = r ? performance.now() + r.ends_in * 1000 : 0; renderVote();
+}
+function renderVote(){
+  const card = $("votecard"); card.hidden = !vote && !voteLast; if (card.hidden) return;
+  const r = vote, tot = r ? Math.max(1, r.total) : 1;
+  $("v-opts").innerHTML = r ? r.options.map((o, k) => `<button type="button" class="opt${voteMine === k ? " mine" : ""}" data-k="${k}"${voteMine != null ? " disabled" : ""}>`
+    + `<i class="bar" style="width:${Math.round(100 * o.n / tot)}%"></i><span>${esc(o.label)}</span><span class="n">${o.n}</span></button>`).join("")
+    : `<div class="m">the next round opens soon</div>`;
+  $("v-last").hidden = !voteLast;
+  if (voteLast) $("v-last").textContent = voteLast.winner ? `Last round: viewers voted “${voteLast.label}” (${voteLast.options.find(o => o.act === voteLast.winner).n} of ${voteLast.total} votes)`
+    : "Last round: no votes, no nudge";
+  voteClock();
+}
+function voteClock(){
+  if (unseen(voteClock)) return;                          // (a hidden tab: the clock catches up as it comes back)
+  if (!vote) { put("v-left", "textContent", ""); put("tab-left", "textContent", ""); return; }
+  const s = Math.max(0, Math.round((voteEnds - performance.now()) / 1000));
+  put("v-left", "textContent", s >= 3600 ? `${Math.floor(s / 3600)} h ${String(Math.floor(s % 3600 / 60)).padStart(2, "0")} min left`
+    : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")} left`);
+  put("tab-left", "textContent", s >= 3600 ? `${Math.floor(s / 3600)}h${String(Math.floor(s % 3600 / 60)).padStart(2, "0")}`
+    : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`);           // (the Vote tab's header: time left)
+}
+setInterval(voteClock, 1000);
+function voteNote(t, err){ $("v-note").textContent = t; $("v-note").className = err ? "s err" : "s"; }
+$("v-opts").addEventListener("click", ev => {
+  const b = ev.target.closest(".opt"); if (!b || b.disabled || !vote) return;
+  if (!sock || sock.readyState !== 1) { voteNote("still connecting", true); return; }
+  sock.send(JSON.stringify({type: "vote", k: +b.dataset.k}));
+});
+function onVote(m){
+  if (m.type === "vote") { voteLast = m.last || voteLast; setRound(m.round); voteNote("one vote per viewer per round"); }
+  else if (m.type === "vote_ack") { if (typeof m.mine === "number") voteMine = m.mine;
+    voteNote(m.ok ? "vote counted · results when the round ends" : `not counted: ${m.reason}`, !m.ok); renderVote(); }
+  else if (m.type === "vote_result") { voteLast = m; vote = null; renderVote();
+    voteNote(m.winner ? `viewers voted “${m.label}” · passed to his activity model when he is awake` : "no votes this round"); }
+  else if (m.type === "vote_applied") voteNote(`viewers voted “${m.label}” · now a strong nudge in his activity model`);
+}
+function onAudience(m){
+  const a = m.aud; viewersText(a.n);
+  if (a.v && vote && a.v[0] === vote.id) {
+    const [, counts, left] = a.v; let changed = false;
+    counts.forEach((n, k) => { if (vote.options[k] && vote.options[k].n !== n) { vote.options[k].n = n; changed = true; } });
+    vote.total = counts.reduce((x, y) => x + y, 0); voteEnds = performance.now() + left * 1000;
+    if (changed) renderVote();
+  }
+  if (m.rx) floatUp(m.rx);
+}
+let rxAt = [], rxOff = 0;
+function react(k){
+  if (!sock || sock.readyState !== 1) return;
+  const now = performance.now(); rxAt = rxAt.filter(t => now - t < 15000);
+  if (now < rxOff) return;                                // (the server's limit, mirrored: 1 every 3 s, burst 5)
+  sock.send(JSON.stringify({type: "react", k}));
+}
+function rxSlow(){ rxOff = performance.now() + 3000; $("rx").querySelectorAll("button").forEach(b => b.classList.add("off"));
+  setTimeout(() => $("rx").querySelectorAll("button").forEach(b => b.classList.remove("off")), 3000); }
+const RX_MAX = 40;
+function floatUp(counts){                                 // the reactions since the last tick, over the room for everyone
+  if (document.hidden) return;
+  const box = $("rxfloat");
+  counts.forEach((n, k) => { for (let i = 0; i < Math.min(n, 6); i++) {
+    if (box.childElementCount >= RX_MAX) return;
+    const el = document.createElement("span"); el.textContent = RX[k] || "";
+    const narrow = innerWidth <= 900, left = narrow ? 8 + Math.random() * 74 : 22 + Math.random() * 40;
+    el.style.left = `${left}%`; el.style.setProperty("--dx", `${Math.round((Math.random() - 0.5) * 80)}px`);
+    el.style.setProperty("--d", `${(2.6 + Math.random() * 1.2).toFixed(2)}s`); el.style.animationDelay = `${(i * 0.18 + Math.random() * 0.2).toFixed(2)}s`;
+    el.addEventListener("animationend", () => el.remove()); box.appendChild(el); } });
+}
+
+
+// ---------- the panel's tabs (Vote · Chat · Teach · More) and the header's "today" toggle (preview/interactive) ----------
+{
+  const tabs = [...document.querySelectorAll("#tabs [data-tab]")], panes = [...document.querySelectorAll(".pane[data-pane]")];
+  const set = t => {
+    document.body.dataset.tab = t;
+    for (const b of tabs) { const on = b.dataset.tab === t; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); }
+    for (const p of panes) p.classList.toggle("on", p.dataset.pane === t);
+    if (t === "chat") { $("tab-dot").hidden = true; const f = $("feed"); f.scrollTop = f.scrollHeight; }
+    if (t === "more") window.dispatchEvent(new Event("resize"));     // (the map sizes itself once it can be seen)
+    try { localStorage.setItem("sub01.tab", t); } catch (e) {}
+  };
+  for (const b of tabs) b.addEventListener("click", () => set(b.dataset.tab));
+  let saved = null; try { saved = localStorage.getItem("sub01.tab"); } catch (e) {}
+  set(tabs.some(b => b.dataset.tab === saved) ? saved : "vote");
+  for (const k of document.querySelectorAll('.pane[data-pane="more"] .card > .k')) k.addEventListener("click", ev => {
+    if (ev.target.closest("a")) return; k.parentElement.classList.toggle("shut"); window.dispatchEvent(new Event("resize")); });
+  new MutationObserver(() => { if (document.body.dataset.tab !== "chat") $("tab-dot").hidden = false; })   // a new chat line
+    .observe($("feed"), {childList: true});
+  const btn = $("todaybtn"), box = $("today");
+  btn.addEventListener("click", () => { box.hidden = !box.hidden; btn.setAttribute("aria-expanded", !box.hidden); });
+  document.addEventListener("click", ev => { if (!box.hidden && !ev.target.closest("#today, #todaybtn")) { box.hidden = true; btn.setAttribute("aria-expanded", false); } });
+}
 // ---------- live ----------
 const LABEL_AWAY = {park:"at the park, Inokashira", buy_bread:"at the bakery", buy_konbini:"at the konbini"};
 let sock = null, tickMsg = null, uiTimer = 0, uiAt = 0, panAt = 0, mePos = "";
@@ -3105,24 +3526,88 @@ const UI_MS = 200;                   // the page follows the simulation 5x a sec
 const shown = new Map();             // element.prop -> last value written: unchanged values are not rewritten
 function put(id, prop, v){ const k = id + "." + prop; if (shown.get(k) === v) return; shown.set(k, v);
   const el = $(id); if (prop === "display" || prop === "background") el.style[prop] = v; else el[prop] = v; }
+// one socket and one reconnect timer per page. The server answers {"type":"full"} and closes with 1013 when it has no
+// room for us (its per-address or total cap): the page says so and comes back after ~30 s, doubling to 2 min, with
+// jitter; any other drop: 1.5 s doubling to 30 s. The dot is lit only once the hello arrived; 20 s without a tick
+// while open is a dead connection (a phone that slept, a proxy that went away) and is dropped and redone. The 20 s are
+// counted on the drawn frames' clock (drawn: frame() adds each drawn frame's time, a second at most, so a main-thread
+// stall counts for a second and a hidden tab for nothing), and only once he is in the scene: a slow machine decoding
+// the character stalls the main thread for longer than that, and said "connection lost" while still booting
+let reTimer = 0, retry = 0, full = null, gotHello = false, tickAt = 0, tickWatch = 0, drawn = 0;
+const FULL_TXT = {ip:"too many tabs open on this address · retrying in a moment", all:"the room is full · retrying in a moment"},
+      LOST_TXT = "connection lost · reconnecting…", SLOW_TXT = "cannot reach his room · still trying";
+// the city (city.subzerone.live): its pulse from /api/city (the server pings it, at most once a minute for everyone);
+// every "city" link opens it in its own window (a popout), or a new tab where popups are blocked
+function cityPulse(){
+  fetch("/api/city", {cache:"no-store"}).then(r => r.ok ? r.json() : null).then(c => {
+    if (!c) return;
+    if (c.url) document.querySelectorAll("a.city").forEach(a => { a.href = c.url; });
+    $("citypip").classList.toggle("up", !!c.up); $("city-st").textContent = c.up ? "live · open" : "offline right now";
+  }).catch(() => {});
+}
+cityPulse(); setInterval(cityPulse, 90000);
+{ // phones: the card is a strip just above the tabs; desktops: in the corner column (also after a rotation or resize)
+  const mq = matchMedia("(max-width: 900px)");
+  const place = () => { if (mq.matches) $("side").insertBefore($("citypip"), $("tabs")); else $("corner").insertBefore($("citypip"), $("brainpip")); };
+  place(); mq.addEventListener("change", place);
+}
+document.querySelectorAll("a.city").forEach(a => a.addEventListener("click", e => {
+  if (e.metaKey || e.ctrlKey || e.shiftKey) return;              // (the viewer wants a tab: keep the browser's behaviour)
+  const w = Math.min(1180, screen.availWidth - 40), h = Math.min(800, screen.availHeight - 60);
+  const win = window.open(a.href, "sub01city", `popup=yes,width=${w},height=${h},left=${Math.max(0, (screen.availWidth - w) / 2)},top=${Math.max(0, (screen.availHeight - h) / 2)}`);
+  if (win) { e.preventDefault(); win.focus(); }
+}));
+// the coin's contract address from the server (SUB01_CA or MINT): shown once set, with a copy button; nothing else
+function showCA(ca){
+  const ok = typeof ca === "string" && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(ca);
+  $("ca").hidden = !ok; if (ok) $("ca-addr").textContent = ca;
+}
+$("ca-copy").onclick = async () => {
+  const b = $("ca-copy"), ca = $("ca-addr").textContent; let done = false;
+  try { await navigator.clipboard.writeText(ca); done = true; } catch (e) {}
+  if (!done) { const r = document.createRange(); r.selectNodeContents($("ca-addr")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  b.textContent = done ? "copied" : "select + copy"; b.classList.toggle("ok", done);
+  setTimeout(() => { b.textContent = "copy"; b.classList.remove("ok"); }, 1800);
+};
+function offline(text){ $("live").classList.remove("on"); $("story").textContent = text; put("chip", "textContent", "…");
+  for (const k of ["story.innerHTML", "chip.textContent", "chip.background"]) shown.delete(k); }   // (the next tick rewrites them)
+function reconnect(ms){ clearTimeout(reTimer); reTimer = setTimeout(() => { reTimer = 0; connect(); }, ms); }
 function connect(){
+  if (sock && sock.readyState <= 1) return;                      // (open or opening: never a second one)
+  clearTimeout(reTimer); reTimer = 0;
   // ~5 ticks a second without the per-region brain arrays (a server that ignores the query sends every tick: still fine)
   const ws = sock = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws?rate=5&lite=1`);
-  ws.onopen = () => $("live").classList.add("on");
-  ws.onclose = () => { $("live").classList.remove("on"); setTimeout(connect, 1500); };
+  gotHello = false; full = null; tickAt = drawn;
+  clearInterval(tickWatch); tickWatch = setInterval(() => { if (sock === ws && gotHello && boy && drawn - tickAt > 20000) { offline(LOST_TXT); ws.close(); } }, 5000);
+  ws.onclose = ev => {
+    if (sock !== ws) return;                                      // (an old socket closing after a new one opened)
+    sock = null; clearInterval(tickWatch);
+    const refused = full || (ev && ev.code === 1013), jitter = 0.75 + 0.5 * Math.random();
+    const wait = refused ? Math.min(120000, 30000 * 2 ** retry) * jitter : Math.min(30000, 1500 * 2 ** retry) * jitter;
+    offline(refused ? FULL_TXT[full] || FULL_TXT.all : gotHello || retry < 2 ? LOST_TXT : SLOW_TXT);
+    if (!gotHello && !refused && retry < 2) $("story").textContent = "connecting…";
+    retry = Math.min(retry + 1, 5); reconnect(wait);
+  };
   ws.onmessage = e => {
     const m = JSON.parse(e.data);
+    if (m.type === "full") { full = m.why === "ip" ? "ip" : "all"; offline(FULL_TXT[full]); return; }
+    if (m.type === "hello") { gotHello = true; $("live").classList.add("on"); showCA(m.ca); }
+    if (m.type === "tick") { tickAt = drawn; retry = 0; }
     if (m.type !== "chess") deskEv(m);  // (chess: onChess, the fetch's too)
     if (m.type === "chat_ack") { $("note").textContent = m.ok ? "sent · it reaches his brain first" : `not sent: ${m.reason}`; $("note").className = m.ok ? "" : "err"; return; }
     if (m.type === "screen") { showScreen(m); return; }
     if (m.type === "chess") { onChess(m); return; }
     if (m.type === "music") { onMusic(m); return; }
+    if (m.type === "eye") { onEye(m); return; }          // (R3: the dream frame while he sleeps)
+    if (m.type === "nights") { onNights(m); return; }
     if (m.type === "hello") {          // the latest chat and his replies, merged by time (hh:mm); what is playing
       if ("music" in m) { musicNow = m.music ? {...m.music, card:musicNow && m.music && musicNow.id === m.music.id ? musicNow.card : null} : null; renderMusic(); }
       talk = [...(m.chat || []).map(c => ({his:false, t:c.t || "", text:String(c.text || "")})),
               ...(m.replies || []).map(r => ({his:true, t:r.t || "", text:String(r.text || ""), re:r.replying_to || "", tag:r.tag || REPLY_TAG}))]
         .filter(x => x.text).map((x, i) => [x, i]).sort((a, b) => a[0].t < b[0].t ? -1 : a[0].t > b[0].t ? 1 : a[1] - b[1]).map(a => a[0]).slice(-40);
-      typing = null; chatDirty = true; renderFeed(); return;
+      typing = null; chatDirty = true; renderFeed();
+      if (m.audience) onAudienceHello(m.audience);
+      return;
     }
     if (m.type === "chat") { if (m.text) { addTalk({his:false, t:m.t || "", text:String(m.text)}); chatDirty = true; renderFeed(); } return; }
     if (m.type === "chat_reply") { hearReply(m, true); renderFeed(); return; }
@@ -3134,10 +3619,12 @@ function connect(){
       return;
     }
     if (m.type === "taught") { if (performance.now() - taughtAt > 2000) loadTaught(); return; }
+    if (m.type === "vote" || m.type === "vote_ack" || m.type === "vote_result" || m.type === "vote_applied") { onVote(m); return; }
+    if (m.type === "react_ack") { rxSlow(); return; }
+    if (m.type === "glance") { GLANCE.trigger(!(lastLife && /^lying/.test(lastLife.pose || ""))); return; }
+    if (m.type === "tick" && m.aud) onAudience(m);
     if (m.type !== "tick" || !m.life) return;
     if ((m.events || []).some(ev => ev.type === "replay" && ev.source === "taught")) loadTaught();   // a new count
-    for (const t of m.trades || []) { trades.push({t:Date.now() / 1000, kind:t.kind, usd:t.usd}); chartDirty = true; }
-    if (trades.length > 500) trades = trades.filter(t => Date.now() / 1000 - t.t < 300);
     tickMsg = m; scheduleUI();
   };
 }
@@ -3146,6 +3633,9 @@ function scheduleUI(){               // at most every UI_MS, and not while the t
   uiTimer = setTimeout(() => { uiTimer = 0; uiAt = performance.now(); applyTick(tickMsg); }, Math.max(0, uiAt + UI_MS - performance.now()));
 }
 document.addEventListener("visibilitychange", scheduleUI);
+// back to the tab, or the network back: do not wait out the backoff
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !(sock && sock.readyState <= 1)) { retry = 0; connect(); } });
+addEventListener("online", () => { if (!(sock && sock.readyState <= 1)) { retry = 0; connect(); } });
 // the caption: what he is doing. At the desk it says "at the computer" once he sits there in the room; while he still walks
 // over, pulls the chair out and sits down it says he is going to the desk (the server's walk ends seconds before his)
 let seatedWas = null;
@@ -3155,19 +3645,53 @@ function storyCheck(){                                // after each step of his 
   if (seatedNow !== seatedWas) { seatedWas = seatedNow; if (lastLife) story(lastLife, outsideOf(lastLife)); }
 }
 const outsideOf = life => !!life.geo || ["counter","bakery_in","bench","park_gate","bakery_door"].includes(life.place);
-function story(life, outside){
+// the caption is his activity in a verb (reading, watching, on his phone), with the page's title when there is one (else
+// its host): never "at the computer: ." and never the page's machinery (a restart is not his story); while the browser brings
+// the next page up it says so in-world, and keeps the article he is reading in view (R1)
+const LOADING = "the next page is loading…";
+function storyText(life, outside, seated){
   const r = life.reading, sc = life.screen, short = t => t && t.length > 70 ? t.slice(0, 68) + "…" : t;
-  const desk = sc && sc.device !== "phone", going = desk && visible && !seatedAtDesk();
-  put("story", "innerHTML", sc && sc.restarting && !life.path ? (going ? "is going to the desk (browser restarting)." : `is ${sc.device === "phone" ? "on his phone" : "at the computer"} (browser restarting).`)
-    : sc && !life.path ? (going ? `is going to the desk: <em>${esc(short(sc.title))}</em>.` : `is ${sc.device === "phone" ? "on his phone" : "at the computer"}: <em>${esc(short(sc.title))}</em>.`)
-    : outside && life.walking ? `is <em>walking</em> · next: ${esc(life.doing)}.`   // a walk home takes minutes: don't say he's already there
-    : r ? `is reading <em>${esc(r.title)}</em>.` : `is <em>${esc(life.doing)}</em>.`);
+  const phone = sc && sc.device === "phone", going = sc && !phone && !seated, act = life.activity;
+  const what = sc && !sc.restarting ? esc(short(sc.title || sc.host || "")) : "";
+  if (sc && !life.path && sc.restarting) return r && !phone ? `is reading <em>${esc(r.title)}</em> · ${LOADING}`
+    : `is ${going ? "going to the desk" : phone ? "on his phone" : "at the computer"} · ${LOADING}`;
+  if (sc && !life.path) {
+    if (going) return what ? `is going to the desk: <em>${what}</em>.` : "is going to the desk.";
+    if (phone) return what ? `is on his phone: <em>${what}</em>.` : "is on his phone.";
+    if (act === "watch_video") return what ? `is watching <em>${what}</em>, muted.` : "is watching a video at the computer, muted.";
+    if (act === "research") return what ? `is reading <em>${what}</em>.` : r ? `is reading <em>${esc(r.title)}</em>.` : "is reading at the computer.";
+    return what ? `is at the computer: <em>${what}</em>.` : "is at the computer.";
+  }
+  if (outside && life.walking) return `is <em>walking</em> · next: ${esc(life.doing)}.`;   // a walk home takes minutes: don't say he's already there
+  return r ? `is reading <em>${esc(r.title)}</em>.` : `is <em>${esc(life.doing)}</em>.`;
+}
+function story(life, outside){ put("story", "innerHTML", storyText(life, outside, !(visible && !seatedAtDesk()))); }
+// ---------- the night (R3): while he sleeps the room is not dead air: the eye's newest frame, and the night so far ----------
+let eyeFrame = null, nights = null, stageWas = null;
+function onEye(f){ if (f && f.img) { eyeFrame = f; dreamCard(); } }
+function onNights(m){ nights = m; nightLine(); }
+function dreamCard(){                                   // the dream frame shows only while he is asleep; by day /world has it
+  const f = eyeFrame, on = !!(f && stage !== "AWAKE");
+  put("dream", "hidden", !on); if (!on) return;
+  if ($("dream-img").getAttribute("src") !== f.img) $("dream-img").src = f.img;
+  put("dream-t", "innerHTML", `<b>${f.stage === "REM" ? "dreaming" : "deep sleep"}</b>${f.thought ? ` · “${esc(String(f.thought).slice(0, 90))}”` : " · the eye's image of the model's state"}`);
+}
+function nightLine(){                                   // under the story while he sleeps: when he fell asleep, how often woken, what came back
+  const n = nights && nights.tonight, on = !!(n && stage !== "AWAKE");   // (tonight's record only: last night's onset is not "asleep since")
+  put("night", "hidden", !on); if (!on) return;
+  const tm = s => s ? String(s).slice(11, 16) : "";
+  const reps = n.replays || [], nr = n.n_replays, last = reps[reps.length - 1];
+  const bits = [n.sleep_onset ? `asleep since ${tm(n.sleep_onset)}` : "falling asleep",
+    (n.wakeups || []).length ? `woken ${n.wakeups.length}×` : "", nr ? `${nr.chat + nr.reading + nr.taught} replay${nr.chat + nr.reading + nr.taught === 1 ? "" : "s"} so far` : "",
+    last ? `last: ${{reading: "read ", taught: "taught "}[last.source] || ""}“${esc(String(last.text || "").slice(0, 60))}”` : ""].filter(Boolean);
+  put("night", "innerHTML", bits.join(" · "));
 }
 function applyTick(m){
     const life = m.life, sl = m.sleep || {};
     lastLife = life; stage = sl.stage || "AWAKE";
+    if (stage !== stageWas) { const asleep = stage !== "AWAKE"; stageWas = stage; dreamCard();          // (a stage change: the dream frame, the vote note)
+      if (asleep && vote) voteNote("he is asleep · the winning option reaches his activity model when he wakes"); }
     const hm = /(\d+):(\d+)/.exec(sl.clock || ""); if (hm && !FIXED_HOUR) hour = +hm[1] + hm[2] / 60;
-    trades = trades.filter(t => Date.now() / 1000 - t.t < 300);
     put("chip", "textContent", sl.stage === "AWAKE" ? "AWAKE" : sl.stage === "REM" ? "REM" : "ASLEEP");
     put("chip", "background", sl.stage === "AWAKE" ? "#ff9a3c" : sl.stage === "REM" ? "#c26bff" : "#4d7cff");
     put("clock", "textContent", `${sl.clock || ""} Tokyo`);
@@ -3176,8 +3700,9 @@ function applyTick(m){
     const r = life.reading, sc = life.screen;
     const short = t => t && t.length > 70 ? t.slice(0, 68) + "…" : t;
     story(life, outside);
+    nightLine();
     put("why", "textContent", life.say || "");
-    if (r && !sc) { put("readcard", "hidden", false); put("r-title", "textContent", r.title); put("r-text", "textContent", r.extract);
+    if (r && (!sc || sc.restarting)) { put("readcard", "hidden", false); put("r-title", "textContent", r.title); put("r-text", "textContent", r.extract);   // (the article stays in view while the browser brings a page up)
       put("r-link", "href", r.url || "#"); put("r-why", "textContent", r.why || "");
       const kw = r.keywords || [], nets = (r.networks || []).map(n => NET[n] || n);
       put("r-kw", "innerHTML", kw.length ? `keywords <b>${esc(kw.join(", "))}</b>${nets.length ? ` → stimulus to ${esc(nets.join(", "))}${r.gain != null && r.gain < 0.99 ? ` (${Math.round(r.gain * 100)}% gets through)` : ""}` : ""}` : "");
@@ -3219,33 +3744,46 @@ $("chat").addEventListener("submit", ev => {
 
 // ---------- loop ----------
 const clock = new THREE.Clock();
-// adaptive resolution: lower the pixel ratio while frames are slow, raise it again after a while of fast frames
-let frameAt = 0, winN = 0, winSum = 0, winMax = 0, goodFor = 0, dprFail = 1e9;
+// adaptive resolution: lower the pixel ratio while frames are slow, raise it again after a while of fast frames.
+// Only drawn frames are measured (see frame()), so a healthy page shows ~FRAME_MS between them and "slow" is a
+// frame that missed the display's tick after the cap (at 60 Hz: 50 ms instead of 33)
+let frameAt = 0, winN = 0, winSum = 0, winMax = 0, goodFor = 0, dprFail = 1e9, slowFor = 0;
 function adapt(now){
   const ms = now - frameAt; frameAt = now;
   if (!room || !boy || ms > 1000) { winN = winSum = winMax = 0; return; }   // loading, or back from a hidden tab
   winN++; winSum += ms; winMax = Math.max(winMax, ms);
   if (winSum < 1000 || winN < 3) return;
   const avg = (winSum - winMax) / (winN - 1); winN = winSum = winMax = 0;    // one hitch (a shader compile) is not "slow"
-  if (avg > 26 && dpr > DPR_MIN) {                                    // under ~38 fps for a second
+  if (avg > FRAME_MS + 9 && dpr > DPR_MIN) {                          // under ~24 fps for a second (most frames missed a tick)
     dprFail = Math.min(dprFail, dpr); setDpr(Math.max(DPR_MIN, dpr - 0.25)); goodFor = 0;
-  } else if (avg < 20 && dpr < DPR_MAX) {
+  } else if (avg > 50 && !navigator.webdriver && ++slowFor >= 3) {    // still under 20 fps at the lowest: lighten the room
+    slowFor = 0; brainOff(); if (renderer.shadowMap.enabled) { renderer.shadowMap.enabled = false; scene.traverse(o => { if (o.material) for (const m of [].concat(o.material)) m.needsUpdate = true; }); }
+  } else if (avg < FRAME_MS + 3 && dpr < DPR_MAX) {                   // holding the cap
     if (++goodFor >= (dpr + 0.25 >= dprFail ? 60 : 5)) { setDpr(Math.min(DPR_MAX, dpr + 0.25)); goodFor = 0; }   // retry a failed level after 1 min
   } else goodFor = 0;
 }
 function setDpr(v){ dpr = v; renderer.setPixelRatio(dpr); resize(); }
-// shadow maps: only the boy (and the phone) cast shadows, so redraw them ~30x a second while he is in the room
-// (every frame while he walks), once when he leaves, and the lamp's only while it is lit
+// shadow maps: only the boy (and the phone) move, so redraw them ~10x a second while he is in the room
+// (every drawn frame while he walks), once when he leaves, and the lamp's only while it is lit
 let shadowAt = 0, boyIn = null;
 function shadows(now, moving){
   const inRoom = !!(boy && boy.visible);
-  if (inRoom !== boyIn || (inRoom && (moving || now - shadowAt > 30))) {
+  if (inRoom !== boyIn || (inRoom && (moving || now - shadowAt > 100))) {   // seated: 10x a second (every drawn frame cost ~24 ms of JS pushing 137 casters)
     sun.shadow.needsUpdate = true; if (lamp.intensity > 0.01) lamp.shadow.needsUpdate = true; shadowAt = now; boyIn = inRoom;
   }
 }
+let drawnAt = -1e9, booting = null;
 function frame(now){
-  requestAnimationFrame(frame);
-  const late = clock.getDelta();                                  // (read every frame: a frozen page's time is not caught up)
+  requestAnimationFrame(frame);                                   // (still every display tick: a hidden tab pauses as before)
+  // booting (he is not in the scene yet): at most 5 frames a second and the lowest resolution, so the character's decode
+  // gets the main thread (full frames of the empty room starved it: he was in at 67 s against ~9 s of network, measured);
+  // his first frame restores the cap and the resolution, and adapt() takes it from there. The boot bar is the loader's
+  if (!boy !== booting) { booting = !boy; if (dpr !== (booting ? DPR_MIN : DPR_MAX)) setDpr(booting ? DPR_MIN : DPR_MAX); }
+  // at most 30 frames a second: a 60/120 Hz display skips every other/three ticks; a skipped tick does not read the
+  // clock, so its time goes to the next drawn frame and he moves at real speed (a Mac drew 60 fps and overheated)
+  if (now - drawnAt < (booting ? 200 : FRAME_MS) - 2) return;
+  drawn += Math.min(1000, now - drawnAt); drawnAt = now;           // (the drawn frames' clock: the socket's watchdog runs on it)
+  const late = clock.getDelta();                                  // (read on every drawn tick: a frozen page's time is not caught up)
   if (document.hidden || (DEBUG && window.FREEZE)) return;       // ?debug: FREEZE and step the simulation with sim()
   adapt(now);
   // his time follows the clock, not the frame rate: a late frame is caught up in steps of at most 0.1 s (a slow device
@@ -3264,10 +3802,10 @@ function frame(now){
     camera.position.lerp(camGoal.pos, k); controls.target.lerp(camGoal.target, k);
   }
   shadows(now, moving);
-  controls.update(); keepClear(); renderer.render(scene, camera);
+  controls.update(); keepClear(); GCAM.apply(real, follow && performance.now() - userMovedAt > 20000, camera, controls, boy, bones); renderer.render(scene, camera); GCAM.restore(camera, controls);
 }
 requestAnimationFrame(frame);
-const CATCH = {max: 30, back: null};
+const CATCH = {max: navigator.webdriver ? 30 : 2, back: null};   // (headless checks only: see frame())
 document.addEventListener("visibilitychange", () => { if (!document.hidden) CATCH.back = 8; });
 function animate(dt){                                // one step of him: clips, his plan, seats, life, the phone, the head
   untouch(); if (mixer) mixer.update(dt); T += dt;
@@ -3278,12 +3816,13 @@ function animate(dt){                                // one step of him: clips, 
   const out = (phoneWanted || peek) && boy.visible && !!hand;                   // the arm comes up to the phone, and goes down
   holdW = out ? Math.min(1, holdW + dt / 0.7) : Math.max(0, holdW - dt / 0.5);
   phone.visible = holdW > 0.25 && boy.visible && !!hand;
+  propHand(!phone.userData.byClip);
   if (holdW > 0) holdPhone(holdW);
   aliveHead(); inBed(dt);
   return moving;
 }
 if (DEBUG) { Object.assign(window, {THREE, scene, camera, controls, renderer, clock, CATCH, SURF, ANCHOR, phone, buildSurfaces, camGoal, updateCameraGoal, fitTop, screenTexture,
-  setHour: h => { hour = h; }, windowView, setWeather: k => windowView.setWeather(k), setDoor, setMusic: m => { musicNow = m; renderMusic(); }, setScreen: s => { screenOn = s; }, setStage: s => { stage = s; }, applyTick, drawChart, drawFood, drawReading,
+  setHour: h => { hour = h; }, windowView, setWeather: k => windowView.setWeather(k), setDoor, setMusic: m => { musicNow = m; renderMusic(); }, setScreen: s => { screenOn = s; }, setStage: s => { stage = s; }, applyTick, drawFood, drawReading, loadingTex, onEye, onNights,
   place, screens, play, snap, actions, hearReply, renderFeed, renderPlan, setPlan: (p, rest) => { mindPlan = p; mindResting = !!rest; renderPlan(); },
   addTalk: x => { addTalk(x); chatDirty = true; renderFeed(); }, bones, GRIP, thigh: (a, d) => { G_THIGH = a; if (d != null) G_DESK = d; }, settle: () => { for (let i = 0; i < 80; i++) lighting(0.1); },
   sim: (dt, n = 1) => { for (let i = 0; i < n; i++) animate(dt); lighting(0.1); controls.update(); sun.shadow.needsUpdate = true; renderer.render(scene, camera); }, animate_: animate,
@@ -3336,7 +3875,7 @@ if (DEBUG) { Object.assign(window, {THREE, scene, camera, controls, renderer, cl
   live: (a, x = {}) => { const l = {activity:a, place:"room", ...x}; lastLife = l; place(l); screens(l, "AWAKE"); },
   act: (a, x = {}) => { untouch(); if (step && step.k === "act") endAct(step); if (bag === "hand") endAct({name:"put"}); if (chairNode()) placeChair(0); const l = {activity:a, place:"room", ...x}; lastLife = l; at = null; goal = null; place(l); screens(l, "AWAKE"); placed = true; snap(goal.anchor, goal.clip); holdW = phoneWanted ? 1 : 0; mixer.update(1); },
   setLife: x => { lastLife = {...lastLife, ...x}; }, gz: () => ({p:GZ.p.toArray().map(v => +v.toFixed(2)), w:+GZ.w.toFixed(2), why:GZ.why, iv:IV.cur && IV.cur.n, ctx:ctxNow, bag, eat:EAT.kind, trash:trash && (trash.held ? "held" : "desk"), tpos:trash && trash.g.position.toArray().map(v => +v.toFixed(2))}),
-  setSeed: v => { seed = v; }, __keepClear: () => keepClear(), dbg: () => ({lean, T, clr:clearance(), TL:TL.toArray(), TU:TU.toArray(), TF:TF.toArray()}), armTo, torso, reach, bend, TL, shiftHips, variant: (n, d = 4) => { IV.cur = {n, d, t:0, side:"Left", s:0.3}; IV.last = n; }, setDoor,
+  setSeed: v => { seed = v; }, __keepClear: () => keepClear(), __keepClearStats: KC, dbg: () => ({lean, T, clr:clearance(), TL:TL.toArray(), TU:TU.toArray(), TF:TF.toArray()}), armTo, torso, reach, bend, TL, shiftHips, variant: (n, d = 4) => { IV.cur = {n, d, t:0, side:"Left", s:0.3}; IV.last = n; }, setDoor,
   pose: () => ({at, step:step && {k:step.k, t:step.t && +step.t.toFixed(2), to:step.to}, plan:plan.map(p => p.k + (p.to ? ":" + p.to : "")), goal, clip:current && current.getClip().name,
     root:boy.position.toArray().map(x => +x.toFixed(3)), ry:+boy.rotation.y.toFixed(2)}) });
   Object.defineProperties(window, {room:{get:() => room}, boy:{get:() => boy}, current:{get:() => current}, want:{get:() => want}, hand:{get:() => hand}, head:{get:() => head},
@@ -3354,7 +3893,7 @@ if (DEBUG) { Object.assign(window, {THREE, scene, camera, controls, renderer, cl
     ...(V5 ? {clipDir: "room/mh_v5", fixClip: c => V5.m.fixClip(THREE, c, V5.conv), pageHips: h => V5.m.legacyHips(THREE, h, V5.conv), seatUp: 0, seatIn: 0.06, noHair: true} : {}),   // (v5: its clips, the live chair, its own hair)
     ...(V5 && V5.mx ? {clipDir: "room/mh_mx", ...V5.m.ROOM} : {}),   // (?char=mixamo: its clips, which clip plays which slot, the clips' keyboard and mouse)
     ...(DESK_EV ? {anim: "sova", deskEvents: () => DESK_EV.splice(0)} : {}),   // (&anim=sova: the desk states and what they react to)
-    movesDone: () => !MOVES || movesOn, setCurrent: a => { current = a; },
+    movesDone: () => !MOVES || movesOn, setCurrent: a => { current = a; }, phone: () => phone, propHand,
     resnap: () => { if (placed && goal) snap(goal.anchor, goal.clip); },
     state: () => ({at, step, goal, current, want, T, life:lastLife}),
     chairChanged: () => { VOX = null; },                // (the chair's shape changed: its collision voxels anew)
@@ -3396,8 +3935,11 @@ if (DEBUG) { Object.assign(window, {THREE, scene, camera, controls, renderer, cl
     movesDone: () => !MOVES || movesOn,            // #76's clips go in first (same slots); these take over after them
     HIPS0: JSON.parse(JSON.stringify(HIPS)), stride0: STRIDE_V,   // the table and stride before any clip swap (?motion=old)
     setStride: v => { STRIDE_V = v; }}); if (DEBUG) window.motion = motion; }).catch(e => console.warn("motion layer off:", e));
-  animate = dt => { if (pickRig() === "mh") return mh ? mh.animate(dt) : mhEnv().step0(dt);   // (the old rig's layers stay off)
-    const moving = animate0(dt); if (motion) motion.update(dt); return moving; };
+  animate = dt => { let moving;
+    if (pickRig() === "mh") moving = mh ? mh.animate(dt) : mhEnv().step0(dt);   // (the old rig's layers stay off)
+    else { moving = animate0(dt); if (motion) motion.update(dt); }
+    GLANCE.apply(dt, boy, bones, camera);              // (preview/interactive: a glance at the camera when reactions spike)
+    return moving; };
   if (DEBUG) window.animate_ = animate;                // the debug step (tests/visual) runs the layer too
 }
 // ===== end #98 G3 =====

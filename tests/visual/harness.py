@@ -196,7 +196,10 @@ class Harness:
         if S.makehuman_rig():
             clip = S.MH_CLIP.get(name, clip)
         ok_at = at is None or pose.get("at") == at
-        ok_clip = clip is None or clip in (pose.get("clip") or "")
+        got = pose.get("clip") or ""
+        # (the bed layer, room/boy_mh.js bedStep: with the mixamo character's Sova clips the bed plays its own takes over the
+        # lie and sleep clips - bed_sleep_side, bed_bed_phone_watch_portrait, ...)
+        ok_clip = clip is None or clip in got or (clip in ("mh_sleep", "mh_lie") and got.startswith("bed_"))
         if name == "walking":
             ok_at = bool(pose.get("step")) and pose["step"]["k"] == "walk"
         if not (ok_at and ok_clip):
@@ -309,7 +312,7 @@ class Harness:
         # the room's own embed: what URL it loads (#116: /brain?mini, without neurons=1)
         with urllib.request.urlopen(self.base + "/room.html", timeout=30) as resp:
             room_html = resp.read().decode("utf-8", "replace")
-        m = re.search(r'<a id="brainpip"[^>]*>\s*<iframe[^>]*\ssrc="([^"]*)"', room_html)
+        m = re.search(r'<a id="brainpip"[^>]*>\s*<iframe[^>]*\s(?:data-)?src="([^"]*)"', room_html)
         embed_src = m.group(1) if m else None
         pg.goto(self.base + PIP_URL, wait_until="load")
         try:

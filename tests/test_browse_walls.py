@@ -133,9 +133,8 @@ def test_an_anime_page_with_in_game_words_is_not_finance():
     body = ("Trading cards and tokens in the gacha game. Fans trade shares of screenshots. "
             "The anime adaptation airs in spring.")
     assert not browse.is_finance("https://myanimelist.net/anime/52991/Sousou_no_Frieren", "Sousou no Frieren", body)
-    info = browse.finance_note({"why": "w"}, "https://myanimelist.net/anime/52991/x", "Sousou no Frieren", body)
-    assert "finance" not in info
-    st = dict(info, url="https://myanimelist.net/anime/52991/x", title="Sousou no Frieren", kind="page")
+    assert browse.url_ok("https://myanimelist.net/anime/52991/x")                 # S2: not a trading host either
+    st = {"why": "w", "url": "https://myanimelist.net/anime/52991/x", "title": "Sousou no Frieren", "kind": "page"}
     assert readings.kind_of(st) == "page" and SC.screen_kind(st) == "other"
     assert browse.is_finance("https://example.org/a", "Bitcoin and Solana prices", "crypto trading and memecoins")
 

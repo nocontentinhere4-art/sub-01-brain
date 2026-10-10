@@ -17,7 +17,7 @@ sys.path.insert(0, str(HERE.parents[1]))
 from tests.visual import harness as H          # noqa: E402
 from tests.visual.fake_server import Server    # noqa: E402
 
-TIP = """() => { const g = n => { const b = boy.getObjectByName(n); return b ? b.getWorldPosition(new THREE.Vector3()).toArray() : null; };
+TIP = """() => { const g = n => { const b = boy.getObjectByName(n) || boy.getObjectByName(n.slice(0, -1) + '.' + n.slice(-1)); return b ? b.getWorldPosition(new THREE.Vector3()).toArray() : null; };   // (v5: finger2-3L; mixamo: finger2-3.L)
   return {L: g('finger2-3L'), R: g('finger2-3R'), E: bones.RightForeArm.getWorldPosition(new THREE.Vector3()).toArray()}; }"""
 LEFT_MM, RIGHT_MM, ELBOW_MM = 30, 40, 50     # (the right hand travels ~32 cm from the keys to the mouse in 0.8 s, peaking ~25 mm a frame)
 

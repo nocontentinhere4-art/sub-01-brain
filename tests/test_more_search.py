@@ -54,9 +54,11 @@ class Clock:
     ("openlibrary.json", S.parse_openlibrary, "", 8, "https://openlibrary.org/works/OL151798W", "Goodnight Moon"),
     ("youtube.html", S.parse_youtube, "", 8, "https://www.youtube.com/watch?v=_8rsTkOsI2M",
      "Beginner Guide to Making Ramen Noodles from Scratch"),
-    ("recipes.html", S.parse_headlines, "https://www.recipetineats.com/?s=melon+pan", 9,
+    # B3: a site's own results count only when the headline or its excerpt has a word of the query (the apple tart
+    # and the pavlovas the recipe site returned for "melon pan" are not results)
+    ("recipes.html", S.parse_headlines, "https://www.recipetineats.com/?s=melon+pan", 1,
      "https://www.recipetineats.com/watermelon-salad/", "Watermelon Salad"),
-    ("news.html", S.parse_headlines, "https://www.sciencenews.org/?s=sleep+spindles", 10,
+    ("news.html", S.parse_headlines, "https://www.sciencenews.org/?s=sleep+spindles", 7,
      "https://www.sciencenews.org/article/nap-science-sleep-health",
      "To nap or not to nap? Science is still waking up to the question"),
 ])

@@ -12,9 +12,10 @@ BrowseReadings follows the screen statuses the browser sends:
   stay, real text), and an unused candidate goes stale after STALE_S;
 - the kind of source (video, short, forum, news, finance, wiki, page) and its host go with the reading, so the
   pages can say "watched a Short on youtube.com" instead of "read";
-- safety: the title must pass browse.display_ok (the strict filter for his own words and the cards); a finance
-  page gives only its topic word ("memecoins", "stocks": no ticker, price or advice); a logged-in page keeps only
-  its public title (no excerpt); the excerpt keeps only sentences that pass display_ok.
+- safety: the title must pass browse.display_ok (the strict filter for his own words and the cards); a finance /
+  trading page is never a reading (S2: the browser refuses such pages; a status still flagged `finance` gives
+  None here too, so nothing of it reaches the memory, the replay or the diary); a logged-in page keeps only its
+  public title (no excerpt); the excerpt keeps only sentences that pass display_ok.
 Pure: no network, no AI, nothing paid.
 """
 import re
@@ -32,9 +33,8 @@ KEEP = 60
 
 KIND_LABEL = {"video": "watched a video on {host}", "short": "watched a short on {host}",
               "forum": "read a thread on {host}", "news": "read the news on {host}", "wiki": "read about it on {host}",
-              "finance": "looked at {topic} pages on {host} (just browsing)", "page": "read a page on {host}"}
-VERB = {"video": "watched", "short": "watched", "forum": "read", "news": "read", "wiki": "read", "finance": "looked at",
-        "page": "read"}
+              "page": "read a page on {host}"}
+VERB = {"video": "watched", "short": "watched", "forum": "read", "news": "read", "wiki": "read", "page": "read"}
 
 FORUM = re.compile(r"(^|\.)(reddit\.com|news\.ycombinator\.com|stackexchange\.com|stackoverflow\.com|lobste\.rs|"
                    r"metafilter\.com|discourse\.|forum\.)|/comments/|/thread|/t/|/item\?id=", re.I)
@@ -66,18 +66,6 @@ def kind_of(status):
     if NEWS.search(host) or "/news/" in url:
         return "news"
     return "page"
-
-
-def finance_word(title, text=""):
-    """A finance page's memory item: its topic word only."""
-    t = f"{title} {text}".lower()
-    if re.search(r"memecoin|meme coin|pump\.fun|solana token", t):
-        return "memecoins"
-    if re.search(r"stock|nikkei|nasdaq|dow jones|s&p|shares|topix|earnings", t):
-        return "stocks"
-    if re.search(r"yen|forex|exchange rate|dollar", t):
-        return "exchange rates"
-    return "crypto"
 
 
 def excerpt(text, ok, n=EXCERPT):
@@ -165,34 +153,30 @@ class BrowseReadings:
     def reading(self, st, kind, dwell, t):
         """A page -> a reading like research.py's ({title, extract, url, keywords, why}) plus host, kind, via,
         topic; None when nothing of it may be stored."""
+        if kind == "finance" or st.get("finance"):          # S2: never a reading (nothing of it is stored)
+            return None
         url = str(st.get("url") or "")
         host = (urllib.parse.urlsplit(url).hostname or "").removeprefix("www.")
         title = " ".join(str(st.get("title") or "").split())[:140]
         text = self.texts.get(url, "")
         logged_in = bool(st.get("site") or st.get("logged_in"))
         topic = None
-        if kind == "finance":                               # only the topic word: no ticker, price or advice
-            topic = finance_word(title, text)
-            title, extract, kws = topic, "", [topic]
-        else:
-            if not title or not self.ok(title) or title in self.recent:
-                return None
-            if kind in ("video", "short"):
-                ch = str(st.get("channel") or "")
-                extract = f"a {'short' if kind == 'short' else 'video'}" + (f" by {ch}" if ch and self.ok(ch) else "")
-            else:
-                extract = "" if logged_in else excerpt(text, self.ok)
-            kws = keywords(title, extract)
-        if kind == "finance" and title in self.recent[-3:]:
+        if not title or not self.ok(title) or title in self.recent:
             return None
+        if kind in ("video", "short"):
+            ch = str(st.get("channel") or "")
+            extract = f"a {'short' if kind == 'short' else 'video'}" + (f" by {ch}" if ch and self.ok(ch) else "")
+        else:
+            extract = "" if logged_in else excerpt(text, self.ok)
+        kws = keywords(title, extract)
         try:
             import interests
-            topic = topic or interests.topic_of(f"{title} {extract}", host)
+            topic = interests.topic_of(f"{title} {extract}", host)
         except Exception:
             pass
         score = min(dwell, 600) / 60 + (1.0 if len(extract) > 100 else 0.0) + (0.5 if kind != "page" else 0.0)
-        why = KIND_LABEL[kind].format(host=host or "the web", topic=topic or "finance")
-        return {"title": title, "extract": extract, "url": "" if kind == "finance" else url, "host": host,
+        why = KIND_LABEL[kind].format(host=host or "the web")
+        return {"title": title, "extract": extract, "url": url, "host": host,
                 "kind": kind, "via": "browser", "topic": topic, "keywords": kws, "why": why, "t": t,
                 "dwell_s": round(dwell), "score": score}
 

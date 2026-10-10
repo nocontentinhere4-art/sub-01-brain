@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SUB-01 · life</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<title>SUB-01 · map</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root { --bg:#050507; --fg:#ececf2; --dim:#80808f; --or:#ff6a00; }
   * { box-sizing:border-box; }
@@ -73,7 +73,7 @@
 <div id="wrap">
   <div id="scene">
     <div id="hud">
-      <h1>SUB-01</h1><span id="nav"><a class="on" href="/">LIFE</a><a href="/brain">BRAIN</a><a href="/world.html">DREAMS</a></span>
+      <h1>SUB-01</h1><span id="nav"><a href="/">room</a><a href="/brain">brain</a><a href="/diary">diary</a><a href="/world.html">sees</a><a class="on" href="/life.html">map</a><a href="https://city.subzerone.live/" target="_blank" rel="noopener">city</a></span>
       <div id="doing">connecting…</div>
       <div id="meta"></div>
       <div id="thought"></div>
@@ -180,7 +180,7 @@ function buildWorld(W){
   // desk against the back wall: the screen faces the room (and the camera), SUB-01 sits with its back to us
   const dp = W.places.desk; box(1.5, 0.07, 0.7, 0x2e2e33, dp[0], 0.76, dp[1]-0.65); box(0.05, 0.75, 0.6, 0x222226, dp[0]-0.7, 0.38, dp[1]-0.65); box(0.05, 0.75, 0.6, 0x222226, dp[0]+0.7, 0.38, dp[1]-0.65);
   box(1.08, 0.66, 0.04, 0x111114, dp[0], 1.2, dp[1]-0.93);
-  monitor = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.6), new THREE.MeshBasicMaterial({map: chartTex}));
+  monitor = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.6), new THREE.MeshBasicMaterial({map: deskTex}));
   monitor.position.set(dp[0], 1.2, dp[1]-0.9); scene.add(monitor);
   box(0.5, 0.06, 0.5, 0x333338, dp[0], 0.46, dp[1]); // stool
   const lamp = new THREE.PointLight(0xffd6a0, 0, 9); lamp.position.set(4, 2.5, 3); scene.add(lamp); roomLamp = lamp;
@@ -234,21 +234,11 @@ phoneScreen.position.z = 0.009; phoneMesh.add(phoneScreen); phoneMesh.visible = 
 const loafHand = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), M(0xc98b43)); loafHand.scale.set(1.8, 0.8, 1); loafHand.visible = false; body.add(loafHand);
 const zzz = label("z z z", "rgba(0,0,0,0)", "#bcd0ff", 0.8, 0.25); zzz.visible = false; scene.add(zzz);
 
-// ---------------- chart / phone canvases (its real inputs: live trades + chat) ----------------
-const chartCv = document.createElement("canvas"); chartCv.width = 512; chartCv.height = 300;
-const chartTex = new THREE.CanvasTexture(chartCv);
-const flow = []; let flowSum = 0; const chatLines = [];
-function drawChart(cv, tall){
-  const x = cv.getContext("2d"), W = cv.width, H = cv.height;
-  x.fillStyle = "#07080c"; x.fillRect(0, 0, W, H);
-  x.fillStyle = "#ff6a00"; x.fillRect(0, 0, W, tall ? 44 : 30); x.fillStyle = "#0a0a0a"; x.font = `bold ${tall?24:18}px Menlo, monospace`;
-  x.fillText(`${poolName} · order flow`, 10, tall ? 30 : 21);
-  if (flow.length > 1) { const lo = Math.min(...flow), hi = Math.max(...flow), top = tall ? 70 : 44;
-    const n = flow.length, cw = W / Math.max(40, n);
-    for (let i = 1; i < n; i++) { const up = flow[i] >= flow[i-1], y0 = top + (H-top-20) * (1 - (flow[i-1]-lo)/(hi-lo||1)), y1 = top + (H-top-20) * (1 - (flow[i]-lo)/(hi-lo||1));
-      x.fillStyle = up ? "#39f5a0" : "#ff4d6d"; x.fillRect(i*cw, Math.min(y0,y1), Math.max(2, cw-2), Math.max(2, Math.abs(y1-y0))); } }
-  chartTex.needsUpdate = true;
-}
+// ---------------- the desk monitor: the chat window (its real input). No chart: the coin's trades are a stimulus inside
+// the model only and are never drawn on a screen ----------------
+const deskCv = document.createElement("canvas"); deskCv.width = 512; deskCv.height = 300;
+const deskTex = new THREE.CanvasTexture(deskCv);
+const chatLines = [];
 function drawChat(cv){
   const x = cv.getContext("2d"), W = cv.width, H = cv.height;
   x.fillStyle = "#0a0a10"; x.fillRect(0, 0, W, H); x.fillStyle = "#ff6a00"; x.fillRect(0, 0, W, 44);
@@ -258,13 +248,14 @@ function drawChat(cv){
     const words = m.text.split(" "); let line = ""; y += 26;
     for (const w of words) { if ((line + w).length > 26) { x.fillText(line, 12, y); y += 24; line = ""; } line += w + " "; }
     x.fillText(line, 12, y); y += 34; if (y > H - 20) break; }
+  if (cv === deskCv) deskTex.needsUpdate = true;
 }
 
 // ---------------- live state ----------------
 const phoneBroken = {}, embedFailed = {};             // screenshots that failed to load; embeds that never loaded
 document.getElementById("phoneimg").onerror = e => { phoneBroken[e.target.dataset.id] = true; document.getElementById("phone").style.display = "none"; };
 document.getElementById("phonefr").onload = e => { if (e.target.dataset.src) e.target.dataset.loaded = "1"; };
-let life = null, prev = null, poolName = "", stage = "AWAKE", clock = "--:--", lab = false, follow = true;
+let life = null, prev = null, stage = "AWAKE", clock = "--:--", lab = false, follow = true;
 // #89: what is really on his screens (the browser up or down, the last pages, today's share by kind)
 function renderScreens(d){
   const el = document.getElementById("screens"); if (!d) return;
@@ -284,7 +275,9 @@ function renderScreens(d){
   screenEmbed("scr-tt", tt && tt.embed.src, 340, tt ? `${tt.embed.label}: ${tt.title}` : "", esc);
 }
 // official embed players (Spotify, TikTok) under the screens block: replaced only when the source changes, no autoplay
+const EMBED_OK = /^https:\/\/(open\.spotify\.com\/embed\/|www\.tiktok\.com\/(embed|player)\/|www\.youtube-nocookie\.com\/embed\/)/;   // the official players only (R2)
 function screenEmbed(id, src, h, label, esc){
+  if (src && !EMBED_OK.test(src)) src = "";
   const el = document.getElementById(id); if (!el || (el.dataset.src || "") === (src || "")) return;
   el.dataset.src = src || "";
   el.innerHTML = src ? `<div>${esc(label)}</div><iframe src="${esc(src)}" title="${esc(label)}" style="width:100%;height:${+h || 80}px;border:0;border-radius:8px" allow="encrypted-media; fullscreen; picture-in-picture"></iframe>` : "";
@@ -307,8 +300,7 @@ function connect(){
     if (m.type === "chat_ack") { document.getElementById("ack").textContent = m.ok ? "sent — it heard you" : "not sent: " + m.reason; return; }
     if (m.type === "eye") { if (m.thought) document.getElementById("thought").textContent = `“${m.thought}”`; return; }
     if (m.type !== "tick") return;
-    poolName = m.pool || ""; stage = (m.sleep && m.sleep.stage) || "AWAKE"; clock = (m.sleep && m.sleep.clock) || clock;
-    for (const t of m.trades || []) { flowSum += (t.kind === "buy" ? 1 : -1) * Math.log10(1 + t.usd); flow.push(flowSum); if (flow.length > 90) flow.shift(); }
+    stage = (m.sleep && m.sleep.stage) || "AWAKE"; clock = (m.sleep && m.sleep.clock) || clock;
     if (m.life) onLife(m.life, m.sleep);
   };
   ws.onclose = () => setTimeout(connect, 1500);
@@ -320,7 +312,7 @@ let musicNow = null, musicEmbed = "";
 const SPOTIFY_EMBED = /^https:\/\/open\.spotify\.com\/embed\/track\/[A-Za-z0-9]{22}(\?[\w=&]*)?$/;
 function showMusic(m){
   musicNow = m; const $m = id => document.getElementById(id);
-  $m("music").hidden = !m; if (!m) return;
+  $m("music").hidden = !m; if (!m) { if (musicEmbed) { musicEmbed = ""; $m("mu-embed").removeAttribute("src"); } return; }   // (R2: a stopped track's player goes too)
   $m("mu-k").textContent = m.mode === "background" ? "in the background" : "headphones on";
   $m("mu-t").textContent = m.title; $m("mu-a").textContent = [m.artist, m.genre_label].filter(Boolean).join(" · ");
   const art = $m("mu-art"); art.hidden = !m.art; if (m.art && art.src !== m.art) art.src = m.art;
@@ -377,7 +369,8 @@ function updateWalk(geo, hourLocal){
   if (!want) { div.style.display = "none"; vid.removeAttribute("src"); document.getElementById("svlabel").style.display = "none"; return; }
   const [route, when] = want.split("@"), list = (walkFeed[when] || walkFeed.day)[route] || [];
   if (!list.length) return;
-  const clip = list[Math.floor(Math.random() * list.length)];
+  const pool = list.length > 1 ? list.filter(c => c !== updateWalk.last) : list;   // (R4: not the clip that just played, when there is another)
+  const clip = updateWalk.last = pool[Math.floor(Math.random() * pool.length)];
   vid.src = `https://www.youtube-nocookie.com/embed/${clip.id}?autoplay=1&mute=1&controls=0&start=${clip.start}&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
   vid.onload = () => {                                   // muted autoplay, nudged through the official IFrame API
     const cmd = f => vid.contentWindow.postMessage(JSON.stringify({event: "command", func: f, args: []}), "*");
@@ -503,7 +496,7 @@ function animate(t){
   nightLights.forEach(([mat, off, on]) => mat.emissive.setHex(night || lab ? on : off));
   streetLamps.forEach(l => l.intensity = night || lab ? 1.2 : 0);
   if (roomLamp) roomLamp.intensity = (night || lab) && stage === "AWAKE" ? 1.4 : 0;
-  if (monitor && Math.floor(time * 2) !== animate.k) { animate.k = Math.floor(time * 2); drawChart(chartCv, false); }
+  if (monitor && Math.floor(time * 2) !== animate.k) { animate.k = Math.floor(time * 2); drawChat(deskCv); }
   controls.update(); renderer.render(scene, camera);
 }
 requestAnimationFrame(animate);

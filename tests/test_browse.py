@@ -162,3 +162,17 @@ def test_bot_wall_page_is_left_not_shown():
                 await b.pw.stop()
 
     asyncio.run(run())
+
+
+def test_money_hype_never_on_screen():
+    """Live 2026-10-09: money-making and trading promotion videos reached the monitor (owner rules: no buy pressure,
+    no Fomo / trading on the monitor). Plain finance words and big numbers in other videos still pass."""
+    import browse
+    import eyes
+    for t in ("How to make millions on FOMO app... newbie tutorial!",
+              "#1 Prop Firm Scalper: The ICT Trader Who Made $2.5+ Million With A 40% Win Rate",
+              "Day Trading for beginners", "make money online fast", "crypto gems 100x"):
+        assert not browse.media_title_ok(t) and not browse.title_ok(t) and not eyes.query_ok(t), t
+    for t in ("How 1 Person Solved A $1,000,000 Puzzle!", "Stockholm Syndrome", "Pokemon trading cards",
+              "How to make magnetic slime at home"):
+        assert browse.media_title_ok(t), t

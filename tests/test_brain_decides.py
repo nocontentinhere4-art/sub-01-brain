@@ -520,7 +520,7 @@ def test_screen_card_shows_options_only_for_their_pages():
         live.browser.screens["desk"] = st
         assert ("decision" in Live.screen_status(live, "desk")) == shown
     live.browser.screens["desk"] = {"url": "u-c", "id": 9, "title": "$BONK to the moon", "host": "example.org"}
-    assert Live.screen_status(live, "desk")["title"] == "example.org"
+    assert Live.screen_status(live, "desk") == {"device": "desk", "restarting": True}   # S2: a refused title shows the placeholder
 
 
 def test_service_restores_the_log_only_once_and_gives_up_on_a_hung_page(monkeypatch):
@@ -549,7 +549,7 @@ def test_service_restores_the_log_only_once_and_gives_up_on_a_hung_page(monkeypa
             await c.init({"log": [{"title": "stale"}], "used": []})          # a running service keeps its log
             assert [x["title"] for x in fb.log] == ["old", "newer"] and fb.used == {"hi"}
             d = await c.step("desk")
-            assert d == {"status": None} and Hung.closed == 1                 # abandoned after the limit
+            assert d.get("status") is None and d.get("closed") == "desk" and Hung.closed == 1   # abandoned after the limit (B8: closed)
         finally:
             await c.aclose()
             await server.close()

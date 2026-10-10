@@ -97,7 +97,10 @@ CLOSEUPS = {
     "night": ("sleeping", 23, "bed"),       # the same bed at night: what the dark room shows
     "side":  ("sleeping_side", 14, "bed"),  # asleep on his side under the duvet (#108)
 }
-CORE_SCENES = [s for s in SCENES if s not in ("sleeping_side", "computer", "music")]   # the side pose: its close-up; the computer: test_arrival.py; music: test_phone_camera.py
+# watching a video at the desk, sitting back (boy_mh.js desk_watch: the mode the Sova desk states play in), for test_glance.py
+SCENES["video"] = (life("watch_video", "desk", "watching a video (muted)",
+                        screen={"device": "desk", "id": "qa2", "kind": "video", "title": "a video"}), "AWAKE", None, 1.0, "desk", None)
+CORE_SCENES = [s for s in SCENES if s not in ("sleeping_side", "computer", "music", "video")]   # the side pose: its close-up; the computer: test_arrival.py; music: test_phone_camera.py; video: test_glance.py
 CORE_SHOTS = [(s, NATURAL_HOUR[s], "1280") for s in CORE_SCENES] + [("desk", 14, "390"), ("sleeping", 23, "390")]
 FULL_SHOTS = [(s, h, z) for s in CORE_SCENES for h in HOURS for z in SHOT_SIZES] + [("sleeping_side", 23, "1280"), ("sleeping_side", 14, "390")]
 

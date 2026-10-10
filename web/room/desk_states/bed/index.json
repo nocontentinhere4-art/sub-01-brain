@@ -1,0 +1,121 @@
+{
+ "note": "G23's Sova bed clips (preview/sova-phone-src docs/qa/sova/mattina/bed): each clip's file, length, whether it loops, and for the phone clips the phone's grip under the left hand bone (translation in the hand's local units, rotation xyzw; the phone's box: x its thickness (the screen's normal), y its length, z its width). Used with the author's permission (confirmed by the owner, 2026-10-08).",
+ "clips": {
+  "bed_phone_watch_landscape": {
+   "file": "bed_phone_watch_landscape.glb",
+   "duration_s": 6.63,
+   "loop": true,
+   "phone": {
+    "hand": "Left",
+    "node_translation": [
+     0.7475,
+     7.8386,
+     6.3655
+    ],
+    "node_rotation_xyzw": [
+     0.004228,
+     -0.698371,
+     -0.158405,
+     0.697974
+    ],
+    "box_m": [
+     0.008,
+     0.15,
+     0.072
+    ]
+   }
+  },
+  "bed_phone_watch_portrait": {
+   "file": "bed_phone_watch_portrait.glb",
+   "duration_s": 6.63,
+   "loop": true,
+   "phone": {
+    "hand": "Left",
+    "node_translation": [
+     0.7763,
+     7.9355,
+     6.349
+    ],
+    "node_rotation_xyzw": [
+     -0.496727,
+     0.605798,
+     -0.381289,
+     -0.490806
+    ],
+    "box_m": [
+     0.008,
+     0.15,
+     0.072
+    ]
+   }
+  },
+  "bed_phone_typing": {
+   "file": "bed_phone_typing.glb",
+   "duration_s": 6.63,
+   "loop": true,
+   "phone": {
+    "hand": "Left",
+    "node_translation": [
+     0.7774,
+     7.9383,
+     6.3491
+    ],
+    "node_rotation_xyzw": [
+     -0.496726,
+     0.605798,
+     -0.381283,
+     -0.490811
+    ],
+    "box_m": [
+     0.008,
+     0.15,
+     0.072
+    ]
+   }
+  },
+  "bed_phone_lift": {
+   "file": "bed_phone_lift.glb",
+   "duration_s": 18.3,
+   "loop": false,
+   "phone": {
+    "hand": "Left",
+    "node_translation": [
+     0.7433,
+     7.9056,
+     6.3674
+    ],
+    "node_rotation_xyzw": [
+     -0.496575,
+     0.605739,
+     -0.38184,
+     -0.490603
+    ],
+    "box_m": [
+     0.008,
+     0.15,
+     0.072
+    ]
+   }
+  },
+  "sleep_side": {
+   "file": "sleep_side.glb",
+   "duration_s": 6.63,
+   "loop": true
+  },
+  "sleep_roll_to_back": {
+   "file": "sleep_roll_to_back.glb",
+   "duration_s": 14.33,
+   "loop": false
+  },
+  "sleep_back": {
+   "file": "sleep_back.glb",
+   "duration_s": 6.63,
+   "loop": true
+  },
+  "sleep_back_idle": {
+   "file": "sleep_back_idle.glb",
+   "duration_s": 6.0,
+   "loop": true
+  }
+ }
+}

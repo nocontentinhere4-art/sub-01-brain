@@ -463,6 +463,18 @@ def test_the_life_phone_shows_only_a_real_screen_and_tiktok_gets_its_embed(tmp_p
     assert "#cards [hidden]" in css                                          # empty cards are really hidden
 
 
+def test_a_refused_title_or_a_finance_page_gets_the_placeholder_and_no_screenshot():
+    """S2: the public card never shows a title the card filter refuses or a finance / trading page: the status is
+    the restarting-style placeholder (device only) and /api/screen/<dev>.jpg has nothing to serve."""
+    bad = {"url": "https://example.org/b", "title": "Bitcoin price today", "host": "example.org", "id": 4}
+    fin = {"url": "https://example.org/c", "title": "A page", "host": "example.org", "id": 5, "finance": True}
+    live = SimpleNamespace(browser=SimpleNamespace(restarting=False, screens={"phone": bad, "desk": fin}), decisions={})
+    assert Live.screen_status(live, "phone") == {"device": "phone", "restarting": True}
+    assert Live.screen_status(live, "desk") == {"device": "desk", "restarting": True}
+    assert not browse.screen_showable(bad) and not browse.screen_showable(fin)
+    assert SC.DopamineBursts(clock=Clock()).on_new("finance", "crypto") is None       # no reward from it either
+
+
 def test_todays_screens_survive_a_deploy(tmp_path):
     """#89 live (2026-10-04): /api/screens had 44 pages today at 05:26; after the next deploy counts {} and last []."""
     clock = Clock()
@@ -490,3 +502,159 @@ def test_the_live_server_saves_and_restores_the_screens(tmp_path):
     live2 = Live("m", True, time_scale=1e6, data_dir=tmp_path)
     assert live2.screens_view()["today"]["counts"] == {"shorts": 1}
     assert live2.screens_view()["last"][0]["title"] == "clip 1"
+
+
+# --- 5. the pages (S1 web, S10, R1, R2, R4): no trading content, the disclaimer on the first screen, honest captions ----
+import os
+import re
+import subprocess
+
+WEB = ROOT / "web"
+PAGES = sorted(list(WEB.glob("*.html")) + list(WEB.glob("*.js")) + list((WEB / "room").glob("*.js")))
+
+
+def _js_function(js, head):
+    """The source of one function in a script, from its head to its matching brace (as tests/test_boy_mh.py does)."""
+    i = js.index(head); j = js.index("{", i); depth = 0
+    for k in range(j, len(js)):
+        depth += {"{": 1, "}": -1}.get(js[k], 0)
+        if depth == 0:
+            return js[i:k + 1]
+    raise AssertionError(head)
+
+
+def _node(src):
+    if not shutil.which("node"):
+        pytest.skip("node not installed")
+    r = subprocess.run(["node", "-e", src], capture_output=True, text=True, timeout=60)
+    assert r.returncode == 0, r.stderr
+    return json.loads(r.stdout)
+
+
+import shutil  # noqa: E402
+
+
+def test_no_trading_content_on_any_page():
+    """S1: the trading terminal, the trade tape and the market line are gone from every page and room module; nothing
+    on a screen may show buys, sells, amounts or a chart (hard rule: no money-hype/trading content on screen)."""
+    bad = re.compile(r"TRADE FLOW|\$\{t\.usd\}|\{buys\}|\{sells\}|\.trades\b|drawChart|chartTex|market \$\{|order flow|browser restarting")
+    hits = [(p.relative_to(ROOT), m.group(0)) for p in PAGES for m in bad.finditer(p.read_text())]
+    assert hits == [], hits
+    room = (WEB / "room.html").read_text()
+    assert '"chart"' not in room and "chart:[" not in room          # no chart screen on the monitor, no chart activity anchor
+    assert "mood.market" not in (WEB / "world.html").read_text()
+    about = re.sub(r"\s+", " ", (WEB / "about.html").read_text())
+    assert "never shown: no chart, no trade feed" in about and "read-only: it never connects" not in about
+
+
+def test_room_first_screen_says_he_is_a_fictional_character():
+    """S10: one always-visible line under the story, in the header (before any tick, at phone width too), with /about."""
+    room = (WEB / "room.html").read_text()
+    head = room[room.index('<div id="top">'):room.index('<div id="side">')]
+    m = re.search(r'<div id="fiction">(.*?)</div>', head, re.S)
+    assert m and "hidden" not in m.group(0), "the disclaimer line is missing from the header or hidden"
+    line = m.group(1)
+    assert "fictional character" in line and "simulated life" in line and "Not a person, not conscious" in line
+    assert 'href="/about.html"' in line
+    assert "#fiction[hidden]" not in room and not re.search(r"#fiction\s*\{[^}]*display\s*:\s*none", room)
+    assert room.index('id="fiction"') < room.index('id="tools"')   # directly under the story, above the tools
+
+
+def test_room_caption_is_an_activity_verb_and_never_leaks_the_browser():
+    """R1: story() reads 'is reading <em>title</em>.' / 'is watching <em>title</em>, muted.' / 'is on his phone: ...',
+    uses the host when the title is empty and never writes an empty <em>; a restarting browser is 'the next page is
+    loading…' with the article he is reading kept in the caption; 'browser restarting' never appears."""
+    room = (WEB / "room.html").read_text()
+    src = re.search(r"^const LOADING = .*$", room, re.M).group(0) + "\n" + _js_function(room, "function storyText(")
+    js = r"""
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+%s
+const L = (a, x = {}) => ({activity: a, doing: "reading at the computer", walking: false, path: null, ...x});
+const out = {
+  empty: storyText(L("research", {screen: {device: "desk", title: ""}}), false, true),
+  reading: storyText(L("research", {screen: {device: "desk", title: "Inokashira Park - Wikipedia"}}), false, true),
+  host: storyText(L("research", {screen: {device: "desk", title: "", host: "theverge.com"}}), false, true),
+  video: storyText(L("watch_video", {screen: {device: "desk", title: "Tokyo night walk"}}), false, true),
+  phone: storyText(L("phone", {screen: {device: "phone", title: "Tiny sushi"}}), false, false),
+  going: storyText(L("research", {screen: {device: "desk", title: "Sleep"}}), false, false),
+  restartRead: storyText(L("research", {screen: {device: "desk", restarting: true}, reading: {title: "Sleep"}}), false, true),
+  restartPhone: storyText(L("phone", {screen: {device: "phone", restarting: true}}), false, false),
+  restartDesk: storyText(L("research", {screen: {device: "desk", restarting: true}}), false, true),
+  wiki: storyText(L("research", {reading: {title: "Kanda River"}}), false, true),
+  walk: storyText(L("park", {walking: true, doing: "sitting on the park bench", geo: {}}), true, false),
+  plain: storyText(L("window", {doing: "looking out of the window"}), false, false),
+  xss: storyText(L("research", {screen: {device: "desk", title: "<b>x</b>"}}), false, true),
+};
+console.log(JSON.stringify(out));
+""" % src
+    o = _node(js)
+    assert o["empty"] == "is reading at the computer." and "<em>" not in o["empty"]
+    assert o["reading"] == "is reading <em>Inokashira Park - Wikipedia</em>."
+    assert o["host"] == "is reading <em>theverge.com</em>."
+    assert o["video"] == "is watching <em>Tokyo night walk</em>, muted."
+    assert o["phone"] == "is on his phone: <em>Tiny sushi</em>."
+    assert o["going"] == "is going to the desk: <em>Sleep</em>."
+    assert o["restartRead"] == "is reading <em>Sleep</em> · the next page is loading…"
+    assert o["restartPhone"] == "is on his phone · the next page is loading…"
+    assert o["restartDesk"] == "is at the computer · the next page is loading…"
+    assert o["wiki"] == "is reading <em>Kanda River</em>." and o["plain"] == "is <em>looking out of the window</em>."
+    assert o["walk"].startswith("is <em>walking</em> · next: sitting on the park bench")
+    assert "<b>" not in o["xss"] and "&lt;b&gt;" in o["xss"]
+    for v in o.values():
+        assert "browser" not in v and "<em></em>" not in v, v
+
+
+def test_room_shows_the_reading_and_a_loading_screen_while_the_browser_restarts():
+    """R1/R2: while the status says restarting the reading card stays, the monitor draws the article or a blank loading
+    page (never the frozen old page), and the phone's glass goes dark when nothing real is on it (R2)."""
+    room = (WEB / "room.html").read_text()
+    assert "if (r && (!sc || sc.restarting))" in room                      # the reading card through a restart
+    sc = _js_function(room, "function screens(")
+    assert "deskLive" in sc and "!deskSt.restarting" in sc and 'monitor.id !== "loading"' in sc and "loadingTex()" in sc
+    assert 'ps.id = "food"' in sc and "ps.failed === psc.id" in sc and "ps.off()" in sc
+    assert "img.onerror" in _js_function(room, "function showScreen(") and "target.failed" in room
+    assert "the next page is loading…" in _js_function(room, "function panel(")
+    for page in ("room.html", "index.html", "life.html"):                # a stopped track takes its player with it
+        html = (WEB / page).read_text()
+        assert 'removeAttribute("src")' in html and "musicEmbed = \"\"" in html, page
+    for page in ("index.html", "life.html"):                             # one allowlist of official players
+        html = (WEB / page).read_text()
+        assert "EMBED_OK" in html and "open\\.spotify\\.com\\/embed\\/" in html and "youtube-nocookie" in html, page
+
+
+def test_room_handles_the_night_and_brain_says_a_word_reaches_him_through_the_sleep():
+    """R3: the room handles `eye` and `nights` and shows the dream frame and the night line only while asleep; /brain
+    says a message reaches him through the sleep at its gain, never 'heard' as if awake."""
+    room = (WEB / "room.html").read_text()
+    assert 'if (m.type === "eye") { onEye(m); return; }' in room and 'if (m.type === "nights") { onNights(m); return; }' in room
+    assert 'id="dream"' in room and 'id="night"' in room
+    dc = _js_function(room, "function dreamCard(")
+    assert 'stage !== "AWAKE"' in dc and "not a mind" in room[room.index('id="dream"') - 200:room.index('id="dream"') + 200]
+    assert 'nights.tonight' in _js_function(room, "function nightLine(")
+    assert "reaches his activity model when he wakes" in room
+    brain = (WEB / "index.html").read_text()
+    assert "heard asleep" not in brain
+    st = _js_function(brain, "function story(")
+    assert "reaches him through the sleep at" in st and "heard.asleep" in st
+    assert "function fire(text, networks, asleep, gain)" in brain and "fire(m.text, m.networks, m.asleep, m.gain)" in brain
+    assert 'capPut("story", story())' in brain                            # R4: the caption is written only when it changed
+
+
+def test_phone_battery_curve_is_continuous():
+    """R4: the phone's battery look has no jump at midnight or at 07:00 and stays within 12 %..100 %."""
+    js = (WEB / "room_phone.js").read_text()
+    src = re.search(r"^const BAT_LO = .*$", js, re.M).group(0) + "\n" + _js_function(js, "export function batteryAt(").replace("export ", "")
+    o = _node(src + "\nconst b = []; for (let h = 0; h < 24; h += 0.05) b.push(batteryAt(h)); console.log(JSON.stringify({b, mid: batteryAt(23.999) - batteryAt(0), seven: batteryAt(6.999) - batteryAt(7.001)}));")
+    assert abs(o["mid"]) < 0.01 and abs(o["seven"]) < 0.01
+    assert min(o["b"]) >= 0.12 - 1e-9 and max(o["b"]) <= 1.0 + 1e-9
+    steps = [abs(x - y) for x, y in zip(o["b"], o["b"][1:])]
+    assert max(steps) < 0.01, max(steps)                                  # (no step anywhere in the day)
+
+
+def test_empty_phone_feed_is_gone_and_walk_clips_do_not_repeat():
+    """R4: the empty phone_feed.json (never anything to show) is deleted and nothing asks for it; the walk footage skips
+    the clip that just played when there is another."""
+    assert not (WEB / "phone_feed.json").exists()
+    assert not any("phone_feed" in p.read_text() for p in PAGES)
+    life = (WEB / "life.html").read_text()
+    assert "updateWalk.last" in life and "list.filter(c => c !== updateWalk.last)" in life

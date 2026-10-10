@@ -108,13 +108,15 @@ def make_app(browser, token=None):
             browser.heavy.merge(st["heavy"])
         return web.json_response({"ok": True, "applied": fresh})
 
+    CLOSED = object()                                           # B8: limited() closed the screen: nothing is on it
+
     async def limited(coro, limit, dev):
         try:
             return await asyncio.wait_for(coro, limit)
         except asyncio.TimeoutError:                            # e.g. a page whose script never returns
             print(f"browse service: {dev} took over {limit:.0f}s, closing it", flush=True)
             await browser.close(dev)
-            return None
+            return CLOSED
 
     async def step(request):
         d = await body(request)
@@ -122,6 +124,8 @@ def make_app(browser, token=None):
         mode = "video" if d.get("mode") == "video" else None
         out = await limited(browser.step(dev, list(d.get("heard") or [])[-5:], d.get("interest"), mode), STEP_LIMIT_S,
                             dev)
+        if out is CLOSED:                                       # B8: the client drops the old page, not keeps showing it
+            return web.json_response({"status": None, "closed": dev})
         if out and "decide" in out:
             return web.json_response({"decide": out["decide"]})
         return web.json_response({"status": out})
@@ -131,6 +135,8 @@ def make_app(browser, token=None):
         dev = device(d)
         st = await limited(browser.act(dev, d.get("action") or {}, str(d.get("why") or "")[:200], d.get("interest")),
                            ACT_LIMIT_S, dev)
+        if st is CLOSED:
+            return web.json_response({"status": None, "closed": dev})
         return web.json_response({"status": st})
 
     async def close(request):
@@ -285,13 +291,22 @@ class BrowserClient:
         self.restarting = False
         if d.get("status"):
             self.screens[device] = d["status"]
+        self._closed(d)
         return d
+
+    def _closed(self, d):
+        """B8: the service closed that screen (a hung page): its old status and screenshot are gone, not shown on."""
+        dev = d.get("closed")
+        if dev:
+            self.screens.pop(dev, None)
+            self.shots.pop(dev, None)
 
     async def act(self, device, action, why="", interest=None):
         d = await self._post("/act", {"device": device, "action": action, "why": why, "interest": interest},
                              timeout=ACT_LIMIT_S + 20)
         if d.get("status"):
             self.screens[device] = d["status"]
+        self._closed(d)
         return d.get("status")
 
     async def close(self, device=None):
@@ -315,7 +330,10 @@ class BrowserClient:
         return d
 
     async def shot(self, device):
-        """Latest JPEG of a screen (cached by shot id; refetched when the screen shows a new one)."""
+        """Latest JPEG of a screen (cached by shot id; refetched when the screen shows a new one); None when the
+        device has no current status (B8: closed, timed out, not opened yet)."""
+        if not self.screens.get(device):
+            return None
         want = (self.screens.get(device) or {}).get("id")
         have = self.shots.get(device)
         if have and have[0] == want:

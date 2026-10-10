@@ -19,6 +19,7 @@ import math
 import os
 import random
 import re
+import signal
 import socket
 import time
 from collections import deque
@@ -31,17 +32,19 @@ from aiohttp import web
 
 from brain_sim import Brain
 from chat import (RULES, TEACH_MAX_WORDS, TEACH_PER_DAY, NICK_MAX, Dedupe, RateLimiter, TeachLimits,
-                  check as chat_check, check_teach, dedupe_key, stimulus as chat_stimulus)
+                  check as chat_check, check_teach, clean_nick, dedupe_key, stimulus as chat_stimulus)
 from sleep import ROME, TZ, Clock, Memory, SleepEngine, Store, day_of, hhmm, next_bedtime, night_date
 from eye import Eye, ReplicateLLM, load_env, market_mood
 from diary import Diary
 from real_baseline import RealBaseline
-from life import WORLD, Life
+from life import LABEL as LIFE_LABEL, WORLD, Life
 from twin.body import Body
 from twin.neurochem import Neuromodulators
 from research import Reader, reading_stimulus
-from browse import Browser, card_title_ok
+from browse import Browser, card_title_ok, screen_showable
+import audience
 import brain_vote
+import launchpad_eval
 import chess_game
 import clips
 import music as music_mod
@@ -57,6 +60,7 @@ from screens import DA_LABEL, DopamineBursts, ScreensStatus
 from eyes import Eyes
 import mind as mind_mod
 from tastes import PageWatch, Tastes
+import state_io
 from state_io import append_jsonl, load_json, read_jsonl, save_json
 
 try:                                             # the GPU spiking brain is optional: the server runs without it
@@ -68,6 +72,7 @@ from spiking.words import half_cue_ok              # torch-free, like pod_manage
 from spiking import live as spiking_live           # numpy only: his spiking neurons in the day, a child process (#55)
 
 HERE = Path(__file__).parent
+START = time.monotonic()        # import time: the startup log line says how long the process took to listen (a deploy gap)
 TICK = 0.05                     # seconds of simulated time per broadcast (real time)
 BASELINE_DRIVE = 1.6            # excitability per z-unit of the recorded resting-state signal
 GOOD = re.compile(r"\bgood\b!?", re.I)    # chat 'good!' -> dopamine pulse on the spiking pod
@@ -77,6 +82,11 @@ SAVE_S = 60                     # persist sleep state + memory every minute (rea
 TICK_RING = int(60 / TICK)      # tick durations kept for /api/health: the last minute
 HEALTHY_S = 5.0                 # /healthz: 200 while the brain loop ticked within this many seconds, else 503
 RESTING = "resting its eyes"    # what the pages say while the eye is over its daily cap
+CHAT_INBOX = 10                 # chat messages waiting for his reply at most (C1); older ones are let go with a note
+CHAT_PER_VIEWER = 3             # ... and at most this many from one viewer
+CHAT_WAIT_S = 1200              # simulated seconds a message waits for him, unless he is at the desk answering
+CHAT_RESERVE = 5                # hourly AI calls kept for chat: no page-read call starts while messages wait (C2)
+CAP_LINE = "He has answered 40 messages today and is resting; back tomorrow."   # the in-world cap notice (C2)
 GATED = web.AppKey("gated", bool)            # the app runs behind the password gate
 ADMIN_PATHS = ("/api/costs", "/api/health")   # private even after launch: SUB01_ADMIN_TOKEN (or the password cookie)
 REPLAY_AMP = 0.35               # replayed stimulus pattern, relative to the original message
@@ -132,6 +142,21 @@ def b58decode(text):
         n = n * 58 + B58.index(c)
     raw = n.to_bytes((n.bit_length() + 7) // 8, "big") if n else b""
     return b"\0" * (len(text) - len(text.lstrip("1"))) + raw
+
+
+DEFAULT_CA = "6WCtKQfkWurd77tCCAYWuL5TwyAvuovTzworfnfupump"      # the coin's contract address (owner, 2026-10-11)
+CITY_URL = os.environ.get("SUB01_CITY_URL", "https://city.subzerone.live/").strip()   # the city: his neighbourhood site
+
+
+def coin_address(mint=""):
+    """The coin's contract address for the pages (owner, 2026-10-11): SUB01_CA, else MINT, else DEFAULT_CA. The pages
+    show it as it is, with a copy button and no market link: not advice, only the official address, so nobody has to
+    trust one pasted in the chat (where addresses stay blocked). Not a Solana address (32 bytes of base58): nothing."""
+    ca = (os.environ.get("SUB01_CA") or mint or DEFAULT_CA or "").strip()
+    try:
+        return ca if ca and len(b58decode(ca)) == 32 else ""
+    except ValueError:
+        return ""
 
 
 def b58encode(b):
@@ -191,10 +216,28 @@ def decode_trades(logs, mint=None, pools=None):
 
 LITE_DROP = ("act", "wave", "groups", "slow")     # per-region brain activity: only the brain page draws it
 ACT_LO, ACT_HI = 0.01, 10.0     # q=1: act on a log scale, one byte a region (~1.4 % steps), clipped to this range
-# q=1 keeps only what web/index.html draws (one source of truth for the brain page's fields)
-BRAIN_KEEP = ("type", "sync", "trades", "events", "sleep", "baseline", "slow", "life")
+# q=1 keeps only what web/index.html draws (one source of truth for the brain page's fields). S1: the coin's trades
+# are a stimulus only (Live.apply), never in a tick: no trade tape, amounts or buy / sell words reach a page.
+BRAIN_KEEP = ("type", "sync", "events", "sleep", "baseline", "slow", "life")
 BRAIN_SLEEP = ("stage", "burst", "clock", "tz", "gain", "debt", "woken_tonight")
 BRAIN_LIFE = ("doing", "walking")
+
+
+# S4: a search or reading that started from the chat says so ("a viewer's wish in chat", "from chat"), never what the
+# viewer wrote: the quoted text after the chat origin is cut from every `why` the server hands out (the screen card,
+# the reading card, /api/reading), whatever the browser or the reader stored
+CHAT_WHY = re.compile(r"^(.*?\bchat)\s*[:：]\s*[“\"'].*$", re.S)
+
+
+def public_why(rec, copy=True):
+    """`rec` (a status or reading dict, or None) with its `why` cut after a chat origin; copy=False edits it in place."""
+    why = rec.get("why") if isinstance(rec, dict) else None
+    if not isinstance(why, str) or not (m := CHAT_WHY.match(why)):
+        return rec
+    if copy:
+        rec = dict(rec)
+    rec["why"] = m.group(1)
+    return rec
 
 
 def quantise_act(act):
@@ -212,7 +255,7 @@ def dequantise_act(text):
 
 class Feed:
     """What a websocket client gets. Default (plain /ws): every tick, 20 a second, as before.
-    /ws?rate=5 sends ~5 ticks a second, carrying the trades and events of the skipped ticks;
+    /ws?rate=5 sends ~5 ticks a second, carrying the events of the skipped ticks;
     &lite=1 leaves out the per-region activity and the spiking frames (for pages that do not draw the brain, e.g. the room);
     &q=1 is the brain page's feed: `act` quantised to one byte a region (`aq`, see quantise_act) and only the
     fields the brain page draws (well under 1.5 KB a tick).
@@ -222,10 +265,11 @@ class Feed:
     RATES = (1.0, 20.0)                                 # ticks a second a client may ask for
 
     def __init__(self, rate=None, lite=False, q=False):
-        if rate is not None:                            # clamped: a tiny rate would buffer trades/events without bound
+        if rate is not None:                            # clamped: a tiny rate would buffer events without bound
             rate = min(max(rate, self.RATES[0]), self.RATES[1])
         self.every = max(1, round(1.0 / (TICK * rate))) if rate else 1
-        self.lite, self.q, self.n, self.trades, self.events = lite, q and not lite, 0, [], []
+        self.lite, self.q, self.n, self.events = lite, q and not lite, 0, []
+        self.rx = None                                  # reactions summed over skipped ticks
         self.bps = 0.0                                  # bytes a second of this feed's ticks (slow-client check)
         self.phase = 0                                  # global tick (mod every) its sends land on; see Live.feed_for
 
@@ -253,13 +297,17 @@ class Feed:
             return data
         out = msg
         if self.every > 1:
-            self.trades += msg.get("trades") or []
             self.events += msg.get("events") or []
+            if msg.get("rx"):                          # viewers' reactions: summed over the skipped ticks
+                self.rx = [a + b for a, b in zip(self.rx, msg["rx"])] if self.rx else list(msg["rx"])
             self.n += 1
             if (self.n - 1) % self.every:              # the first tick goes out at once, then every n-th
                 return None
-            out = msg | {"trades": self.trades, "events": self.events}
-            self.trades, self.events = [], []
+            out = msg | {"events": self.events}
+            out.pop("rx", None)
+            if self.rx:
+                out["rx"] = self.rx
+            self.events, self.rx = [], None
         if self.lite:
             out = {k: v for k, v in out.items() if k not in LITE_DROP}
         elif self.q:
@@ -302,10 +350,12 @@ class Live:
     def __init__(self, mint, demo, time_scale=1.0, data_dir=HERE / "data", start=None, trust_proxy=False):
         self.brain = Brain()
         self.mint, self.demo = mint, demo
+        self.ca = coin_address(mint)       # shown on the pages (hello, /api/config); "" until the owner sets it
         self.trust_proxy = trust_proxy
         self.store = Store(data_dir)
         saved, mem = self.store.load()
         self.memory = Memory(mem)
+        self.purge_blocked(saved)
         if start is None and saved and time_scale != 1:
             start = saved["t"]                                   # accelerated clock resumes where it stopped
         self.clock = Clock(time_scale, start)
@@ -381,7 +431,9 @@ class Live:
         self.spiking = None              # SpikingHub, set by spiking.server.attach in main()
         self.decider = None              # brain_vote.Backend (main()): a spiking network votes too, GPU or CPU (#55)
         self.mind = None                 # mind.py (main()): an AI reads and remembers for him; his brain model chooses
-        self.chat_inbox = []             # (sim t, text) of recent chat messages he may answer at the computer
+        self.chat_inbox = []             # {t, text, key, nick, tries}: messages he may answer at the computer, FIFO (C1)
+        self.chat_served = {}            # viewer key -> sim t of their last answered message (round-robin, memory only)
+        self.cap_noted = None            # Tokyo day the "resting, back tomorrow" chat line was posted (C2)
         self.replies = []                # his recent replies (AI-written), for the hello and /api/mind
         self.read_topics = {}            # page title -> topics an AI noted (the eye's dream scenes)
         self.interest = (0.0, None)      # (wall time, mind.next_interest()) cached for the browser
@@ -401,6 +453,9 @@ class Live:
         self.music_rng = random.Random(int(seed) + 6 if seed else None)
         self.music_bg = (None, False)      # (the activity start it was rolled for, background music wanted)
         self.music_busy = False            # a pick is being made (worker threads)
+        # viewers (preview/interactive, audience.py): the vote on what he does next, the viewer count, the reactions
+        self.votes = audience.Votes(rng=random.Random(int(seed) + 7 if seed else None))
+        self.reactions = audience.Reactions()
 
     # --- trades -> stimuli ---------------------------------------------------
     def apply(self, tr):
@@ -531,9 +586,9 @@ class Live:
         art = self.reader.current()
         if art and "tonight" in art and art.get("tonight_night") != night_date(next_bedtime(t)):
             art = {k: v for k, v in art.items() if k != "tonight"}
-        return art
+        return public_why(art)
 
-    async def handle_chat(self, ws, key, text):
+    async def handle_chat(self, ws, key, text, nick=""):
         ok, reason = chat_check(text, key, self.limiter, self.dedupe)      # filter first; blocked = never stored
         if not ok:
             await ws.send_json({"type": "chat_ack", "ok": False, "reason": reason})
@@ -549,14 +604,59 @@ class Live:
             self.eye.hear(text, t)
         self.life.hear(text, t)
         self.music.hear(text, t)                           # "play …" / "metti …": a wish (filtered above)
-        if getattr(self, "mind", None):                    # he may answer it later, at the computer
-            self.chat_inbox = (self.chat_inbox + [(t, text)])[-10:]
+        ack = {"type": "chat_ack", "ok": True, "queued": False}
+        if getattr(self, "mind", None):                    # he may answer it later, at the computer (C1)
+            why = await self.enqueue_chat(t, text, key, nick)
+            ack.update(queued=True, will_reply=why is None, reason=why)
         if self.spiking:                                   # no-op when no GPU pod is connected
             self.spiking.forward_chat(text, emotion)
             if GOOD.search(text):
                 self.spiking.forward_good()
-        await ws.send_json({"type": "chat_ack", "ok": True})
+        await ws.send_json(ack)
         await self.broadcast({"type": "chat", "gain": round(gain, 2), **self.public(m)})
+
+    # --- the chat inbox (C1/C2): FIFO, one viewer at a time, a visible outcome for every message -----------------
+    async def enqueue_chat(self, t, text, key, nick=""):
+        """Queue a message for his reply at the computer; returns why a reply is not possible right now (or None).
+        A viewer keeps at most CHAT_PER_VIEWER messages waiting: their oldest one is let go with a note."""
+        nick, _ = clean_nick(nick)
+        mine = [x for x in self.chat_inbox if x["key"] == key]
+        for x in mine[:max(0, len(mine) + 1 - CHAT_PER_VIEWER)]:
+            await self.chat_missed(x, "a newer message from the same viewer took its place")
+        self.chat_inbox.append({"t": t, "text": text, "key": key, "nick": nick, "tries": 0})
+        for x in self.chat_inbox[:-CHAT_INBOX]:
+            await self.chat_missed(x, "too many messages were waiting")
+        self.chat_inbox = self.chat_inbox[-CHAT_INBOX:]
+        return (None if self.engine.stage == "AWAKE" else "asleep") or self.mind.reply_open()
+
+    async def chat_missed(self, item, why):
+        """The message leaves the inbox unanswered: viewers see why (room.html: a dim line under the message)."""
+        if item in self.chat_inbox:
+            self.chat_inbox.remove(item)
+        await self.broadcast({"type": "chat_missed", "t": hhmm(self.clock.now()), "replying_to": item["text"],
+                              "why": why, "tag": "not answered"})
+
+    def next_message(self, t=None):
+        """The message he answers next (C1): the viewer answered longest ago (or never) first, their oldest first."""
+        served = self.chat_served
+        return min(self.chat_inbox, key=lambda x: (served.get(x["key"], -1e18), x["t"]))
+
+    def doing_now(self, t):
+        """What he is really doing, for a reply's context (C4): the activity, the track playing, the article or the
+        page on his screen. Built from state already in memory; no new calls."""
+        life = self.life
+        parts = [LIFE_LABEL.get(life.activity, life.activity)]
+        now = getattr(getattr(self, "music", None), "now", None)
+        if now and now.get("title"):
+            parts.append(f"listening to “{now['title']}”" + (f" by {now['artist']}" if now.get("artist") else ""))
+        art = self.reader.current() if life.activity == "research" and getattr(self, "reader", None) else None
+        if art and art.get("title"):
+            parts.append(f"reading “{art['title']}”")
+        elif getattr(self, "browser", None) and (dev := self.screen_device()):
+            st = self.browser.screens.get(dev) or {}
+            if st.get("title") and card_title_ok(st.get("title", ""), st.get("host", "")):
+                parts.append(f"on the {dev} screen: “{st['title']}”")
+        return "; ".join(parts)[:160]
 
     def taught_on(self, day):
         return [m for m in self.memory.items if m.get("source") == "taught" and day_of(m["t"]) == day]
@@ -624,8 +724,15 @@ class Live:
         self.transports = {}        # websocket -> its transport (write-buffer size for the slow-client check)
         self.sockets = set()        # every accepted websocket, also while its hello is being sent
         self.ws_per_ip = {}         # client address -> open websockets (only counts, kept in memory)
+        # viewers (audience.py): per connection, set in ws_handler, so here with the rest of the websocket state
+        self.viewer_fp = audience.Fingerprints()   # the process's salt (memory only): a connection's ids, never raw
+        self.viewer_ids = {}        # websocket -> its salted hashes (cookie, IP + UA), dropped with the connection
+        self.viewer_addr = {}       # websocket -> its address's salted hash (per-address caps: votes, reactions)
         self.max_ws = int(os.environ.get("SUB01_MAX_WS", 400))
-        self.max_ws_ip = int(os.environ.get("SUB01_MAX_WS_PER_IP", 4))
+        # per address: 12, not 4 - a viewer with a few tabs, and the phones of a whole carrier behind one NAT address,
+        # were refused with "full" (2026-10-09: the room stuck at "connecting…" for the owner's own tabs). The total cap
+        # still bounds the process; both are env-tunable
+        self.max_ws_ip = int(os.environ.get("SUB01_MAX_WS_PER_IP", 12))
         self.ws_stats = {"lag": [], "late": [], "skipped": 0, "refused": 0, "t0": None, "ticks": 0,
                          "at": time.monotonic(), "every": float(os.environ.get("SUB01_WS_STATS_S", 300))}
 
@@ -718,10 +825,36 @@ class Live:
         if feed is not None and feed not in self.feeds.values():
             self.variants.pop(feed.key, None)            # last client of this variant: its buffers go with it
 
+    def purge_blocked(self, saved):
+        """Messages the chat filter blocks today (chat.blocked: trading pushes, adult requests, insults...) that were
+        accepted before the rule existed are dropped from his memory, so they are neither in the history the page
+        gets on hello nor replayed in his sleep (2026-10-09: "watch porno" from 22:31 came back as a night replay
+        and in the diary), and from the saved nights' replay lists."""
+        from chat import message_blocked as blocked
+        n0 = len(self.memory.items)
+        self.memory.items = [m for m in self.memory.items
+                             if m.get("source", "chat") != "chat" or not blocked(str(m.get("text", "")))]
+        dropped = n0 - len(self.memory.items)
+        for night in ([saved.get("night"), saved.get("last_night")] if saved else []):
+            if night and isinstance(night.get("replays"), list):
+                before = len(night["replays"])
+                night["replays"] = [r for r in night["replays"]
+                                    if r.get("source") in ("reading", "taught") or not blocked(str(r.get("text", "")))]
+                dropped += before - len(night["replays"])
+        if dropped:
+            print(f"memory: {dropped} blocked messages purged", flush=True)
+
     def client_ip(self, request):
+        """The address the rate limits and the vote's per-address cap key on. Behind the reverse proxy (--trust-proxy)
+        it is the entry the proxy itself appended to X-Forwarded-For: the rightmost one. Anything before it is what the
+        client sent in its own header (one hop: a client cannot choose its key by sending "X-Forwarded-For: 1.2.3.4").
+        X-Real-IP, when the proxy sets it instead, is that same address. Without --trust-proxy the headers are ignored.
+        A proxy chain of more than one trusted hop would need the trusted count configured; Railway adds one."""
         key = request.remote
-        if self.trust_proxy and request.headers.get("X-Forwarded-For"):
-            key = request.headers["X-Forwarded-For"].split(",")[0].strip()
+        if self.trust_proxy:
+            xff = [p.strip() for p in request.headers.get("X-Forwarded-For", "").split(",") if p.strip()]
+            real = request.headers.get("X-Real-IP", "").strip()
+            key = xff[-1] if xff else real or key
         return key
 
     def sleep_tick(self):
@@ -731,7 +864,7 @@ class Live:
         out = []
         for ev in e.update(t, dt_real=TICK):
             if ev["type"] == "replay":
-                m = self.memory.pick(t, e.night_start(), replayed=e.replay_counts())
+                m = self.memory.pick(t, e.night_start(), replayed=e.replay_counts(), avoid=e.last_replay_key())
                 if m is None:
                     continue
                 b.stimulate("memory", 6.0)                                   # hippocampus drives the replay
@@ -794,11 +927,9 @@ class Live:
             act = acc / (steps // 5)
             wave = {k: float(z.real[i].mean()) for k, i in gidx.items()}
             st = b.state()
-            msg = {"type": "tick", "act": np.round(act, 3).tolist(), "wave": wave,
-                   "groups": (groups := {k: round(float(act[i].mean()), 3) for k, i in gidx.items()}),
-                   "sync": round(st["sync"], 3), "stats": self.stats,
-                   "trades": [{k: t[k] for k in ("kind", "usd", "tx", "who")} for t in due],
-                   "pool": self.pool_name, "events": events,
+            msg = {"type": "tick", "act": np.round(act, 3).tolist(), "wave": wave,     # (S1: no trades, counts or
+                   "groups": (groups := {k: round(float(act[i].mean()), 3) for k, i in gidx.items()}),  # coin name)
+                   "sync": round(st["sync"], 3), "events": events,
                    "sleep": self.engine.status() | {"burst": round(self.burst, 2)},
                    "baseline": self.baseline.status() if self.baseline else None,
                    "slow": b.slow.status() if b.slow_on else None}
@@ -828,19 +959,42 @@ class Live:
             if self.browser and (dev := self.screen_device()):
                 msg["life"]["screen"] = self.screen_status(dev)
                 self.pagewatch.feed(rel, now, TICK)
+            await self.audience_tick(msg, tsim, rel, hot)
             await self.broadcast(msg)
             if events:
                 await self.broadcast(self.nights())
             if now - last_save >= SAVE_S:
-                self.store.save(self.engine, self.memory)
-                save_json(self.life_path, self.life.to_dict())
-                save_json(self.body_path, {"body": self.body.to_dict(), "neuro": self.neuro.to_dict()})
-                save_json(self.reading_path, self.reader.to_dict(), ensure_ascii=False)
+                await self.save_state()                               # written off the loop; a disk error is logged
                 last_save = now
             self.tick_s.append(time.perf_counter() - t0)
             self.last_tick = time.monotonic()
             next_t += TICK
             await asyncio.sleep(max(0.0, next_t - time.time()))
+
+    def state_files(self):
+        """What the periodic save writes: [(path, object, json.dumps kwargs)]. The same files and formats as
+        Store.save (state.json, nights/<date>.json) plus life.json, body.json and reading.json."""
+        night = {"indent": 1, "ensure_ascii": False}
+        files = [(self.store.root / "state.json", {"engine": self.engine.to_dict(), "memory": self.memory.items}, night)]
+        for n in (self.engine.night, self.engine.last_night):
+            if n is not None:
+                files.append((self.store.root / "nights" / f"{n['date']}.json", n, night))
+        files += [(self.life_path, self.life.to_dict(), {}),
+                  (self.body_path, {"body": self.body.to_dict(), "neuro": self.neuro.to_dict()}, {}),
+                  (self.reading_path, self.reader.to_dict(), {"ensure_ascii": False})]
+        return files
+
+    async def save_state(self):
+        """The periodic save (every SAVE_S, from the brain loop): serialised on the event loop, because the objects keep
+        changing under the loop, then written (tmp + fsync + rename, one file at a time) in a worker thread, so the
+        20 Hz loop never waits on the volume's fsync. A full or failing disk is logged, never fatal: before this an
+        OSError here ended the brain loop and with it the process (a Railway restart, a 502 window)."""
+        loop = asyncio.get_running_loop()
+        try:
+            data = [(path, json.dumps(obj, **kw)) for path, obj, kw in self.state_files()]
+            await loop.run_in_executor(None, write_json_files, data)
+        except (OSError, TypeError, ValueError) as e:
+            print("state: periodic save failed:", repr(e)[:160], flush=True)
 
     # --- the computer: what it reads -------------------------------------------------
     def wiki_fallback(self):
@@ -872,6 +1026,7 @@ class Live:
         """A reading (a page he stayed on, or the Wikipedia fallback) becomes a stimulus and a memory, is estimated
         for tonight's replay and goes out on the feed with its host and kind."""
         loop = asyncio.get_running_loop()
+        public_why(art, copy=False)                        # S4: the reason never quotes a viewer (also in the log)
         m = self.absorb_reading(art)
         if art.get("via") == "browser":
             self.reader.record(art)                        # "on his mind" and /api/reading show it
@@ -891,13 +1046,16 @@ class Live:
         return {"research": "desk", "phone": "phone", "watch_video": "desk"}.get(self.life.activity)
 
     def screen_status(self, dev):
+        """The public status of a screen: the browser's last status for it, or the restarting-style placeholder
+        (device only) while the browser restarts and when the status must not be shown (S2: a title the card filter
+        refuses, a finance / trading page)."""
         if self.browser.restarting:
             return {"device": dev, "restarting": True}
-        st = self.browser.screens.get(dev)
+        st = public_why(self.browser.screens.get(dev))      # S4: "from chat", never the viewer's words
         dec = self.decisions.get(dev)
-        if st and not card_title_ok(st.get("title", ""), st.get("host", "")):   # the public card never shows such a title
-            st = dict(st, title=st.get("host", ""))
-        elif st and (m := screens.TIKTOK_ID.search(str(st.get("url") or ""))):   # #89: viewers may play it in
+        if st and not screen_showable(st):                   # S2: a refused title or a finance page: the placeholder
+            return {"device": dev, "restarting": True}        # (device only: no title, url, id or screenshot)
+        if st and (m := screens.TIKTOK_ID.search(str(st.get("url") or ""))):     # #89: viewers may play it in
             st = dict(st, embed={"src": screens.TIKTOK_EMBED.format(m.group(1)),     # TikTok's official player
                                  "label": "TikTok (official embed)"})
         elif st and (m := screens.YT_ID.search(str(st.get("url") or ""))):        # ... or YouTube's
@@ -1158,13 +1316,17 @@ class Live:
         mood = {"boredom": self.life.boredom, "pressure": self.engine.pressure(t), "tired": self.engine.tired}
         gain = self.engine.gain
         topics = [Tastes.topics(o, page.get("title", "")) for o in opts]
-        tastes = [self.tastes.predict(tp) for tp in topics]
+        here = (self.pagewatch.cur or {}).get("topics")        # the page he is on: its taste is the leave row's (negated there)
+        tastes = [self.tastes.predict(here if here and o.get("action") == "leave" else tp, vote=True)
+                  for o, tp in zip(opts, topics)]
+        recent = list(getattr(self, "recent_picks", None) or [])   # repeat_key of the last choices: the repeat penalty
         clone = self.brain.clone()                            # snapshot on the event loop, simulated in a thread
         decider = getattr(self, "decider", None)
         sp = await decider.ask([o["label"] for o in opts], "browse") if decider else None   # GPU, else CPU, <= ~3.5 s
         dec = await loop.run_in_executor(None, lambda: brain_vote.vote(
-            clone, opts, gain, mood, tastes, [self.novel(o) for o in opts], self.vote_rng, spiking=sp))
+            clone, opts, gain, mood, tastes, [self.novel(o) for o in opts], self.vote_rng, spiking=sp, recent=recent))
         chosen = opts[dec["chosen"]]
+        self.recent_picks = (recent + [brain_vote.repeat_key(chosen)])[-brain_vote.REPEAT_N:]
         brain_vote.apply(self.brain, chosen, gain)             # the live brain receives the chosen stimulus
         act = {k: chosen.get(k) for k in ("action", "target", "label", "href")}
         if chosen.get("action") in brain_vote.VIDEO_ACTIONS:     # how long he watches: boredom + the brain's response
@@ -1208,7 +1370,7 @@ class Live:
     def chess_view(self):
         """GET /api/chess: the game on the board (or the last one), recent games, what the card says."""
         g = self.chess.public() if self.chess else self.chess_last
-        return {"playing": self.chess is not None, "game": g, "games": read_jsonl(self.chess_path, last=10)[::-1],
+        return {"playing": self.chess is not None, "game": g, "games": tail_jsonl(self.chess_path, 10)[::-1],
                 "card": chess_game.CARD, "note": chess_game.NOTE}
 
     def chess_pace(self, his):
@@ -1229,7 +1391,8 @@ class Live:
         g = self.chess
         if g is None:
             if playing:
-                g = self.chess = chess_game.Game(t, rng=self.chess_rng)
+                level = chess_game.level_for(tail_jsonl(self.chess_path, chess_game.LEVEL_GAMES))   # W/D/L-tuned
+                g = self.chess = chess_game.Game(t, rng=self.chess_rng, level=level)
                 g.next_at = time.time() + self.chess_pace(g.his_turn)
                 await self.broadcast({"type": "chess", **g.public()})
             return
@@ -1280,6 +1443,21 @@ class Live:
         if self.life.activity == "play_chess":
             self.life.end_activity(t)
         await self.broadcast({"type": "chess", **self.chess_last, "finished": True})
+        await self.apply_held_vote(t)                           # L4: a vote held during the game is applied now
+
+    async def apply_held_vote(self, t):
+        """A vote result waiting while he played chess (audience_tick holds it: votes never cut a game, L4) becomes
+        his nudge once the game is over, when he is awake and the activity is possible."""
+        v = getattr(self, "votes", None)
+        p = v.pending if v else None
+        if not p:
+            return
+        ok = self.engine.stage == "AWAKE" \
+            and self.life.scores(t, self.last_rel, 0.0, self.engine.pressure(t)).get(p["act"], 0.0) > 0
+        got = v.take_pending(t, ok)
+        if got and self.life.apply_vote(got["act"], t):
+            await self.broadcast({"type": "vote_applied", "act": got["act"], "label": got["label"],
+                                  "round": got["round"], "t": hhmm(t)})
 
     # --- music (#68): his brain model picks among 3-5 candidate tracks; the pages show Spotify's own embed ------------
     def music_context(self, t):
@@ -1379,13 +1557,15 @@ class Live:
         if not self.mind or not page.get("title"):
             return
         page = {k: page.get(k, "") for k in ("url", "title", "host", "text")}
-        task = asyncio.get_running_loop().create_task(self._remember(page, self.encoding()))
+        # C2: with messages waiting and few hourly calls left, the page gets a keyword trace, the call is kept for chat
+        ai = not (self.chat_inbox and self.mind.calls_left() <= CHAT_RESERVE)
+        task = asyncio.get_running_loop().create_task(self._remember(page, self.encoding(), ai))
         self.bg.add(task)
         task.add_done_callback(self.bg.discard)
 
-    async def _remember(self, page, brain):
+    async def _remember(self, page, brain, ai=True):
         try:
-            it = await asyncio.get_running_loop().run_in_executor(None, self.mind.read, page, brain)
+            it = await asyncio.get_running_loop().run_in_executor(None, lambda: self.mind.read(page, brain, ai=ai))
         except Exception as e:                                   # notes are optional: never stop the screens
             print("mind: read failed:", repr(e)[:120], flush=True)
             return
@@ -1445,40 +1625,70 @@ class Live:
         t = self.clock.now()
         awake = self.engine.stage == "AWAKE"
         seen = getattr(self, "mind_seen", 0.0)
-        for ts, act in list(self.life.started):            # plan steps he carried out
+        hint = self.life.plan_hint
+        for ts, act in list(self.life.started):            # plan steps he carried out (only a start that was the hint)
             if ts > seen:
-                m.life_started(act)
+                m.life_started(act, hint)
                 seen = ts
         self.mind_seen = seen
         if awake and m.due_slot(t):
-            state = {"mood": self.mood(t), "gain": self.engine.gain, "chat": True}
+            state = {"mood": self.mood(t), "gain": self.engine.gain, "chat": True, "chess": True,
+                     "bread": self.life.bread, "chat_waiting": len(self.chat_inbox)}
             clone, view = self.brain.clone(), m.taste_view(self.tastes)    # snapshots on the event loop
             try:
                 await loop.run_in_executor(None, lambda: m.plan_day(state, clone, view, self.plan_rng))
                 await self.broadcast({"type": "plan", **(m.plan_public() or {})})
             except Exception as e:
                 print("mind: plan failed:", repr(e)[:160], flush=True)
-        nxt = m.next_step({"hunger": self.life.hunger, "pressure": self.engine.pressure(t)})
+        pressure = self.engine.pressure(t)
+        scores = self.life.scores(t, self.last_rel, 0.0, pressure) if awake else None     # P1: feasible steps only
+        nxt = m.next_step({"hunger": self.life.hunger, "pressure": pressure}, scores)
         self.life.plan_hint = nxt["life"] if nxt else None
-        self.chat_inbox = [x for x in self.chat_inbox if t - x[0] < 1800]     # older ones are not answered
-        resting = m.over_cap()
-        self.life.chat_waiting = len(self.chat_inbox) if awake and not resting else 0
-        at_desk = self.life.activity == "chat" and not self.life.path
-        ready = awake and at_desk and not resting and m.can_reply({"awake": True, "at_desk": True}) is None
-        if self.chat_inbox and ready:
-            said = self.chat_inbox.pop()[1]                         # the newest message first
-            ctx = {"awake": True, "at_desk": True, "mood": self.mood(t), "doing": "at the computer",
-                   "brain": self.encoding()}
-            try:
-                r = await loop.run_in_executor(None, m.reply, said, None, ctx)
-            except Exception as e:
-                print("mind: reply failed:", repr(e)[:160], flush=True)
-                return
-            if r["reply"]:
-                rec = {"t": hhmm(self.clock.now()), "text": r["reply"], "to": "a viewer", "replying_to": said,
-                       "tag": "his reply (AI-written)", "source": r["source"]}
+        # the inbox (C1/C2): he sits down to answer only when a reply is possible; every message gets an outcome
+        life = self.life
+        at_desk = not life.path and (life.activity == "chat"
+                                     or (life.activity in ("research", "watch_video") and life.place == "desk"))
+        open_why = m.reply_open()
+        if self.chat_inbox and open_why and "replies today" in open_why:      # the day's cap: the inbox is cleared
+            day = day_of(t)
+            if self.cap_noted != day:
+                self.cap_noted = day
+                rec = {"t": hhmm(t), "text": CAP_LINE, "to": "everyone", "replying_to": "",
+                       "tag": "a note from the room, not his words", "source": "note"}
                 self.replies = (self.replies + [rec])[-30:]
                 await self.broadcast({"type": "chat_reply", **rec})
+            for x in list(self.chat_inbox):
+                await self.chat_missed(x, "he has answered 40 messages today; back tomorrow")
+        for x in list(self.chat_inbox):
+            if t - x["t"] > CHAT_WAIT_S and not (awake and at_desk):
+                await self.chat_missed(x, "he missed that one: it waited too long")
+        life.chat_waiting = len(self.chat_inbox) if awake and open_why is None else 0
+        if self.chat_inbox and awake and at_desk:
+            item = self.next_message(t)                             # peek: popped only on a posted reply
+            ctx = {"awake": True, "at_desk": True, "mood": self.mood(t), "doing": self.doing_now(t),
+                   "brain": self.encoding(), "viewer": item["key"]}
+            try:
+                r = await loop.run_in_executor(None, m.reply, item["text"], item["nick"] or None, ctx)
+            except Exception as e:
+                print("mind: reply failed:", repr(e)[:160], flush=True)
+                r = {"reply": None, "why": "no AI reply", "source": None}
+            if r["reply"]:
+                if item in self.chat_inbox:
+                    self.chat_inbox.remove(item)
+                self.chat_served[item["key"]] = t
+                while len(self.chat_served) > 200:
+                    self.chat_served.pop(next(iter(self.chat_served)))
+                rec = {"t": hhmm(self.clock.now()), "text": r["reply"], "to": item["nick"] or "a viewer",
+                       "replying_to": item["text"], "tag": "his reply (AI-written)", "source": r["source"]}
+                self.replies = (self.replies + [rec])[-30:]
+                await self.broadcast({"type": "chat_reply", **rec})
+            elif r["why"] == "no AI reply":                         # transient: one more try, then a visible miss
+                item["tries"] += 1
+                if item["tries"] >= 2:
+                    await self.chat_missed(item, "his reply did not come (the AI did not answer)")
+            elif r["why"].startswith("message blocked"):
+                await self.chat_missed(item, "the chat filter kept it")
+            # else: it waits (the 2-min gap, the rule gap, the budget): chat_waiting says whether he will come back
 
     # --- the eye: what SUB-01 "sees" ----------------------------------------------
     async def run_eye(self):
@@ -1568,7 +1778,7 @@ class Live:
                                 mem_limit_mb=getattr(self.local_browser, "mem_mb", None),
                                 heavy=self.local_browser.heavy.public() if hasattr(self.local_browser, "heavy") else None)
         nights = self.diary.index(1) if self.diary else []
-        tests = read_jsonl(self.data_dir / "spiking" / "memory_tests.jsonl", last=1)
+        tests = tail_jsonl(self.data_dir / "spiking" / "memory_tests.jsonl", 1)
         return {"ok": self.healthy(),
                 "last_tick_s_ago": round(time.monotonic() - self.last_tick, 3) if self.last_tick else None,
                 "tick_ms": {"p50": pct(ticks, 0.5), "p95": pct(ticks, 0.95), "max": round(1000 * ticks[-1], 2) if ticks
@@ -1579,6 +1789,77 @@ class Live:
                 "last_diary": nights[0]["date"] if nights else None,
                 "last_memory_test": tests[-1].get("test_day") if tests else None,
                 "spend_today": {k: round(v, 4) for k, v in self.ledger.by_day(1).popitem()[1].items()}}
+
+    # --- viewers: the vote on what he does next, the reactions (preview/interactive, audience.py) ----------------
+    async def audience_tick(self, msg, tsim, rel, hot):
+        """Each brain tick: the viewer count and the vote's counts go in the tick, the reactions since the last tick too;
+        a round that ends hands its winner to his activity model (when he is awake and it is possible), a new round
+        opens, while he is awake, with what his model allows now and at its end minus what he is doing already; the
+        page hears `vote_applied` when the voted activity actually begins (not when the nudge is set); a spike of
+        reactions makes him glance at the camera."""
+        v = self.votes
+        now = v.clock()
+        awake = self.engine.stage == "AWAKE"
+        if v.due(now):
+            res = v.close(tsim)
+            if res:
+                await self.broadcast({"type": "vote_result", **res})
+            opts = []
+            if awake:                                            # asleep: no round (it would only wait for morning)
+                pressure = self.engine.pressure(tsim)
+                end = tsim + v.round_s * self.time_scale
+                opts = audience.pick_options(self.life.scores(tsim, rel, hot, pressure),
+                                             self.life.scores(end, rel, hot, pressure), v.rng,
+                                             exclude={self.life.activity})
+            if v.open(opts, now):
+                await self.broadcast({"type": "vote", **v.public(now)})
+        p = v.pending
+        held = bool(p) and self.life.activity == "play_chess"   # L4: a vote never cuts a game; finish_chess applies it
+        if p and not held:
+            if awake and self.life.activity == p["act"]:          # he got there by himself meanwhile: nothing to nudge
+                v.pending = None
+            else:
+                can = awake and self.life.scores(tsim, rel, hot, self.engine.pressure(tsim)).get(p["act"], 0.0) > 0
+                got = v.take_pending(tsim, can)
+                if got and self.life.apply_vote(got["act"], tsim):
+                    self.vote_due = got                              # announced when it starts (below)
+        due = getattr(self, "vote_due", None)
+        if due:
+            if self.life.activity == due["act"]:                 # life.start() took the nudge: the vote is carried out
+                self.vote_due = None
+                await self.broadcast({"type": "vote_applied", "act": due["act"], "label": due["label"],
+                                      "round": due["round"], "t": hhmm(tsim), "started": True})
+            elif self.life.nudge(tsim) != due["act"]:            # the nudge ran out (an hour) without a start: dropped
+                self.vote_due = None
+        msg["aud"] = {"n": len(self.sockets), "v": v.compact(now)}
+        if held:
+            msg["aud"]["held"] = "after the game"
+        rx = self.reactions.drain()
+        if rx:
+            msg["rx"] = rx
+        if audience.glance_ok(self.engine.stage, msg.get("life")):   # (else it waits)
+            emoji = self.reactions.glance_due()
+            if emoji:
+                await self.broadcast({"type": "glance", "emoji": emoji})   # (the spike's dominant reaction: how he answers)
+
+    def audience_hello(self, ws):
+        if getattr(self, "votes", None) is None:               # a Live with only its websocket parts (as music, replies)
+            return None
+        ids = self.viewer_ids.get(ws, ())
+        return {"reactions": list(audience.REACTIONS), "viewers": len(self.sockets),
+                "vote": self.votes.public(mine=self.votes.mine(ids)), "react_every": audience.REACT_EVERY_S,
+                "react_burst": audience.REACT_BURST}
+
+    async def handle_vote(self, ws, k):
+        ids = self.viewer_ids.get(ws, ())
+        ok, reason = self.votes.cast(ids, k, addr=self.viewer_addr.get(ws))
+        await ws.send_json({"type": "vote_ack", "ok": ok, "reason": reason, "mine": self.votes.mine(ids)})
+
+    async def handle_react(self, ws, k):
+        ids = self.viewer_ids.get(ws, ())
+        ok, reason = self.reactions.react(ids[0] if ids else id(ws), k, self.viewer_addr.get(ws))   # IP + UA, the address
+        if not ok:
+            await ws.send_json({"type": "react_ack", "ok": False, "reason": reason})
 
     # --- http ----------------------------------------------------------------
     async def ws_handler(self, request):
@@ -1591,14 +1872,18 @@ class Live:
         key = self.client_ip(request)
         if len(self.sockets) >= self.max_ws or self.ws_per_ip.get(key, 0) >= self.max_ws_ip:
             self.ws_stats["refused"] += 1
+            why = "all" if len(self.sockets) >= self.max_ws else "ip"   # (the page says which: too many tabs/addresses, or the room)
             try:
-                await ws.send_json({"type": "full"})
+                await ws.send_json({"type": "full", "why": why, "retry": 30})
                 await ws.close(code=1013, message=b"full")       # 1013: try again later
             except Exception:
                 pass
             return ws
         self.sockets.add(ws)
         self.ws_per_ip[key] = self.ws_per_ip.get(key, 0) + 1
+        self.viewer_addr[ws] = self.viewer_fp.address(key)
+        self.viewer_ids[ws] = self.viewer_fp.ids(audience.issued_cookie(request.cookies.get(audience.VIEWER_COOKIE)),
+                                                 key, request.headers.get("User-Agent", ""))   # (a made-up cookie: none)
         try:
             if request.transport is not None:                    # sends never wait: see backlogged()
                 request.transport.set_write_buffer_limits(high=WS_HIGH_WATER)
@@ -1612,7 +1897,8 @@ class Live:
             await ws.send_json({"type": "hello", "chat": [self.public(m) for m in self.memory.chat()[-30:]],
                                 "replies": getattr(self, "replies", [])[-10:],
                                 "rules": [[cond, list(groups)] for cond, groups in RULES], "world": WORLD,
-                                "music": self.music.public(self.music.now) if getattr(self, "music", None) else None})
+                                "music": self.music.public(self.music.now) if getattr(self, "music", None) else None,
+                                "audience": self.audience_hello(ws), "ca": self.ca})
             await ws.send_json(self.nights())
             if self.last_frame:
                 await ws.send_json(self.eye_frame())
@@ -1626,19 +1912,60 @@ class Live:
                 except ValueError:
                     continue
                 if isinstance(d, dict) and d.get("type") == "chat" and isinstance(d.get("text"), str):
-                    await self.handle_chat(ws, key, d["text"])
+                    await self.handle_chat(ws, key, d["text"], d.get("nick") if isinstance(d.get("nick"), str) else "")
                 elif isinstance(d, dict) and d.get("type") == "teach" and isinstance(d.get("text"), str):
                     nick = d.get("nick") if isinstance(d.get("nick"), str) else ""
                     await self.handle_teach(ws, key, d["text"], nick)
+                elif isinstance(d, dict) and d.get("type") == "vote":
+                    await self.handle_vote(ws, d.get("k"))
+                elif isinstance(d, dict) and d.get("type") == "react":
+                    await self.handle_react(ws, d.get("k"))
         finally:                                       # also on errors / cancellation: never leak a client or its buffer
             self.drop_client(ws)
             self.sockets.discard(ws)
+            self.viewer_ids.pop(ws, None)
+            self.viewer_addr.pop(ws, None)
             n = self.ws_per_ip.get(key, 1) - 1
             if n > 0:
                 self.ws_per_ip[key] = n
             else:
                 self.ws_per_ip.pop(key, None)
         return ws
+
+
+def tail_jsonl(path, n, block=64 * 1024):
+    """The last `n` rows of a JSONL file, read from its end in 64 KB blocks; lines that do not parse are skipped (as in
+    state_io.read_jsonl, which reads and splits the whole file: the eye's frames.jsonl and the chess log grow on the
+    volume for months, and /api/frames read all of it on the event loop at every request)."""
+    if n <= 0:
+        return []
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, os.SEEK_END)
+            end, buf = f.tell(), b""
+            while end > 0 and buf.count(b"\n") <= n:      # n + 1 newlines: the n-th line from the end is whole
+                start = max(0, end - block)
+                f.seek(start)
+                buf = f.read(end - start) + buf
+                end = start
+    except OSError:
+        return []
+    out = []
+    for ln in buf.splitlines()[-n:]:
+        try:
+            out.append(json.loads(ln))
+        except ValueError:
+            continue
+    return out
+
+
+def write_json_files(items):
+    """[(path, json text)] -> each written as state_io.save_json does (tmp + fsync + os.replace, one writer per path at
+    a time, shared with the sync savers of the same files). Runs in a worker thread: Live.save_state."""
+    for path, data in items:
+        path = Path(path)
+        with state_io._lock(path.absolute()):
+            state_io._write_replace(path, data)
 
 
 def rss_mb():
@@ -1705,6 +2032,20 @@ def add_ops_routes(app, live, data_dir):
             return web.json_response(fn(request), headers={"Cache-Control": "no-store"})
         return handler
     app.router.add_get("/api/costs", admin(lambda r: live.ledger.report()))
+
+    async def api_wake(request):                     # the owner gets him out of bed now (curl -X POST -H "X-Admin-Token: ...")
+        if not (admin_ok(request) or request.app.get(GATED)):
+            raise web.HTTPUnauthorized(text="admin token required")
+        t = live.clock.now()
+        if not live.engine.asleep:
+            return web.json_response({"ok": True, "text": "already awake"})
+        ev = live.engine.get_up(t, "owner")
+        try:
+            await live.broadcast({"type": "event", **ev})
+        except Exception:
+            pass
+        return web.json_response({"ok": True, **ev})
+    app.router.add_post("/api/wake", api_wake)
     app.router.add_get("/api/health", admin(lambda r: live.health()))
 
     async def diag_shot(request):
@@ -1730,6 +2071,50 @@ color:#ececf2;font-family:ui-monospace,Menlo,monospace"><form method=post action
 <input name=password type=password placeholder="password" autofocus style="background:#0c0c12;color:#ececf2;
 border:1px solid #2a2a36;padding:10px;font:inherit"><button style="background:#ececf2;border:0;padding:10px;
 font:inherit">enter</button>{msg}</form></body>"""
+
+
+@web.middleware
+async def viewer_cookie(request, handler):
+    """The vote's one-per-viewer cookie (audience.py): a random id, HttpOnly, set on the pages (never on /ws, /api);
+    set again when the browser's one is not an id this server issued (a restart forgot it, or it was made up)."""
+    resp = await handler(request)
+    if request.method == "GET" and not audience.issued_cookie(request.cookies.get(audience.VIEWER_COOKIE)) and not resp.prepared \
+            and request.path in ("/", "/brain", "/room.html", "/index.html"):
+        resp.set_cookie(audience.VIEWER_COOKIE, audience.new_viewer_id(), max_age=365 * 86400, httponly=True,
+                        samesite="Lax", secure=request.secure or request.headers.get("X-Forwarded-Proto") == "https")
+    return resp
+
+
+# links visitors may still have from before the launch, sent to the page they meant
+OLD_PATHS = {"/login": "/", "/room": "/", "/room/": "/", "/home": "/", "/index": "/", "/sees": "/world.html",
+             "/brain.html": "/brain", "/diary.html": "/diary", "/about": "/about.html",
+             "/city": CITY_URL, "/life": "/life.html", "/map": "/life.html"}   # the city site; the old map at /map
+
+NOT_FOUND_PAGE = """<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>SUB-01</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><body style="margin:0;height:100vh;
+display:grid;place-items:center;background:#040406;color:#ececf2;font-family:ui-monospace,Menlo,monospace">
+<div style="display:grid;gap:14px;justify-items:center;text-align:center;padding:16px">
+<div style="background:#ff6a00;color:#0a0a0a;font-size:28px;letter-spacing:.12em;padding:2px 12px">SUB-01</div>
+<div>this page doesn't exist</div><a href="/" style="color:#ff6a00">back to his room</a></div></body>"""
+
+
+@web.middleware
+async def friendly_errors(request, handler):
+    """A page a person opens that isn't there (a 403 or 404 on a GET for HTML) gets a small page with a link to the room,
+    not the server's bare error; the APIs, the socket and the media keep their plain status codes."""
+    page = (request.method == "GET" and "text/html" in request.headers.get("Accept", "")
+            and not request.path.startswith(("/api/", "/ws", "/eye/", "/diary-img/")))
+    try:
+        resp = await handler(request)
+    except web.HTTPException as e:
+        if page and e.status in (403, 404):
+            return web.Response(text=NOT_FOUND_PAGE, content_type="text/html", status=404)
+        raise
+    if page and not resp.prepared and isinstance(resp, web.FileResponse):   # (the static route answers a missing file
+        path = getattr(resp, "_path", None)                                  # with a FileResponse that 404s on send)
+        if path is not None and not Path(path).is_file():
+            return web.Response(text=NOT_FOUND_PAGE, content_type="text/html", status=404)
+    return resp
 
 
 def password_gate(password):
@@ -1765,12 +2150,16 @@ def password_gate(password):
 
 async def main(args):
     data_dir = Path(args.data_dir) if args.data_dir else HERE / "data" / ("demo" if args.time_scale != 1 else "")
+    t_build = time.monotonic()
     live = Live(args.mint, args.demo, args.time_scale, data_dir,
                 parse_start(args.start) if args.start else None, args.trust_proxy)
+    built_s = time.monotonic() - t_build          # the brain model (+ the fitted slow layer's eig) and the saved state
     # launched (owner, 2026-10-08): the site is public; the password gate only comes back with SITE_GATE=1
     gate_on = os.environ.get("SITE_PASSWORD") and os.environ.get("SITE_GATE") == "1"
     middlewares = [password_gate(os.environ["SITE_PASSWORD"])] if gate_on else []
-    app = web.Application(client_max_size=64 * 1024 ** 2, middlewares=middlewares)
+    if args.vote_round:
+        live.votes.round_s = args.vote_round
+    app = web.Application(client_max_size=64 * 1024 ** 2, middlewares=middlewares + [viewer_cookie, friendly_errors])
     app[GATED] = bool(middlewares)                # behind the password gate: its cookie also opens the admin APIs
     app.router.add_get("/ws", live.ws_handler)
     manager = None
@@ -1791,6 +2180,7 @@ async def main(args):
         cpu_net.on_frame = live.spiking.relay if live.spiking else live.broadcast
     live.decider = brain_vote.Backend(cpu=cpu_net, gpu=spiking_manager, log=spiking_live.DecisionLog(data_dir))
     spiking_live.attach(app, live.decider)
+    launchpad_eval.add_routes(app, live, data_dir)   # the launchpad asks his brain about ideas (signed, off without a secret)
 
     async def snap(request):                      # save a canvas capture posted by the page (local only)
         name = Path(request.query.get("name", "snap")).name
@@ -1828,8 +2218,10 @@ async def main(args):
 
     async def screen_shot(request):               # latest screenshot of the desk or phone screen
         dev = request.match_info["device"]
-        try:
-            shot = await live.browser.shot(dev) if live.browser and dev in ("desk", "phone") else None
+        st = (getattr(live.browser, "screens", None) or {}).get(dev) if live.browser else None
+        try:                                      # S2 / B8: no current status (closed, timed out), a refused title
+            shot = (await live.browser.shot(dev) if live.browser and dev in ("desk", "phone")   # or a finance page:
+                    and st and screen_showable(st) else None)                                   # nothing to show
         except BrowserDown:
             shot = None
         if not shot:
@@ -1860,6 +2252,10 @@ async def main(args):
     async def chess_api(request):                 # the chess board at his desk, recent games, what the card says
         return web.json_response(live.chess_view())
     app.router.add_get("/api/chess", chess_api)
+
+    async def vote_api(request):                  # viewers' vote on what he does next: the round, the last result
+        return web.json_response(live.votes.public())
+    app.router.add_get("/api/vote", vote_api)
 
     async def music_api(request):                 # now playing (Spotify embed URL), today's tracks and why each was picked
         return web.json_response(live.music.view(live.clock.now()))
@@ -1893,12 +2289,17 @@ async def main(args):
     app.router.add_get("/api/diary/{date}", diary_night)
 
     async def reading(request):                   # what it read at the computer, newest last
-        return web.json_response({"log": live.reader.log[-20:]})
+        return web.json_response({"log": [public_why(a) for a in live.reader.log[-20:]]})
     app.router.add_get("/api/reading", reading)
 
     async def frames(request):                    # recent eye frames for the world page
         log = live.eye.log if live.eye else HERE / "missing"
-        rows = read_jsonl(log, last=int(request.query.get("n", "40")))         # a torn last line is skipped
+        try:
+            n = max(1, min(500, int(request.query.get("n", "40"))))
+        except ValueError:
+            n = 40
+        # frames.jsonl grows for as long as the volume lives: read its tail only, and off the event loop
+        rows = await asyncio.get_running_loop().run_in_executor(None, tail_jsonl, log, n)   # a torn line is skipped
         world = live.eye.world.top(live.clock.now(), 20) if live.eye else []
         return web.json_response({"frames": rows, "world": world, "resting": RESTING if live.eye_resting else None})
     app.router.add_get("/api/frames", frames)
@@ -1921,22 +2322,48 @@ async def main(args):
     async def config(request):                    # browser config (Maps JS keys are referrer-restricted by design)
         key = os.environ.get("GOOGLE_MAPS_KEY", "")
         referer = f"{request.headers.get('X-Forwarded-Proto', request.scheme)}://{request.host}/"
-        return web.json_response({"gmaps": key if key and await gmaps_works(key, referer) else ""})
+        return web.json_response({"gmaps": key if key and await gmaps_works(key, referer) else "", "ca": live.ca})
     app.router.add_get("/api/config", config)
+
+    city_state = {"up": False, "checked": 0.0}
+
+    async def city(request):
+        """The city site's pulse for the room's popout card: one GET of its front page at most every 60 s (shared by
+        every viewer), up = 200. The city forbids being framed by other sites (frame-ancestors 'self'), so the card is
+        a preview and a live dot, and the click opens the city in its own window."""
+        if time.time() - city_state["checked"] > 60:
+            city_state["checked"] = time.time()
+            try:
+                async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=8)) as http, \
+                        http.get(CITY_URL, headers={"User-Agent": "SUB-01 room (city pulse)"}) as r:
+                    city_state["up"] = r.status == 200
+            except Exception:
+                city_state["up"] = False
+        return web.json_response({"url": CITY_URL, "up": city_state["up"], "checked": int(city_state["checked"])},
+                                 headers={"Cache-Control": "no-store"})
+    app.router.add_get("/api/city", city)
     app.router.add_get("/", lambda r: web.FileResponse(HERE / "web" / "room.html", headers=NOCACHE))   # his room is the front page       # the life is the front page
     app.router.add_get("/brain", lambda r: web.FileResponse(HERE / "web" / "index.html", headers=NOCACHE))
     app.router.add_get("/diary", lambda r: web.FileResponse(HERE / "web" / "diary.html", headers=NOCACHE))
+    for old, new in OLD_PATHS.items():             # links from before the launch (the login page, short names)
+        app.router.add_get(old, lambda r, new=new: web.HTTPFound(new))
     app.router.add_static("/", HERE / "web")
     runner = web.AppRunner(app)
     await runner.setup()
     await web.TCPSite(runner, args.host, args.port).start()
     print(f"SUB-01 live on http://localhost:{args.port}  ({'demo' if args.demo else (args.mint or 'no coin yet: trade feed off')}, "
           f"time x{args.time_scale:g}, state in {data_dir})", flush=True)
+    # the deploy gap: until this line the edge gets "connection refused" (a 502); a slow build shows up here
+    print(f"startup: listening {time.monotonic() - START:.1f} s after import (brain + state built in {built_s:.1f} s); "
+          f"/healthz answers 200 from the first brain tick", flush=True)
     live.life.can_watch = bool(live.browser)     # no browser: no videos at the desk
-    tasks = [live.run_brain(), live.run_research(), live.demo_trades() if args.demo else live.rpc_trades(),
+    # every long-running part is supervised: an unexpected error restarts that part, instead of ending asyncio.gather
+    # and with it the process (a Railway restart = a 502 window for every page until the new process listens)
+    tasks = [supervised("brain", live.run_brain, backoff=1.0), supervised("research", live.run_research),
+             supervised("trades", live.demo_trades if args.demo else live.rpc_trades),
              supervised("chess", live.run_chess), supervised("music", live.run_music)]
     if live.eye:
-        tasks.append(live.run_eye())
+        tasks.append(supervised("eye", live.run_eye))
     if live.browser:
         tasks.append(supervised("browse", live.run_browse))
     if live.mind:
@@ -1947,6 +2374,17 @@ async def main(args):
         tasks.append(supervised("spiking live", cpu_net.run))
     if getattr(live, "clips", None):
         tasks.append(supervised("clips", lambda: live.clips.run(live, args.port), backoff=60))
+    me, stopping = asyncio.current_task(), []
+
+    def on_sigterm():                             # a redeploy / `docker stop`: SIGTERM, then SIGKILL after a grace period.
+        if not stopping:                          # Without this the process died at once and the last minute of state
+            stopping.append(True)                 # (memory, sleep, life) was lost; now the finally below saves it first.
+            print("SIGTERM: saving state and stopping", flush=True)
+            me.cancel()
+    try:
+        asyncio.get_running_loop().add_signal_handler(signal.SIGTERM, on_sigterm)
+    except (NotImplementedError, RuntimeError, ValueError):    # not on this platform / not the main thread
+        pass
     try:
         await asyncio.gather(*tasks)
     finally:
@@ -1985,9 +2423,14 @@ def build_parser():
     p.add_argument("--eye", action="store_true", help="generate what SUB-01 'sees' (local image + language models)")
     p.add_argument("--browse", action="store_true", default=os.environ.get("BROWSE") == "1",
                    help="real headless browser on the open web for his computer and phone screens (needs playwright)")
+    p.add_argument("--vote-round", type=float, default=None,
+                   help="seconds per viewers' vote round (default SUB01_VOTE_ROUND_S or 3600)")
     p.add_argument("--trust-proxy", action="store_true", help="rate-limit by X-Forwarded-For (behind a reverse proxy)")
     return p
 
 
 if __name__ == "__main__":
-    asyncio.run(main(build_parser().parse_args()))
+    try:
+        asyncio.run(main(build_parser().parse_args()))
+    except asyncio.CancelledError:                # SIGTERM (a redeploy): the state was saved in main()'s finally
+        pass

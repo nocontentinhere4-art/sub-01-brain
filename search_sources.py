@@ -328,9 +328,36 @@ def _tiktok_url(q):
     return short_videos.tiktok_url(q)
 
 
+ASIDE_TAGS = {"aside", "nav", "footer", "menu"}                  # (not <header>: articles have an entry header)
+ASIDE_CLASS = re.compile(r"\b((?<!no-)sidebar|aside|related|trending|popular|most-read|recommended|widget|"
+                         r"site-footer|footer-|site-nav|main-nav|navbar|nav-menu|menu-)", re.I)
+
+
+def query_words(base):
+    """The query a results page was asked for (its own URL's s / q / query / searchTerm / term parameter), as words."""
+    u0 = urllib.parse.urlsplit(base)
+    q = " ".join(v for k, v in urllib.parse.parse_qsl(u0.query) if k in ("s", "q", "query", "searchTerm", "term"))
+    return [w for w in re.findall(r"\w+", q.lower()) if len(w) > 2]
+
+
+def in_aside(node):
+    """B3: a heading inside an aside, nav, footer, header or menu (or a sidebar / related / trending box) is not a
+    result."""
+    n = node.parent
+    while n is not None and n.tag != "#root":
+        if n.tag in ASIDE_TAGS or ASIDE_CLASS.search(n.attrs.get("class") or "") or ASIDE_CLASS.search(
+                n.attrs.get("id") or ""):
+            return True
+        n = n.parent
+    return False
+
+
 def parse_headlines(text, base):
-    """A site's own search results (site_search): article links in headings on the same site."""
+    """A site's own search results (site_search): article links in headings on the same site. B3: a heading counts
+    only when it shares a word with the query (the same rule as parse_links) and is not in an aside / nav / footer,
+    so a results page with nothing about the query gives [] and the rotation moves on."""
     host = urllib.parse.urlsplit(base).hostname or ""
+    words = query_words(base)
     out = []
     for h in parse_html(text).iter():
         if h.tag not in ("h1", "h2", "h3", "h4"):
@@ -340,7 +367,7 @@ def parse_headlines(text, base):
             continue
         url = urllib.parse.urljoin(base, a.attrs.get("href", ""))
         u = urllib.parse.urlsplit(url)
-        if (u.hostname or "") != host or u.path in ("", "/") or u.query:
+        if (u.hostname or "") != host or u.path in ("", "/") or u.query or in_aside(h):
             continue
         box = h.parent
         sn = ""
@@ -352,6 +379,8 @@ def parse_headlines(text, base):
                 sn = p.text()
                 break
             box = box.parent
+        if words and not any(w in f"{a.text()} {sn}".lower() for w in words):
+            continue                                        # B3: nothing of the query in it: not a result
         out.append(_result(url, a.text(), sn))
     return _dedup(out)
 
@@ -359,10 +388,8 @@ def parse_headlines(text, base):
 def parse_links(text, base):
     """A site's own search results page when its results are not in headings: same-site article links whose text
     (at least 20 characters) has one of the query's words (the query is read from the page's own URL)."""
-    u0 = urllib.parse.urlsplit(base)
-    host = u0.hostname or ""
-    q = " ".join(v for k, v in urllib.parse.parse_qsl(u0.query) if k in ("s", "q", "query", "searchTerm", "term"))
-    words = [w for w in re.findall(r"\w+", q.lower()) if len(w) > 2]
+    host = urllib.parse.urlsplit(base).hostname or ""
+    words = query_words(base)
     out = []
     for a in parse_html(text).find_all("a"):
         url = urllib.parse.urljoin(base, a.attrs.get("href", ""))
@@ -448,22 +475,24 @@ TOPICS = [
                            r"evolution|climate|mathemat\w*|theorem|equation\w*|neural network\w*|chemistry|"
                            r"molecul\w*|biolog\w*|ecolog\w*|scientists?|new study|research paper)\b", re.I),
      ("arxiv", "news", "wikipedia")),
+    # B2: phrases, not generic words: "Tokyo tour" is not music, "zip code" and "Code Geass" are not code, a "series
+    # of events" is not a TV series, "race" / "engine" / "switch" alone say nothing
     ("cars", re.compile(r"\b(cars?|supra|gt-?r|skyline|jdm|drift\w*|civic|type r|porsche|ferrari|lamborghini|bmw|"
-                        r"toyota|nissan|honda|mazda|subaru|tesla|formula ?1|f1|race|racing|motor\w*|engine|tuning|"
-                        r"supercar\w*|hypercar\w*)\b", re.I), ("carscoops",)),
-    ("games", re.compile(r"\b(games?|gaming|gamer|nintendo|switch|playstation|ps5|xbox|steam|elden ring|minecraft|"
+                        r"toyota|nissan|honda|mazda|subaru|tesla|formula ?(?:1|one)|f1 race|grand prix|motorsport\w*|"
+                        r"racing|car engines?|engine swap|tuning|supercar\w*|hypercar\w*)\b", re.I), ("carscoops",)),
+    ("games", re.compile(r"\b(games?|gaming|gamer|nintendo( switch)?|playstation|ps5|xbox|steam|elden ring|minecraft|"
                          r"fortnite|zelda|pokemon|gta|valorant|speedrun\w*|esports?|indie games?)\b", re.I),
      ("pcgamer",)),
     ("anime", re.compile(r"\b(anime|manga|one piece|naruto|jujutsu|kaisen|chainsaw man|frieren|demon slayer|"
                          r"solo leveling|ghibli|dragon ball|attack on titan|spy x family|crunchyroll)\b", re.I),
      ("mal",)),
-    ("movies", re.compile(r"\b(movies?|films?|series|trailer|netflix|marvel|dune|cinema|box office|season \d+)\b",
-                          re.I), ("tmdb",)),
-    ("music", re.compile(r"\b(music|songs?|albums?|rappers?|rap|hip hop|playlist|concert|tour|singer|band|"
-                         r"city pop|lo-?fi|k-?pop|j-?pop)\b", re.I), ("nme",)),
+    ("movies", re.compile(r"\b(movies?|films?|tv series|netflix series|trailer|netflix|marvel|dune|cinema|box office|"
+                          r"season \d+)\b", re.I), ("tmdb",)),
+    ("music", re.compile(r"\b(music|songs?|albums?|rappers?|rap|hip hop|playlist|concert( tour)?|world tour|singer|"
+                         r"band|city pop|lo-?fi|k-?pop|j-?pop)\b", re.I), ("nme",)),
     ("tech", re.compile(r"\b(iphone|apple|macbook|ipad|airpods|android|samsung|pixel|smartphones?|gadgets?|"
                         r"headphones|keyboards?|laptops?)\b", re.I), ("9to5mac", "hn")),
-    ("code", re.compile(r"\b(programming|software|code|coding|python|rust|linux|computers?|compilers?|"
+    ("code", re.compile(r"\b(programming|software|source code|coding|python|rust|linux|computers?|compilers?|"
                         r"open source|gpu|databases?|startups?)\b", re.I), ("hn",)),
     ("book", re.compile(r"\b(books?|novels?|authors?|poetry|poems?|fiction|literature|reading list)\b", re.I),
      ("openlibrary",)),
@@ -672,7 +701,9 @@ def route(q, limits=None, rng=None, video=False, wiki_share=0.0, hungry=False):
     less once it filled more than a tenth of today's pages (`wiki_share`; novelty, not a quota)."""
     import math
     rng = rng or random.Random()
-    score = {"youtube": 1.2} if video else {}
+    if video:                                               # B2: a video search has no page source here: the caller
+        return []                                           # goes to the video path (the Data API / the feeds)
+    score = {}
     for _, rx, srcs in TOPICS:
         if rx.search(q or ""):
             for i, s in enumerate(srcs):
@@ -684,8 +715,6 @@ def route(q, limits=None, rng=None, video=False, wiki_share=0.0, hungry=False):
     if not hungry:
         for s in MEAL_ONLY:                                 # #89 teen: no recipe loops outside meals
             score.pop(s, None)
-    if video:
-        score.pop("wikipedia", None)                        # a video search never ends on Wikipedia
     if not ol_slug(q or ""):
         score.pop("openlibrary", None)
     for s in [k for k in score if SOURCES.get(k, {}).get("feed")]:
@@ -747,12 +776,27 @@ PLACE_QUERIES = {"park": "Inokashira Park", "bench": "Inokashira Park", "buy_bre
                  "shop": "Kichijoji shops", "window": "Kichijoji street view"}
 
 
+# B3: words that make no search on their own (web-UI and title filler); a query made only of these, or only of words
+# under 5 letters, is dropped by interest_for
+GENERIC = set("""video videos watch watching official new best live full free top today really people time news
+page click menu home read view part episode shorts tiktok youtube thing things stuff trailer latest update
+compilation highlights reaction channel stream subscribe tonight week this that with from about""".split())
+
+
+def query_fit(q):
+    """A query worth typing: at least one word of 5+ letters that is not generic filler."""
+    ws = re.findall(r"[^\W\d_]+", str(q or "").lower())
+    return any(len(w) >= 5 and w not in GENERIC for w in ws)
+
+
 def interest_for(mind=(), reading=None, taught=(), tastes=(), rng=None, query_ok=None, seen=None):
     """One query for the browser, drawn from his sources: the mind's memory-linked searches (weight 3), what he was
     reading (1), words viewers taught him (1.5), topics his tastes favour (1), and things he saw (`seen`:
-    {"video": [...], "walk": [...], "eye": [...], "screen": [...]}, SEEN_WEIGHT). -> {"query", "from"} or None."""
+    {"video": [...], "walk": [...], "eye": [...], "screen": [...]}, SEEN_WEIGHT). -> {"query", "from"} or None.
+    B3: a query made only of generic filler or short words ("video", "best", "top") is never one."""
     rng = rng or random.Random()
-    ok = query_ok or (lambda q: " ".join(str(q or "").split()) or None)
+    filt = query_ok or (lambda q: " ".join(str(q or "").split()) or None)
+    ok = lambda q: (lambda r: r if r and query_fit(r) else None)(filt(q))          # noqa: E731
     pools = []
     m = [q for q in (ok(x.get("query") if isinstance(x, dict) else x) for x in (mind or [])) if q]
     if m:
@@ -782,10 +826,26 @@ def interest_for(mind=(), reading=None, taught=(), tastes=(), rng=None, query_ok
 
 
 def video_query(title):
-    """A video title -> a short search about it (its first words, without the channel tail and hashtags)."""
+    """B3: a video or page title -> a search about what it is about, or None. A name in it (ENTITY: "Ghibli Museum",
+    but not in an all-capitalised clickbait title, and not a person's name), else two or more content words that
+    map to one of his profile topics ("Beginner Guide to Making Ramen Noodles" -> "ramen noodles"); never the
+    title's first words ("I Spent 24 Hours In A Capsule Hotel In Tokyo" -> None)."""
+    import interests
     t = re.sub(r"#\w+|\(.*?\)|\[.*?\]|[|｜\-–—:].*$", " ", str(title or ""))
-    words = [w for w in re.findall(r"[A-Za-z0-9'&]+", t) if len(w) > 1][:5]
-    return " ".join(words) or None
+    tokens = re.findall(r"[A-Za-z][A-Za-z0-9'&-]*", t)
+    long = [w for w in tokens if len(w) >= 4]
+    title_case = long and sum(w[0].isupper() for w in long) / len(long) >= 0.6
+    if not title_case:
+        for m in ENTITY.finditer(t):
+            parts = [p for p in m.group(1).split(" ") if p not in CAP_STOP]
+            e = " ".join(parts)
+            if len(parts) >= 2 and not person_like(e):
+                return e
+    content = [w.lower() for w in tokens if len(w) >= 4 and w.lower() not in GENERIC and w.lower() not in COMMON]
+    hits = [w for w in content if interests.topic_of(w)]
+    if len(hits) >= 2:
+        return " ".join(dict.fromkeys(hits[:3]))
+    return None
 
 
 def seen_things(live):
@@ -796,7 +856,9 @@ def seen_things(live):
             if not st:
                 continue
             if st.get("video") or "youtube.com" in str(st.get("host", "")) or "tiktok.com" in str(st.get("host", "")):
-                seen["video"] += [video_query(st.get("title")), st.get("channel")]
+                import interests
+                ch = str(st.get("channel") or "")
+                seen["video"] += [video_query(st.get("title")), ch if interests.topic_of(ch) else None]   # B3
             elif st.get("kind") == "page" and st.get("title"):
                 seen["screen"].append(video_query(st.get("title")))
     except Exception:
@@ -847,8 +909,9 @@ def live_interest(live, art=None, rng=None):
     except Exception:
         pass
     liked = []
-    try:
-        liked = [f["topic"] for f in live.tastes.top(n=8)["favoured"] if f.get("kind") == "word"][:5]
+    try:                                                    # B3: a favoured word only when it names a profile topic
+        liked = [f["topic"] for f in live.tastes.top(n=8)["favoured"]
+                 if f.get("kind") == "word" and interests.topic_of(str(f["topic"]))][:5]
     except Exception:
         pass
     it = interest_for(mind_q, art["title"] if art else None, taught[-10:], liked, rng=rng, query_ok=query_ok,
@@ -895,7 +958,31 @@ various whether which while within without would years important different anoth
 business children community company country development government information interest national number problem
 program question research service several social system through university student students million billion
 percent article articles comment comments website online content privacy policy cookies newsletter subscribe
-advertisement related latest popular reading continue""".split())
+advertisement related latest popular reading continue character characters everything according announced
+reported released available experience performance technology president minister particular published statement
+television newspaper magazine journalist celebrity personality relationship girlfriend boyfriend apartment
+restaurant interview highlights officially yesterday tomorrow afternoon beautiful wonderful incredible absolutely
+definitely basically literally generally eventually currently recently previously originally completely""".split())
+# B3: a capitalised run that looks like a person's name (two or three capitalised words with no place / work / group
+# word) is never searched: no "who is <name>" from a news article
+PLACE_WORD = re.compile(r"\b(Park|Museum|Station|Tower|City|Street|River|Temple|Shrine|Island|Bay|Lake|Mount|Mountain|"
+                        r"University|Stadium|Festival|Company|Studio|Studios|Line|Airport|Prefecture|Ward|Bridge|"
+                        r"Garden|Gardens|Castle|School|Hotel|Market|Store|Game|Games|Series|Season|Film|Movie|Album|"
+                        r"Band|League|Cup|Championship|Prize|Award|Awards|Agency|Institute|Center|Centre|Project|"
+                        r"Mission|Rover|Telescope|Hospital|Library|Zoo|Aquarium|Cafe|Bakery|Shop|Mall|Avenue|Road|"
+                        r"Railway|Express|Dome|Hall|Arena|Club|Team|FC|United|Corp|Inc|Ltd|Co|Bank|Group|Records|"
+                        r"Pictures|Entertainment|Motors|Motor|Electric|Industries|Labs|Lab|Foundation|Society|Union|"
+                        r"Street|Village|Town|Valley|Forest|Beach|Coast|Sea|Ocean|Desert|Canyon|Falls|Peak|Hill|Hills|"
+                        r"Ring|Quest|Legends|Saga|Chronicles|Wars|Trek|Kaisen|Piece|Slayer|Man|Ball|Titan|Family|"
+                        r"Museum|Gallery|Exhibition|Theatre|Theater|Cinema|Boulevard|Square|Plaza|Harbor|Harbour|Port|"
+                        r"Nintendo|Sony|Toyota|Honda|Nissan|Mazda|Subaru|Apple|Google|Samsung|Netflix|Disney|Ghibli|"
+                        r"Pokemon|Zelda|Mario|Supra|Civic|Skyline|Switch|PlayStation|Xbox|iPhone|Galaxy|Pixel)\b")
+
+
+def person_like(entity):
+    """Two or three capitalised words with no place / work / group word: probably a person's name."""
+    parts = str(entity or "").split()
+    return 2 <= len(parts) <= 3 and all(p[:1].isupper() for p in parts) and not PLACE_WORD.search(entity)
 
 
 def follow_ups(page, n=2, query_ok=None, seen=()):
@@ -906,6 +993,7 @@ def follow_ups(page, n=2, query_ok=None, seen=()):
     title = page.get("title", "") or ""
     text = f"{title}. {page.get('text', '') or ''}"[:4000]
     tl = title.lower()
+    lead = text[:700].lower()                               # B3: the title and the first paragraph
     have = {s.lower() for s in seen}
     out = []
     counts = {}
@@ -918,9 +1006,11 @@ def follow_ups(page, n=2, query_ok=None, seen=()):
         if len(parts) < 2 and not (parts and "-" in parts[0]):
             continue
         e = " ".join(parts)
+        if person_like(e):                                  # B3: a person's name from an article is never searched
+            continue
         counts[e] = counts.get(e, 0) + 1
     ents = [e for e in sorted(counts, key=lambda e: (-counts[e], len(e)))
-            if e.lower() not in tl]                         # not the page's own subject
+            if e.lower() not in tl and e.lower() in lead]   # not the page's own subject; named up top, not in a footer
     for e in ents:
         q = ok(e)
         if q and q.lower() not in have:

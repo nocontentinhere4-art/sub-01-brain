@@ -198,15 +198,15 @@ def test_dream_slides_from_the_diary(tmp_path):
     assert 15 <= sum(s["seconds"] for s in spec["slides"]) <= 40
 
 
-def test_sampling_skips_the_chart_and_unsafe_choices(tmp_path):
+def test_sampling_skips_the_phone_and_unsafe_choices(tmp_path):
     maker = clips.ClipMaker(tmp_path, clock=lambda: NOON)
 
     class Obj:
         pass
     live = Obj()
     live.life = Obj()
-    live.life.activity = "chart"
-    live.life.log = [{"t": NOON - 60, "what": "the market is moving: checks the chart"},
+    live.life.activity = "phone"
+    live.life.log = [{"t": NOON - 60, "what": "the market is moving: checks the chart"},     # (an old save's line)
                      {"t": NOON - 30, "what": "hungry: orders food on the phone"}]
     live.reader = Obj()
     live.reader.log = [{"t": NOON - 20, "title": "Bitcoin"}, {"t": NOON - 10, "title": "Inokashira Park"}]
@@ -224,8 +224,9 @@ def test_sampling_skips_the_chart_and_unsafe_choices(tmp_path):
     assert [r["t"] for r in rows if r["kind"] == "choice"] == ["12:00"]
     maker.sample(live)                                         # the same moments are not written twice
     assert len((tmp_path / "clips/days/2026-10-02/moments.jsonl").read_text().splitlines()) == len(rows)
-    asyncio.run(maker.shoot(live))                             # the chart is never photographed
+    asyncio.run(maker.shoot(live))                             # the phone is never photographed
     assert not list((tmp_path / "clips/days").rglob("shot-*.jpg"))
+    assert "chart" not in clips.SAFE_ACTIVITIES and "phone" not in clips.SAFE_ACTIVITIES
 
 
 # --- retention -------------------------------------------------------------------------------------------------------

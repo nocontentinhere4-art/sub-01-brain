@@ -130,6 +130,78 @@ def test_unsafe_or_broken_summary_falls_back(reply):
         assert entry["text"].startswith("SUB-01 slept")
 
 
+@pytest.mark.parametrize("text, kept, gone", [
+    ("SUB-01 dreamt of a train platform folding into the sea. He walked past warm loaves on the counter.",
+     ["train platform", "He walked past warm loaves"], []),
+    ("SUB-01 dreamt of a crypto chart glowing over the bed. Then the corridor of loaves came back.",
+     ["corridor of loaves"], ["crypto", "chart"]),
+    ("A dumpling shop floating over a canal. Pumpkin soup stock steaming in the dark.", ["dumpling", "Pumpkin"], []),
+    ("The coin went to the moon, buy now. The bakery door kept opening.", ["bakery door"], ["buy", "coin"]),
+    ("She bought bread at the counter; the loaves were still warm.", ["bought bread"], []),
+])
+def test_clean_line_drops_only_the_offending_sentence(text, kept, gone):
+    out = D.clean_line(text, 420)
+    for k in kept:
+        assert k in out, out
+    for g in gone:
+        assert g.lower() not in out.lower(), out
+    assert D.clean_line("buy now", 80) == "" and D.clean_line("SUB-01 is conscious now.", 80) == ""
+
+
+def test_dream_text_with_pronouns_is_kept_and_quoted_lines_are_filtered():
+    with tempfile.TemporaryDirectory() as tmp:
+        d, e, _ = run_night(tmp)
+        e.last_night["replays"] = [{"text": "buy this coin now", "source": "chat"}] * 3 + \
+                                  [{"text": "sweet dreams sub", "source": "chat"}] * 2 + \
+                                  [{"text": "pane", "source": "taught"}]
+        llm = FakeLLM('{"title": "Bread that kept folding", "text": "SUB-01 dreamt of a train platform folding '
+                      'into the sea. He walked past warm loaves on the counter."}')
+        entry = d.close(e.last_night, llm)
+        assert entry["text"].startswith("SUB-01 dreamt") and "He walked" in entry["text"]
+        assert entry["facts"]["replays"] == 5 and entry["facts"]["taught_replays"] == 1
+        assert entry["facts"]["top_replayed"] == ["sweet dreams sub"]            # the blocked line is never quoted
+        assert "coin" not in entry["share"] and "sweet dreams sub" in entry["share"]
+        # the template too: taught words counted apart, the quoted line filtered
+        entry2 = d.close(dict(e.last_night, date="2026-10-03"), FakeLLM("not json"))
+        assert "“sweet dreams sub”" in entry2["text"] and "coin" not in entry2["text"]
+        assert "1 of the words viewers taught it" in entry2["text"]
+
+
+def test_title_kept_when_the_text_is_refused():
+    with tempfile.TemporaryDirectory() as tmp:
+        d, e, _ = run_night(tmp)
+        entry = d.close(e.last_night, FakeLLM('{"title": "Loaves in the sea", "text": "SUB-01 is conscious now."}'))
+        assert entry["title"] == "Loaves in the sea" and entry["text"].startswith("SUB-01 slept")
+
+
+def test_a_model_without_ask_gets_the_template(capsys):
+    with tempfile.TemporaryDirectory() as tmp:
+        d, e, _ = run_night(tmp)
+        entry = d.close(e.last_night, object())
+        assert entry["text"].startswith("SUB-01 slept")
+        assert "no ask()" in capsys.readouterr().out
+
+
+def test_naps_are_not_diary_nights():
+    with tempfile.TemporaryDirectory() as tmp:
+        frames = Path(tmp) / "f"
+        frames.mkdir()
+        d = Diary(tmp, frames)
+
+        class E:
+            stage = "REM"
+            night = {"date": "2026-10-02-nap-1300", "kind": "nap", "sleep_onset": "2026-10-02T13:00"}
+            last_night = {"date": "2026-10-02-nap-1000", "kind": "nap", "sleep_onset": "2026-10-02T10:00",
+                          "woke_up": "2026-10-02T10:40", "wakeups": [], "replays": []}
+        assert d.due(E, 1e9, now_real=1e9) is False                        # no unattended dream frames in a nap
+        assert d.add(E.night["date"], fake_frame(frames, 1), 0, True) is None
+        assert d.pending_close(E) is None                                  # a nap is not written up
+        E.last_night = {"date": "2026-10-01", "kind": "night", "sleep_onset": "2026-10-02T00:20",
+                        "woke_up": "2026-10-02T07:55", "wakeups": [], "replays": []}
+        assert d.pending_close(E) == "2026-10-01"
+        assert not list(d.dir.glob("*nap*"))
+
+
 def test_share_text_trimmed_to_280():
     long = "x" * 400
     s = Diary.share("2026-10-01", "A title", {"sleep_onset": "00:10", "woke_up": "08:00", "wakeups": 3,

@@ -21,7 +21,7 @@ DESK = "act('research', {screen: {device: 'desk', id: 'p1', kind: 'page'}}); for
 SEAT = DESK + "; variant('%s', 7)"                         # an idle variant in the chair, forced (it is picked at random)
 SCENARIOS = [  # label, setup (JS), seconds: the live character's seated clips and the ways in and out of the chair
     ("desk typing", "act('research', {screen: {device: 'desk', id: 'q1', kind: 'page', query: 'ramen near kichijoji'}})", 10),
-    ("desk mouse", "act('chart', {screen: {device: 'desk', id: 'c1', kind: 'page'}})", 8),
+    ("desk mouse", "act('research', {screen: {device: 'desk', id: 'c1', kind: 'page'}})", 8),
     ("desk watch", "act('watch_video', {screen: {device: 'desk', id: 'v1', kind: 'video'}})", 6),
     ("desk chess", "act('play_chess', {screen: {device: 'desk', id: 'k1', kind: 'chess'}})", 6),
     ("eating at the desk", "act('eat', {eating: 'ramen', food: 1})", 8),
@@ -38,7 +38,7 @@ SCENARIOS = [  # label, setup (JS), seconds: the live character's seated clips a
 MH_DESK = "act('research', {screen: {device: 'desk', id: 'p1', kind: 'page'}})"
 SCENARIOS_MH = [  # the room clips under room/boy_mh.js (preview/room-mh; v5 on preview/room-v5): label, setup (JS), seconds or an act clip
     ("desk typing", "act('research', {screen: {device: 'desk', id: 'q1', kind: 'page', search: {query: 'ramen near kichijoji'}}})", 10),
-    ("desk mouse", "act('chart', {screen: {device: 'desk', id: 'c1', kind: 'page'}})", 8),
+    ("desk mouse", "act('research', {screen: {device: 'desk', id: 'c1', kind: 'page'}})", 8),
     ("desk watch", "act('watch_video', {screen: {device: 'desk', id: 'v1', kind: 'video'}})", 6),
     ("room_read", MH_DESK + "; for (let i = 0; i < 30; i++) animate_(1/30); mh.show('read')", "read"),
     ("room_phone", MH_DESK + "; for (let i = 0; i < 30; i++) animate_(1/30); mh.show('phone')", "phone"),

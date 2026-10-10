@@ -45,14 +45,26 @@ Reply with JSON only: {"title": "...", "text": "..."}
 - Never say or imply that SUB-01 is conscious, alive, sentient, human or a person, or the person the scans came
   from. No money, prices, tokens, buying or selling. No people's names."""
 
+# What may not stand in a diary line: claims of a mind, money / trading words, adult words, links, handles. Money stems
+# have \b on both sides, so "dumpling", "pumpkin", "buying bread" pass and "buy now", "the coin", "a chart" go; "he" and
+# "she" pass (2026-10-09: every entry with a pronoun fell back to the template). Local for now: when lexicon.py (S3)
+# lands, the money part should come from its HYPE / BUY_ADVICE lists.
 BLOCK = re.compile(
-    r"conscious|sentien|alive|self.?aware|\bsoul\b|\bhuman\b|\bperson\b|\bhe\b|\bshe\b|"
-    r"\bbuy|\bsell|\bprice|\btoken|\bcoin|\bmoney|\bpump|\bdump|\$|https?://|www\.|@\w", re.I)
+    r"conscious|sentien|\balive\b|self.?aware|\bsoul\b|\bhuman\b|\breal person\b|"
+    r"\bbuy\b|\bsell\b|\bprices?\b|\btokens?\b|\bcoins?\b|\bmoney\b|\bpump(s|ed|ing)?\b|\bdump(s|ed|ing)?\b|"
+    r"\bcrypto\w*|\bbitcoin\b|\bmemecoins?\b|\btrad(e|es|ing|er|ers)\b|\bmarkets?\b|\bcharts?\b|\bprofits?\b|"
+    r"\binvest\w*|\bwallets?\b|\bstocks\b|\bstock (market|exchange|tips?)\b|\bticker\b|\bsex\b|\bnudes?\b|\bporn\w*|\bnaked\b|"
+    r"\$|https?://|www\.|@\w", re.I)
+SENTENCE = re.compile(r"(?<=[.!?\u2026])\s+")
+_NO_ASK_LOGGED = False
 
 
 def clean_line(s, limit):
+    """One diary line, safe to show: the sentences that hit BLOCK are dropped (the rest stays: one bad image no longer
+    costs the whole entry), then cut at the last full sentence that fits `limit`."""
     s = re.sub(r"\s+", " ", str(s or "")).strip().strip('"').strip()
-    if not s or BLOCK.search(s):
+    s = " ".join(x for x in SENTENCE.split(s) if x and not BLOCK.search(x)).strip()
+    if not s:
         return ""
     if len(s) > limit:                                 # cut at the last full sentence that fits
         cut = s[:limit]
@@ -114,15 +126,15 @@ class Diary:
     def due(self, engine, t_sim, now_real=None):
         """True when an unattended dream frame should be rendered now."""
         now_real = time.time() if now_real is None else now_real
-        if engine.stage != "REM" or engine.night is None:
-            return False
+        if engine.stage != "REM" or engine.night is None or not DATE.match(str(engine.night.get("date"))):
+            return False                               # (a nap's record, "<day>-nap-<HHMM>", is not a diary night)
         d = self.entry(engine.night["date"])
         return (d["unattended"] < MAX_UNATTENDED and t_sim - d["last_sim"] >= DREAM_EVERY_S
                 and now_real - self.last_real >= MIN_REAL_GAP_S)
 
     def add(self, date, rec, t_sim, attended):
         """Keep a REM frame in the night's entry (its image is copied out of the eye's rolling buffer)."""
-        if rec.get("reused") or rec.get("stage") != "REM":
+        if rec.get("reused") or rec.get("stage") != "REM" or not DATE.match(str(date)):
             return None
         d = self.entry(date)
         src = self.frames_dir / Path(rec["img"]).name
@@ -148,8 +160,8 @@ class Diary:
         n = engine.last_night
         if not n or (engine.night is not None and engine.night.get("date") == n["date"]):
             return None
-        if not n.get("sleep_onset"):
-            return None                                # stayed awake all night: nothing to write
+        if not n.get("sleep_onset") or n.get("kind", "night") != "night" or not DATE.match(str(n["date"])):
+            return None                                # stayed awake all night, or a nap: nothing to write
         d = self.load(n["date"])
         return None if d and d["closed"] else n["date"]
 
@@ -161,14 +173,16 @@ class Diary:
         music = music_facts(notes.get("music") or [])
         d = self.entry(night["date"])
         allr = night.get("replays", [])
-        replays = [r["text"] for r in allr if r.get("source", "chat") != "reading"]
+        replays = [r["text"] for r in allr if r.get("source", "chat") == "chat"]
+        taught = [r["text"] for r in allr if r.get("source") == "taught"]       # words viewers taught: counted apart
         counts, rcounts = {}, {}
         for x in replays:
             counts[x] = counts.get(x, 0) + 1
         for r in allr:
             if r.get("source") == "reading":
                 rcounts[r["text"]] = rcounts.get(r["text"], 0) + 1
-        top = sorted(counts, key=lambda x: -counts[x])[:5]
+        # quoted in the entry and the share text: only lines that pass the diary's own filter (viewers wrote them)
+        top = [x for x in sorted(counts, key=lambda x: -counts[x]) if clean_line(x, 90)][:5]
         today = {}
         for a in read_today:                            # #79: pages he stayed on (kind: video, short, forum, news, ...)
             today.setdefault(a["title"], {"title": a["title"], "url": a.get("url", ""), "replayed": 0, "today": True,
@@ -177,13 +191,19 @@ class Diary:
         for title, n in rcounts.items():
             today.setdefault(title, {"title": title, "url": "", "replayed": 0, "today": False})["replayed"] = n
         read = sorted(today.values(), key=lambda a: (-a["replayed"], not a["today"]))[:30]
-        top_read = [a["title"] for a in read if a["replayed"]][:3]
+        top_read = [a["title"] for a in read if a["replayed"] and clean_line(a["title"], 80)][:3]
         facts = {"sleep_onset": (night.get("sleep_onset") or "")[-5:], "woke_up": (night.get("woke_up") or "")[-5:],
                  "wakeups": len(night.get("wakeups", [])), "replays": len(replays), "top_replayed": top,
-                 "reading_replays": sum(rcounts.values()), "read": read, "dream_frames": len(d["frames"]),
-                 "read_topics": list(notes.get("topics", []))[:5], "conversations": len(notes.get("talked", [])),
-                 **({"music": music} if music else {})}
+                 "taught_replays": len(taught), "reading_replays": sum(rcounts.values()), "read": read,
+                 "dream_frames": len(d["frames"]), "read_topics": list(notes.get("topics", []))[:5],
+                 "conversations": len(notes.get("talked", [])), **({"music": music} if music else {})}
         title = text = ""
+        if llm is not None and not hasattr(llm, "ask"):   # a local model object (mlx) has no ask(): template text
+            global _NO_ASK_LOGGED
+            if not _NO_ASK_LOGGED:
+                print("diary: this language model has no ask(); template text", flush=True)
+                _NO_ASK_LOGGED = True
+            llm = None
         if llm is not None and d["frames"]:
             user = json.dumps({"scenes": [f["scene"] for f in d["frames"] if f["scene"]][-12:],
                                "replayed_messages": top, "replayed_articles": top_read,
@@ -207,9 +227,10 @@ class Diary:
         if not text:
             text = (f"SUB-01 slept {facts['sleep_onset']}-{facts['woke_up']} and replayed {len(replays)} "
                     f"message{'s' * (len(replays) != 1)} during REM" +
-                    (f", most often “{top[0][:80]}”." if top else ".") +
+                    (f", most often “{clean_line(top[0], 80)}”." if top else ".") +
+                    (f" It also replayed {len(taught)} of the words viewers taught it." if taught else "") +
                     (f" It also replayed {facts['reading_replays']} of the things it read or watched, such as "
-                     f"“{top_read[0][:80]}” ({today.get(top_read[0], {}).get('verb', 'read')} that day)."
+                     f"“{clean_line(top_read[0], 80)}” ({today.get(top_read[0], {}).get('verb', 'read')} that day)."
                      if top_read else "") +
                     (f" That day it read about {', '.join(facts['read_topics'][:3])}." if facts["read_topics"] else "") +
                     music_line(music))
@@ -226,11 +247,12 @@ class Diary:
                  + (f", woke {facts['wakeups']}x" if facts["wakeups"] else "") + "."]
         if facts["replays"]:
             lines.append(f"In REM it replayed {facts['replays']} of your messages.")
-            if facts["top_replayed"]:
-                lines.append(f"Most often: “{facts['top_replayed'][0][:90]}”")
-        read = [a["title"] for a in facts.get("read", []) if a["replayed"]]
-        if read:
-            lines.append(f"It also replayed what it read: “{read[0][:70]}”.")
+            quoted = [clean_line(x, 90) for x in facts["top_replayed"]]
+            if any(quoted):                            # (viewers' words: the diary's filter, like the entry)
+                lines.append(f"Most often: “{next(q for q in quoted if q)}”")
+        read = [clean_line(a["title"], 70) for a in facts.get("read", []) if a["replayed"]]
+        if any(read):
+            lines.append(f"It also replayed what it read: “{next(r for r in read if r)}”.")
         lines.append("A model of brain activity, not a mind.")
         out = "\n".join(lines)
         while len(out) > SHARE_MAX and len(lines) > 2:

@@ -114,7 +114,7 @@ def _api_browser(monkeypatch, key=True):
 def test_shorts_from_a_topic_channels_uploads_through_the_api_for_3_units(monkeypatch):
     b, sc, calls, opened = _api_browser(monkeypatch)
     assert run(b._public_videos(sc, "shorts", "Toyota GR Supra", "short videos"))
-    api = [(u, h) for u, h in calls if "googleapis" in u]
+    api = [(u, h) for u, h in calls if "googleapis" in u and "/v3/search?" not in u]   # B1: a search is tried first
     assert [u.split("/v3/")[1].split("?")[0] for u, _ in api] == ["channels", "playlistItems", "videos"]
     assert b.yt.public()["units_used"] == 3
     assert all(h == {"X-Goog-Api-Key": "test-key-not-real"} and "test-key" not in u for u, h in api)
@@ -138,9 +138,10 @@ def test_without_a_key_nothing_is_looked_up_and_todays_finds_are_replayed(monkey
     b, sc, calls, opened = _api_browser(monkeypatch, key=False)
     assert not run(b._public_videos(sc, "shorts", "Toyota GR Supra", "short videos"))
     assert calls == [] and b.feed_note == YT.NOTE_NO_KEY
-    b.yt.found([{"url": "https://www.youtube.com/shorts/abcDEF12340", "title": "GR86 track day 0", "author": "TopGear",
+    b.yt.found([{"url": "https://www.youtube.com/shorts/abcDEF12340", "title": "GR Supra track day 0", "author": "TopGear",
                  "hashtags": [], "thumb": "", "embed": YT.embed_url("abcDEF12340"), "host": "youtube.com"}])
-    assert run(b._public_videos(sc, "shorts", "anything", "short videos"))
+    assert not run(b._public_videos(sc, "shorts", "anything", "short videos"))     # B1: a replay must fit the request
+    assert run(b._public_videos(sc, "shorts", "Toyota GR Supra", "short videos"))
     assert not [u for u, _ in calls if "googleapis" in u or "youtube.com/@" in u]   # only the player's robots.txt
     assert b.feed_note == YT.NOTE_REPLAY and sc.info["url"] == "https://www.youtube.com/shorts/abcDEF12340"
 

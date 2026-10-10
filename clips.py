@@ -18,8 +18,8 @@ How it runs (the brain tick must never feel it):
   `analysis/bench_clips.py` measures the tick with and without a render on one CPU.
 - Kept KEEP_DAYS (14) days in /data/clips/, then deleted.
 
-Wording: never "he thinks/feels"; every caption goes through `safe()` (no finance words, no feeling or mind claims,
-no links); the chart activity is never sampled or captured. Posting is manual from /admin/clips (download + a
+Wording: never "he thinks/feels"; every caption goes through `safe()` (no finance words or money talk (lexicon), no
+feeling or mind claims, no links); the phone (its apps) is never photographed or captured. Posting is manual from /admin/clips (download + a
 ready caption), or automatic with TIKTOK_POST_TOKEN / YOUTUBE_* set: at most once a day per platform, the AI label in
 the caption and the platform's AI-content flag set. Unset: nothing is ever posted. Posts are counted in costs.py ($0).
 """
@@ -39,6 +39,7 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from lexicon import money_talk
 from sleep import TZ
 from state_io import append_jsonl, load_json, read_jsonl, save_json
 
@@ -64,7 +65,7 @@ ROOM_CPU_S = 600                # RLIMIT_CPU per process of the capture child (C
 ROOM_FRAMES = 6                 # each capture: 6 frames, at most 2 a second (SwiftShader: a few seconds a frame)
 ROOM_WALL_S = 90                # and at most this long once the room has loaded
 SAFE_ACTIVITIES = {"research", "window", "eat", "watch_video", "play_chess", "sleep", "park", "buy_bread",
-                   "order_food", "get_delivery", "chat"}                # never "chart", never "phone" (the chart app)
+                   "order_food", "get_delivery", "chat"}                # never "phone" (its apps are not for a clip)
 NAME = re.compile(r"^(\d{4}-\d{2}-\d{2})-(day|dream|choice)\.mp4$")
 
 FINANCE = re.compile(
@@ -78,16 +79,16 @@ LINKS = re.compile(r"https?://|www\.|@\w", re.I)
 
 
 def safe(s, limit=120):
-    """A caption line, or "" when it carries finance words, a mind claim or a link."""
+    """A caption line, or "" when it carries finance words or money talk (the shared lexicon), a mind claim or a link."""
     s = re.sub(r"\s+", " ", str(s or "")).strip()
-    if not s or FINANCE.search(s) or CLAIMS.search(s) or LINKS.search(s):
+    if not s or FINANCE.search(s) or money_talk(s, chat=True) or CLAIMS.search(s) or LINKS.search(s):
         return ""
     return s if len(s) <= limit else s[:limit - 1].rsplit(" ", 1)[0] + "…"
 
 
 def event_caption(what):
     """life.py's log line -> what the clip says: the motive before ':' is dropped ("hungry: orders food" -> "orders
-    food"), and so is the plan note; finance (the chart) and feeling lines are left out."""
+    food"), and so is the plan note; finance and feeling lines are left out."""
     s = str(what or "").split(";")[0]
     s = s.split(":", 1)[1] if ":" in s else s
     return safe(s.strip(), 60)
@@ -605,7 +606,7 @@ class ClipMaker:
         caps = self.state.setdefault("room", {})
         n, last = caps.get(day, [0, 0])
         if n >= ROOM_CAPTURES or self.clock() - last < ROOM_GAP_S or getattr(live.life, "activity", "") in (
-                "chart", "phone", "sleep"):
+                "phone", "sleep"):
             return
         caps.clear()
         caps[day] = [n + 1, self.clock()]

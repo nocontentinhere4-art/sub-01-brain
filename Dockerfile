@@ -18,9 +18,9 @@ COPY entrypoint.sh /usr/local/bin/sub01-entrypoint
 RUN chmod 755 /usr/local/bin/sub01-entrypoint \
  && useradd --uid 1000 --user-group --create-home --shell /usr/sbin/nologin sub01 \
  && mkdir -p /data/frames && chown -R 1000:1000 /data
-COPY brain_sim.py sleep.py chat.py eye.py real_baseline.py life.py live_server.py diary.py research.py browse.py \
+COPY audience.py brain_sim.py sleep.py chat.py eye.py real_baseline.py life.py live_server.py diary.py research.py browse.py launchpad_eval.py \
      runpod_api.py browse_service.py eyes.py brain_vote.py tastes.py state_io.py mind.py costs.py chess_game.py \
-     search_sources.py sessions.py view_only.py interests.py short_videos.py music.py music_curated.json clips.py readings.py screens.py novelty.py youtube_api.py memory_guard.py ./
+     search_sources.py sessions.py view_only.py interests.py short_videos.py music.py music_curated.json clips.py readings.py screens.py novelty.py youtube_api.py memory_guard.py lexicon.py ./
 COPY twin ./twin
 COPY spiking ./spiking
 COPY web ./web
@@ -32,4 +32,5 @@ COPY out/rest ./out/rest
 # service instead: same repo, start command `python browse_service.py --host :: --port $PORT`, no public domain,
 # BROWSE_SERVICE_TOKEN set on both services, and BROWSE_SERVICE_URL=http://<service>.railway.internal:<port> here.
 ENTRYPOINT ["/usr/local/bin/sub01-entrypoint"]
-CMD ["sh", "-c", "python live_server.py --host 0.0.0.0 --port ${PORT:-8080} --eye --trust-proxy --data-dir /data --frames-dir /data/frames ${EXTRA_ARGS:-}"]
+# `exec`: python is PID 1 (not sh), so Railway's SIGTERM at a redeploy reaches it and live_server.py saves its state
+CMD ["sh", "-c", "exec python live_server.py --host 0.0.0.0 --port ${PORT:-8080} --eye --trust-proxy --data-dir /data --frames-dir /data/frames ${EXTRA_ARGS:-}"]

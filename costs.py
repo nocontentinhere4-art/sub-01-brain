@@ -13,7 +13,11 @@ Social posts of the daily clips (#59, clips.py) are written to costs.jsonl as se
 (`posts_today`), never billed.
 
 Daily caps (USD per Tokyo day, env vars):
-- SUB01_CAP_EYE_USD (1.00): eye frames and the eye's LLM; over it the eye keeps its last frame ("resting its eyes").
+- SUB01_EYE_USD_PER_DAY (1.00, the older name SUB01_CAP_EYE_USD still read): eye frames and the eye's LLM; over it the
+  eye keeps its last frame ("resting its eyes"). What the cap buys: a frame and its thought cost EYE_FRAME_USD
+  (~$0.0031), so $1.00 is ~325 frames a day; at the 90 s cadence (--eye-every) 16 waking hours want ~640, so with
+  viewers present all day the pacing gives ~15 frames an hour (one every 4 min, 38% of the cadence) and the night's
+  dreams ~80; $2.00 would give 30-40 an hour (~83%) and ~120 at night (measured in tests/test_costs.py).
 - SUB01_CAP_DIARY_USD (0.10): the diary text (about 1-2 Llama 3 8B calls a night, < $0.001); over it the diary
   writes its template text.
 - SUB01_CAP_EYES_USD (1.00) and SUB01_CAP_MIND_USD (1.00): the existing eyes / mind shares of the shared ledger
@@ -22,9 +26,9 @@ Daily caps (USD per Tokyo day, env vars):
   EYE_PACE_SLACK (25%) of its cap (dreams at night, the first frames of the morning) plus the rest in proportion to the waking
   hours gone, 08:00 (sleep.WAKE_HOUR) to midnight, less one frame's cost (so the day's last frame stays in the cap). Spent at full rate it had used 0.80 of 1.00 by 11:00 and was capped
   all afternoon and evening (live, 2026-10-07/08). The cap itself is unchanged; SUB01_EYE_PACE=0 turns the pacing off.
-- SUB01_CAP_TOTAL_USD (3.10): everything above together. Its default is the sum of the part caps
-  (1.00 + 1.00 + 1.00 + 0.10), so with the defaults no part can starve another one; it only bites when a part cap
-  is raised. RunPod is not in it: it keeps its own GPU-hour caps (spiking/pod_manager.py).
+- SUB01_CAP_TOTAL_USD (3.10 with the defaults): everything above together. Its default is the sum of the part caps as
+  they are set (eye + eyes + mind + diary), so no part can starve another one even when the eye's cap is raised; set
+  explicitly, it is what it says. RunPod is not in it: it keeps its own GPU-hour caps (spiking/pod_manager.py).
 """
 import json
 import os
@@ -55,11 +59,23 @@ def _cap(name, default):
         return default
 
 
+EYE_USD_PER_DAY = 1.00                             # the eye's daily cap (the owner's money decision, 2026-10-09: kept)
+
+
+def eye_cap():
+    """SUB01_EYE_USD_PER_DAY (the setting), else the older SUB01_CAP_EYE_USD name, else EYE_USD_PER_DAY."""
+    return _cap("SUB01_EYE_USD_PER_DAY", _cap("SUB01_CAP_EYE_USD", EYE_USD_PER_DAY))
+
+
 def caps():
-    """The caps now (read from the environment each time, so tests and restarts see changes)."""
+    """The caps now (read from the environment each time, so tests and restarts see changes). The total's default is
+    the sum of the parts as they are set, so raising the eye's cap alone raises the total with it (no part starves
+    another through total_why_not); SUB01_CAP_TOTAL_USD set explicitly wins."""
     import mind
-    return {"eye": _cap("SUB01_CAP_EYE_USD", 1.00), "diary": _cap("SUB01_CAP_DIARY_USD", 0.10),
-            "eyes": mind.EYES_USD_PER_DAY, "mind": mind.MIND_USD_PER_DAY, "total": _cap("SUB01_CAP_TOTAL_USD", 3.10)}
+    eye, diary = eye_cap(), _cap("SUB01_CAP_DIARY_USD", 0.10)
+    parts = eye + diary + mind.EYES_USD_PER_DAY + mind.MIND_USD_PER_DAY
+    return {"eye": eye, "diary": diary, "eyes": mind.EYES_USD_PER_DAY, "mind": mind.MIND_USD_PER_DAY,
+            "total": _cap("SUB01_CAP_TOTAL_USD", round(parts, 2))}
 
 
 EYE_PACE_SLACK = 0.25                              # share of the eye's cap free at any hour of the Tokyo day: the night's dreams (~80 frames; the diary had 71-76)

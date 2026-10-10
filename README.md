@@ -2,8 +2,9 @@
 
 **A brain rebuilt from real MRI scans, running 24/7, living the life of an invented guy in a tiny room in Tokyo.**
 
-**[▶ Watch him live](https://sub01-production.up.railway.app)** · **[🧠 His brain](https://sub01-production.up.railway.app/brain)** ·
-**[🌙 Dream diary](https://sub01-production.up.railway.app/diary)** · **[𝕏 @SUBZERONE01](https://x.com/SUBZERONE01)**
+**[▶ Watch him live](https://subzerone.live)** · **[🧠 His brain](https://subzerone.live/brain)** ·
+**[🌙 Dream diary](https://subzerone.live/diary)** · **[🏙 The city (launchpad)](https://city.subzerone.live)** ·
+**[𝕏 @SUBZERONE01](https://x.com/SUBZERONE01)**
 
 <p align="center">
   <img src="docs/readme/room_overview.jpg" width="760"
@@ -25,13 +26,15 @@ what the simulation does. It is not the scanned person, and the character, his r
 | | |
 |---|---|
 | 🧩 Brain regions, wired with real tractography | **214** |
-| ⚡ Simulated spiking neurons (GPU) | **1,000,000** (20,000 on the server CPU as a fallback) |
+| ⚡ Simulated spiking neurons | **1,000,000** on rented GPUs (scheduled) · **500,000** live on the server CPU, all day |
 | 🌙 Sleep, from a published sleep–wake circuit | falls asleep ~**23:56**, wakes ~**07:54** Tokyo time, with REM replay |
 | 🧪 Neuromodulators | dopamine, serotonin, noradrenaline, acetylcholine, mapped on real receptor densities |
 | 🧠 Memory | 6/6 items recalled a simulated day later (one GPU validation run) |
 | 📉 Honest negatives | 1M neurons did **not** learn Pong; consciousness test (PCI) 0.18, below the human 0.31 line |
+| 🏙 Launchpad votes | an idea dropped in [the city](https://city.subzerone.live) gets his brain's build / pass answer in seconds, day and night |
 
-Everything runs live on the site and locally in demo mode, see [Run it locally](#run-it-locally).
+Everything runs live on the site and locally in demo mode, see [Run it locally](#run-it-locally). The same brain answers
+the SUBZERONE launchpad, see [The launchpad](#the-launchpad).
 
 ## What you see
 
@@ -68,9 +71,13 @@ and credit. Diary lines and dream images are AI-generated and labelled as such.
   day plans for the brain model to vote on, and can write chat replies tagged "his reply (AI-written)". Capped at
   $2.00 per Tokyo day.
 - **Spiking neurons.** One million simulated spiking neurons inside his wiring run on rented GPUs (scheduled, capped),
-  with a 20,000-neuron network on the server CPU as a fallback. They vote in choices, learn from a dopamine signal, and
-  take a daily memory test. Also YouTube and chess at the desk, music picked by the brain vote, and food orders
+  and a 500,000-neuron network runs on the server CPU all day (`SUB01_SPIKING_LIVE_NEURONS`; 20,000 by default on a
+  laptop). They vote in choices, learn from a dopamine signal, and take a daily memory test; every vote record names
+  the network that answered. Also YouTube and chess at the desk, music picked by the brain vote, and food orders
   (simulated).
+- **Votes on launchpad ideas.** The SUBZERONE launchpad ([city.subzerone.live](https://city.subzerone.live)) asks his
+  brain about every idea dropped in the city; the answer is a build / pass verdict from the same vote as his clicks.
+  See [The launchpad](#the-launchpad).
 
 ## How it works
 
@@ -80,11 +87,12 @@ flowchart LR
   A --> C["Resting-state<br/>recordings"]
   B --> D["Brain model<br/>slow Hopf layer + fast 10 Hz layer"]
   C --> D
-  B --> E["Spiking network<br/>1M neurons (GPU) / 20k (CPU)"]
+  B --> E["Spiking network<br/>1M neurons (GPU) / 500k live (CPU)"]
   D --> F["Sleep circuit,<br/>neuromodulators, pulse"]
   D --> G["Brain vote<br/>(what to click, play, plan)"]
   E --> G
   H["Chat, web pages,<br/>short videos"] --> D
+  K["Launchpad ideas<br/>(city.subzerone.live)"] --> G
   F --> I["The character<br/>and his room"]
   G --> I
   I --> J["Diary and<br/>dreams"]
@@ -96,12 +104,39 @@ flowchart LR
 | Brain model | slow Hopf layer fitted on half of the recordings, tested on the other half; fast delayed Stuart-Landau layer for the live display | `twin/hopf.py`, `brain_sim.py` |
 | Spiking network | leaky integrate-and-fire populations per region, delays from fibre lengths, STDP × dopamine | `spiking/` |
 | Sleep, body, chemistry | Phillips–Robinson circuit, neuromodulators, pulse | `sleep.py`, `twin/neurochem.py`, `twin/body.py` |
-| Choices | the brain model votes among options from pages, videos, chess moves, tracks, day plans | `brain_vote.py`, `life.py`, `browse.py` |
+| Choices | the brain model votes among options from pages, videos, chess moves, tracks, day plans; the record names the network that answered | `brain_vote.py`, `life.py`, `browse.py` |
+| Launchpad | a signed server-to-server call: idea → brain networks → the same vote; build when p(build) ≥ 0.5 | `launchpad_eval.py` |
 | Character and room | three.js room, character, phone and monitor screens, window | `web/room.html`, `web/room/`, `room_build/` |
 | Diary | REM replays → the morning's entry | `diary.py`, `web/diary.html` |
 
 The full pipeline, the real-wiring analysis, sleep/chat/memory and the spiking network's settings are in
 **[docs/TECHNICAL.md](docs/TECHNICAL.md)**.
+
+## The launchpad
+
+[**city.subzerone.live**](https://city.subzerone.live) is the SUBZERONE launchpad: a 3D Tokyo neighbourhood where anyone
+can drop an idea for a coin. The launchpad server
+([nocontentinhere4-art/subzerone-launchpad](https://github.com/nocontentinhere4-art/subzerone-launchpad)) asks this
+brain about the idea, and his answer decides whether the site gets built and the coin launched on pump.fun. The room
+page links to the city and shows its live card. This repository holds only the brain's side of that conversation,
+`launchpad_eval.py`:
+
+- `POST /api/launchpad/evaluate`, server-to-server, signed: HMAC-SHA256 over `<timestamp>.<body>` with
+  `LAUNCHPAD_BRAIN_SECRET` (300 s skew). Without the secret the route answers 503: off.
+- The idea's title and concept are routed to brain networks by the same word lexicon and rule table a chat message
+  goes through. Two options enter the ordinary brain vote on a clone of the live brain: **build** (the idea's networks)
+  and **pass** (a weak "keep doing what he is doing" drive, the same for every idea). The spiking network (the
+  500,000-neuron live net, or the GPU net when it is on) races its striatal pools on the two labels and leans the vote.
+- The verdict is the vote's build probability, not a dice roll: **build when p(build) ≥ 0.5**. The record keeps every
+  option's simulated response (reward, attention, threat …), the sleep stage, the mood and which network answered.
+- Always on: asleep he votes too, on a woken clone (awake rhythm and gain), so the cortex model answers as it would by
+  day; every answer and ledger row carries the stage.
+- Idempotent: the same `request_id` returns the stored record (`launchpad_evals.jsonl` in the data directory), never
+  a second vote. The chosen option's stimulus reaches the live brain, so an idea he builds is also something he "heard".
+
+What this is not: the model does not read or understand the idea. Words are routed by a hand-written table and the
+vote is a rule on simulated activity; no language model is involved. Launching a coin is the launchpad's business and
+happens outside this repository.
 
 ## Real, simulated, fiction
 
@@ -135,6 +170,7 @@ python3.12 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-server.txt        # the live server (requirements.txt is the MRI pipeline)
 BROWSE=0 python live_server.py --demo         # http://localhost:8765 : room at /, brain at /brain, diary at /diary
 python live_server.py --demo --time-scale 60 --start 23:55   # an accelerated night
+SUB01_SPIKING_LIVE_NEURONS=500000 BROWSE=0 python live_server.py --demo   # the live site's CPU net size (default 20,000)
 ```
 
 Tests:
@@ -148,7 +184,9 @@ python -m tests.visual.harness --out tests/visual/out   # room screenshots (need
 
 `--demo` uses fake inputs and keeps its state in `data/demo/` (or a temporary directory for the smoke test). Paid
 services (image generation, language model, GPUs) are optional and off without their keys. Rebuilding the brain from
-the raw MRI needs `requirements.txt` and `./fetch_data.sh` (~900 MB): see [docs/TECHNICAL.md](docs/TECHNICAL.md).
+the raw MRI needs `requirements.txt` and `./fetch_data.sh` (~900 MB): see [docs/TECHNICAL.md](docs/TECHNICAL.md). The
+launchpad route stays off without `LAUNCHPAD_BRAIN_SECRET`; [tests/test_launchpad_eval.py](tests/test_launchpad_eval.py)
+exercises it with a test secret.
 
 ## Repository map
 
@@ -158,6 +196,7 @@ the raw MRI needs `requirements.txt` and `./fetch_data.sh` (~900 MB): see [docs/
 | `brain_sim.py`, `twin/` | the fast brain layer; the fitted slow layer, neurochemistry and body |
 | `sleep.py`, `chat.py`, `diary.py` | sleep circuit and memory replay, chat filter, dream diary |
 | `life.py`, `brain_vote.py`, `mind.py` | his needs and day, the brain vote, the AI notes and plans |
+| `launchpad_eval.py`, `audience.py`, `lexicon.py` | the launchpad's signed vote on ideas; the viewers' vote in the room; the money / hype word lists every filter shares |
 | `browse.py`, `browse_service.py`, `search_sources.py`, `short_videos.py` | the read-only browser and what it searches and watches |
 | `spiking/` | the spiking network: model, plasticity, memory, GPU sessions, caps |
 | `build_*.py`, `export_*.py`, `process_rest.py` | MRI pipeline: connectome, cortex, fibres, recordings |
@@ -175,6 +214,7 @@ the raw MRI needs `requirements.txt` and `./fetch_data.sh` (~900 MB): see [docs/
 - [docs/OPERATIONS.md](docs/OPERATIONS.md): costs, daily caps, health checks, monitoring
 - [docs/real_wiring_report.md](docs/real_wiring_report.md): how much of the fit comes from the wiring
 - [docs/spiking_report.md](docs/spiking_report.md) and [docs/spiking/](docs/spiking/): the spiking network, results and limits
+- [docs/spiking/live_cpu.md](docs/spiking/live_cpu.md): the spiking network on the server CPU (`SUB01_SPIKING_LIVE_NEURONS`)
 - [docs/pci/README.md](docs/pci/README.md): the perturbational complexity test
 - [docs/twin/sleep.md](docs/twin/sleep.md), [docs/twin/neurochem.md](docs/twin/neurochem.md), [docs/twin/body.md](docs/twin/body.md): sleep, chemistry, body
 - [docs/research/game_look.md](docs/research/game_look.md), [docs/research/real_brain_sources.md](docs/research/real_brain_sources.md): research notes

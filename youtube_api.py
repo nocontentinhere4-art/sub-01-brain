@@ -27,6 +27,7 @@ SEARCH_UNITS = 100
 FREE_UNITS = 10_000
 DAILY_UNITS = 9_000
 CACHE_S = 6 * 3600
+NEG_CACHE_S = 600                     # B6: a search whose playability check failed is asked again after 10 min
 EMBED = "https://www.youtube-nocookie.com/embed/{id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&loop=1&playlist={id}"
 VIEWER_EMBED = "https://www.youtube-nocookie.com/embed/{id}?autoplay=0&mute=1&playsinline=1&rel=0"
 NOTE_NO_KEY = "YouTube: YOUTUBE_API_KEY not set (YouTube's search pages are closed to robots), so no YouTube search"
@@ -293,7 +294,7 @@ class Quota:
             self.day, self.used, self.searches, self.errors = d, 0, 0, []
             self.today, self.bad, self.bad_by = [], [], {}
         now = self.clock()
-        for k in [k for k, v in self.cache.items() if now - v["t"] > CACHE_S]:
+        for k in [k for k, v in self.cache.items() if now - v["t"] > (NEG_CACHE_S if v.get("neg") else CACHE_S)]:
             del self.cache[k]
 
     @staticmethod
@@ -316,6 +317,11 @@ class Quota:
         self.cache[self._k(q, short)] = {"t": self.clock(), "r": results[:10], "v": 2}
         while len(self.cache) > 200:
             self.cache.pop(next(iter(self.cache)))
+
+    def cache_fail(self, q, short):
+        """B6: the playability check (videos.list) failed after a search: the query is not cached as "no videos" for
+        CACHE_S but as a short negative entry (NEG_CACHE_S), so it is tried again soon."""
+        self.cache[self._k(q, short)] = {"t": self.clock(), "r": [], "v": 2, "neg": True}
 
     def spend_units(self, n):
         """A cheap call (channels / playlistItems / videos .list)."""

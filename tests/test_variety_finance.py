@@ -1,6 +1,7 @@
 """#56 scope extension: browse like a real young guy. Interest profile and daily rhythm, variety, YouTube Shorts and
 TikTok on the phone (muted, bounded, walls left), queries from things he saw, "on his mind" from what he really reads,
-and crypto / finance pages read-only (no money actions, the advice line, the harmful categories kept).
+and (S2) trading hosts and price / chart / ticker titles refused while neutral market news stays readable (no money
+actions, the harmful categories kept).
 
     python -m pytest tests/test_variety_finance.py -q
 No network and no AI calls. tests/data/search/youtube_shorts.html is a trimmed real capture (2026-10-02);
@@ -17,7 +18,6 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "analysis"))
 
 import browse  # noqa: E402
 import eyes as E  # noqa: E402
@@ -105,13 +105,52 @@ def test_wikipedia_weighs_less_once_it_filled_a_tenth_of_the_day():
 
 
 def test_a_simulated_day_is_varied_with_little_wikipedia():
-    import variety_day
-    rows = [variety_day.day(True, random.Random(d)) for d in range(5)]
-    old = [variety_day.day(False, random.Random(d)) for d in range(5)]
-    for r in rows:
-        assert r["top_share"] < 0.25 and r["wiki_share"] < 0.15 and len(r["topics"]) >= 10
-    assert sum(r["entropy_bits"] for r in rows) > sum(r["entropy_bits"] for r in old)
-    assert sum(r["wiki_share"] for r in old) / 5 > 0.15
+    """T1: the real Browser._next over a simulated desk day (08:00-24:00 Tokyo, a new chain every 3 minutes), with
+    the page loads stubbed: a search lands on the source search_sources.route picks, a link stays on the page's
+    topic, a seed site is a front page. The live Variety counts what was shown."""
+    import urllib.parse
+    start = 1_790_982_000.0                                  # 2026-10-03 08:00 Tokyo
+    for seed in range(3):
+        clock = Clock(start)
+        b = Browser(decide=True, rng=random.Random(seed))
+        b.variety, b.watched = I.Variety(clock=clock), True
+        sc = b.screens["desk"]
+        shown = []
+
+        def note(title, host):
+            b.variety.note(title, "", host)
+            shown.append((title, host))
+            sc.info = {"kind": "page", "host": host, "title": title}
+
+        async def _search(sc_, q, why="", origin=""):
+            name = S.route(q, b.limits, b.rng, wiki_share=b.variety.wiki_share())[0]
+            src = S.SOURCES[name]
+            host = urllib.parse.urlsplit(src["url"](q)).hostname if src.get("url") else f"{name}.example"
+            note(q, host)                                    # the results page, then its top result on the topic
+            return True
+
+        async def _open(sc_, url, why, kind, **kw):
+            note(sc.info.get("title", "") if sc.info else "", urllib.parse.urlsplit(url).hostname)
+            return True
+
+        async def _public_videos(sc_, kind, q, why, origin="", short=True):
+            note(q, "www.youtube.com")
+            return True
+
+        async def _pick_link(sc_, interest):
+            return (f"https://{sc.info['host']}/p{len(shown)}", sc.info.get("title", "")) if sc.info else None
+
+        async def _seed(sc_, why, topic=None, hungry=False, only_topic=False, hour=None, **kw):   # (hour: B4)
+            note(topic or "front page", "news.example")
+            return True
+        b._search, b._open, b._public_videos, b._pick_link, b._seed = _search, _open, _public_videos, _pick_link, _seed
+        for i in range(16 * 20):
+            clock.t = start + i * 180
+            assert run(b._next(sc, [], {"query": "", "from": "", "hour": 8 + i / 20}))
+        r = b.variety.public()
+        assert len(shown) == 320 and r["pages"] == 320
+        assert r["top_share"] < 0.25 and r["wiki_share"] < 0.15 and len(r["topics"]) >= 10, r
+        assert r["entropy_bits"] > 3.0                       # 13 topics evenly would be 3.7 bits
 
 
 def test_next_uses_the_profile_and_says_so():
@@ -247,9 +286,9 @@ def test_seen_things_become_queries_with_their_origin():
         eye=SimpleNamespace(world=SimpleNamespace(top=lambda t, k: [{"name": "melon pan"}, {"name": "rain"}])),
         clock=SimpleNamespace(now=lambda: 1_790_982_000.0))
     seen = S.seen_things(live)
-    assert seen["video"] == ["Beginner Guide to Making Ramen", "Way of Ramen"]
+    assert seen["video"] == ["ramen noodles", "Way of Ramen"]       # B3: what it is about, not the title's first words
     assert seen["walk"] == ["Inokashira Park", "Inokashira Park"] and seen["eye"] == ["melon pan", "rain"]
-    assert seen["screen"] == ["Ghibli Museum opens new exhibit"]
+    assert seen["screen"] == ["Ghibli Museum"]                        # B3: the name in the headline, not the headline
     origins = {S.interest_for(seen=seen, rng=random.Random(i), query_ok=E.query_ok)["from"] for i in range(200)}
     assert origins == {"video", "walk", "eye", "screen"}
     for o in origins:
@@ -261,7 +300,7 @@ def test_live_interest_carries_hour_feed_and_tastes():
     live = SimpleNamespace(mind=None, clock=SimpleNamespace(now=lambda: 1_790_960_400.0),     # 02:00 Tokyo
                            memory=SimpleNamespace(items=[]), tastes=SimpleNamespace(
                                pref={"kw:ramen": 1.0}, top=lambda n=8: {"favoured": []}),
-                           life=SimpleNamespace(activity="phone", phone_app="chart", place="bed", path=[]))
+                           life=SimpleNamespace(activity="phone", phone_app="chat", place="bed", path=[]))
     it = S.live_interest(live, None, random.Random(0))
     assert round(it["hour"]) == 2 and it["feed"] == "shorts" and it["tastes"]["food"] > 1.0
     live.clock = SimpleNamespace(now=lambda: 1_791_000_000.0)                                 # 13:00 Tokyo
@@ -285,16 +324,27 @@ def test_on_his_mind_is_what_he_actually_reads():
     assert R.Reader(json.loads(json.dumps(r.to_dict()))).current()["kind"] == "video"
 
 
-# --- D. crypto and finance: read-only ---------------------------------------------------------------------------------
+# --- D. crypto and finance: trading hosts go (S2), neutral news stays ---------------------------------------------------
 @pytest.mark.parametrize("url", [
     "https://www.binance.com/en/trade/BTC_USDT", "https://pump.fun/coin/abc", "https://dexscreener.com/solana/x",
     "https://www.coingecko.com/en/coins/bitcoin", "https://coinmarketcap.com/currencies/solana/",
     "https://www.tradingview.com/symbols/BTCUSD/", "https://finance.yahoo.com/quote/7203.T/",
     "https://www.google.com/finance/quote/NI225:INDEXNIKKEI", "https://jup.ag/swap/SOL-USDC",
-    "https://old.reddit.com/r/CryptoCurrency/", "https://www.coindesk.com/markets/",
+    "https://gmgn.ai/sol/token/x", "https://www.okx.com/trade-spot/btc-usdt", "https://raydium.io/swap/",
+    "https://kabutan.jp/stock/?code=7203", "https://stocktwits.com/symbol/TSLA",
 ])
-def test_finance_pages_are_viewable(url):
-    assert url_ok(url)
+def test_trading_hosts_are_refused(url):
+    """S2 (owner rules: no trading content on screen): exchanges, DEX, launchpads, chart and quote sites never load,
+    so nothing of them reaches a screen, a link list, a reading, the diary or the reward."""
+    assert not url_ok(url) and browse.trading_url(url) and browse.is_finance(url)
+
+
+@pytest.mark.parametrize("url", [
+    "https://old.reddit.com/r/CryptoCurrency/", "https://www.coindesk.com/markets/", "https://www.reuters.com/markets/",
+    "https://www.google.com/search?q=ramen", "https://www.bloomberg.com/asia", "https://www.nikkei.com/",
+])
+def test_news_about_markets_stays_readable(url):
+    assert url_ok(url) and not browse.trading_url(url)          # the owner's choice: neutral news is fine
 
 
 @pytest.mark.parametrize("url", ["https://metamask.io/", "https://phantom.app/", "https://verify.walletconnect.com/",
@@ -304,17 +354,27 @@ def test_wallets_and_harmful_sites_stay_blocked(url):
     assert not url_ok(url)
 
 
-def test_finance_pages_get_the_advice_line():
-    info = {"why": "followed a link", "title": "Bitcoin price"}
-    out = browse.finance_note(info, "https://www.coingecko.com/en/coins/bitcoin", "Bitcoin price", "")
-    assert out["finance"] and out["advice"] == "He is just browsing; nothing here is financial advice."
-    assert out["why"] == "followed a link · He is just browsing; nothing here is financial advice."
-    assert browse.finance_note(out, "https://www.coingecko.com/x", "x", "")["why"].count("financial advice") == 1
-    news = browse.finance_note({"why": "w"}, "https://example.org/a", "Nikkei and Nasdaq stocks fall",
-                               "crypto and bitcoin traders")
-    assert news.get("finance")
-    assert browse.finance_note({"why": "w"}, "https://example.org/r", "Ramen ranking", "noodles")["why"] == "w"
+@pytest.mark.parametrize("title", ["Bitcoin price today", "$WIF jumps 20%", "SOL/USDT chart", "Solana price prediction",
+                                   "memecoin presale is live", "BTC pumping again", "stocks rally as Nikkei surges",
+                                   "Dogecoin to the moon", "ETH airdrop whitelist"])
+def test_price_chart_and_ticker_titles_never_show(title):
+    assert browse.trading_title(title) and not browse.title_ok(title) and browse.is_finance("https://x.example/", title)
+
+
+@pytest.mark.parametrize("title", ["memecoin news", "Nikkei 225 today", "Nikkei and Nasdaq stocks fall", "Bitcoin history",
+                                   "Pokemon trading cards", "Stockholm Syndrome", "pumpkin soup stock", "do you like dumplings",
+                                   "$5 Pizza Hack", "A$AP Rocky live", "what is the price of ramen", "Sussex Cricket Club"])
+def test_neutral_market_news_and_everyday_words_pass(title):
+    assert not browse.trading_title(title) and browse.title_ok(title)
+
+
+def test_a_terminal_like_page_is_finance_an_anime_page_is_not():
+    terminal = "Market cap $1.2B · 24h volume · Liquidity · Connect wallet · slippage 0.5%"
+    assert browse.is_finance("https://example.org/a", "A token page", terminal)
+    assert not browse.is_finance("https://example.org/a", "Sousou no Frieren", "mana tokens and trading cards")
     assert not browse.is_finance("https://www.google.com/search?q=ramen")
+    # the old advice-line card is gone: the browser refuses the page instead of showing it with a disclaimer
+    assert not hasattr(browse, "finance_note") and not hasattr(browse, "ADVICE_LINE")
 
 
 @pytest.mark.parametrize("label, href", [
@@ -326,16 +386,17 @@ def test_finance_pages_get_the_advice_line():
 ])
 def test_money_actions_are_never_offered_or_clicked(label, href):
     assert browse.money_action(label, href)
-    page = {"url": "https://www.coingecko.com/", "kind": "page", "can_back": False, "chain": 1, "max_chain": 30,
-            "links": [{"id": "L1", "href": href, "text": label}, {"id": "L2", "href": "https://example.org/chart",
-                                                                   "text": "Solana price chart history"}]}
+    page = {"url": "https://example.org/", "kind": "page", "can_back": False, "chain": 1, "max_chain": 30,
+            "links": [{"id": "L1", "href": href, "text": label}, {"id": "L2", "href": "https://example.org/history",
+                                                                   "text": "Solana blockchain history explained"}]}
     assert E.validate([{"action": "click", "target": "L1", "label": "go"}], page) == []      # never offered
-    raw = [[href, label, 9000, True], ["https://example.org/chart", "Solana price chart history", 900, True]]
+    raw = [[href, label, 9000, True], ["https://example.org/history", "Solana blockchain history explained", 900, True],
+           ["https://example.org/chart", "Solana price chart history", 900, True]]          # S2: a price chart: no
     b = Browser(decide=True)
     sc = b.screens["desk"]
-    sc.info = {"title": "CoinGecko", "kind": "page", "host": "coingecko.com"}
-    links = b.pick_links(raw, "https://www.coingecko.com/", "text", sc)["links"]
-    assert [l["text"] for l in links] == ["Solana price chart history"]                     # never numbered
+    sc.info = {"title": "Crypto news", "kind": "page", "host": "example.org"}
+    links = b.pick_links(raw, "https://example.org/", "text", sc)["links"]
+    assert [l["text"] for l in links] == ["Solana blockchain history explained"]           # never numbered
     opened = []
 
     async def _open(sc_, url, why, kind, **kw):
@@ -349,8 +410,8 @@ def test_money_actions_are_never_offered_or_clicked(label, href):
     run(b.act("desk", {"action": "click", "href": href, "label": label}))
     assert opened == [] and b.last_skip == "never acts with money"
     sc.page, sc.awaiting = object(), page
-    run(b.act("desk", {"action": "click", "href": "https://example.org/chart", "label": "the chart"}))
-    assert opened == ["https://example.org/chart"]
+    run(b.act("desk", {"action": "click", "href": "https://example.org/history", "label": "the history"}))
+    assert opened == ["https://example.org/history"]
 
 
 def test_his_words_carry_no_buy_or_sell_and_no_finance_talk():
@@ -358,8 +419,10 @@ def test_his_words_carry_no_buy_or_sell_and_no_finance_talk():
         assert E.query_ok(q) is None                        # never typed
     for q in ("bitcoin price", "memecoin news", "Nikkei 225 today", "solana memecoins"):
         assert E.query_ok(q) == q                           # read-only finance searches are fine
-    assert E.clean_label("buy the dip") == "" and E.clean_label("Bitcoin price chart") == "Bitcoin price chart"
+    assert E.clean_label("buy the dip") == "" and E.clean_label("Bitcoin price chart") == ""     # S2: a chart label: no
+    assert E.clean_label("Bitcoin history") == "Bitcoin history"                                 # neutral: fine
     assert not browse.display_ok("Bitcoin price today")     # his own words (mind notes, the card title): no finance
-    assert browse.title_ok("Bitcoin price today") and browse.title_ok("$WIF jumps 20%")
+    assert not browse.title_ok("Bitcoin price today") and not browse.title_ok("$WIF jumps 20%")   # S2: nor a web title
+    assert browse.title_ok("memecoin news") and browse.title_ok("Nikkei 225 today")               # neutral news: yes
     assert not browse.title_ok("send 5 sol to my wallet address") and not browse.title_ok("crypto giveaway")
     assert not browse.title_ok("7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU")

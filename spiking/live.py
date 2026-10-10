@@ -712,8 +712,11 @@ def score(rows, block=10, net="cpu"):
 class LiveClient:
     """The server's handle on the child process (asyncio). decide() never waits more than its timeout (2 s)."""
 
-    def __init__(self, data_dir, n_neurons=N_NEURONS, timeout=2.0, python=sys.executable, twin=True):
+    def __init__(self, data_dir, n_neurons=N_NEURONS, timeout=None, python=sys.executable, twin=True):
         self.data_dir = Path(data_dir)
+        # SUB01_SPIKING_LIVE_TIMEOUT_S: a bigger network needs longer (500k neurons: ~2 s a decision on a laptop core)
+        if timeout is None:
+            timeout = float(os.environ.get("SUB01_SPIKING_LIVE_TIMEOUT_S") or 2.0)
         self.n_neurons, self.timeout, self.python, self.twin = n_neurons, timeout, python, twin
         self.proc, self.ready, self.info = None, False, {}
         self.futs, self.next_id = {}, 0
